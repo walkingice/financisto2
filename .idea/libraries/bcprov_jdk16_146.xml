@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="bcprov-jdk16-146">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/Financisto/libs/dropbox-android-sdk-1.6.1/bcprov-jdk16-146.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
