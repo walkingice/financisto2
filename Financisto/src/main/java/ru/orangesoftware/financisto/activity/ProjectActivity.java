@@ -41,8 +41,6 @@ public class ProjectActivity extends Activity {
         activityCheckBox.setChecked(true);
 
         db = new DatabaseAdapter(this);
-        db.open();
-
         em = db.em();
 
         Button bOK = (Button)findViewById(R.id.bOK);

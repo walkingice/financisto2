@@ -14,12 +14,21 @@ import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.appwidget.AppWidgetProviderInfo;
-import android.content.*;
+import android.content.ComponentName;
+import android.content.ContentUris;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
 import android.util.Log;
 import android.widget.RemoteViews;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import ru.orangesoftware.financisto.R;
 import ru.orangesoftware.financisto.db.DatabaseAdapter;
 import ru.orangesoftware.financisto.db.MyEntityManager;
@@ -29,10 +38,6 @@ import ru.orangesoftware.financisto.model.CardIssuer;
 import ru.orangesoftware.financisto.utils.MyPreferences;
 import ru.orangesoftware.financisto.utils.Utils;
 import ru.orangesoftware.orb.EntityManager;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import static android.appwidget.AppWidgetManager.INVALID_APPWIDGET_ID;
 
@@ -173,7 +178,6 @@ public class AccountWidget extends AppWidgetProvider {
 
     private static RemoteViews buildUpdateForCurrentAccount(Context context, int widgetId, int layoutId, Class providerClass, long accountId) {
         DatabaseAdapter db = new DatabaseAdapter(context);
-        db.open();
         try {
             MyEntityManager em = db.em();
             Account a = em.getAccount(accountId);
@@ -186,14 +190,11 @@ public class AccountWidget extends AppWidgetProvider {
             }
         } catch (Exception ex) {
             return errorUpdate(context);
-        } finally {
-            db.close();
         }
     }
 
     private static RemoteViews buildUpdateForNextAccount(Context context, int widgetId, int layoutId, Class providerClass, long accountId) {
         DatabaseAdapter db = new DatabaseAdapter(context);
-        db.open();
         try {
             MyEntityManager em = db.em();
             Cursor c = em.getAllActiveAccounts();
@@ -232,8 +233,6 @@ public class AccountWidget extends AppWidgetProvider {
             }
         } catch (Exception ex) {
             return errorUpdate(context);
-        } finally {
-            db.close();
         }
     }
 

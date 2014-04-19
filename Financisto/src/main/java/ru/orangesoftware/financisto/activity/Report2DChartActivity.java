@@ -1,21 +1,5 @@
 package ru.orangesoftware.financisto.activity;
 
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.GregorianCalendar;
-
-import ru.orangesoftware.financisto.R;
-import ru.orangesoftware.financisto.db.DatabaseAdapter;
-import ru.orangesoftware.financisto.db.MyEntityManager;
-import ru.orangesoftware.financisto.graph.Report2DChart;
-import ru.orangesoftware.financisto.model.Currency;
-import ru.orangesoftware.financisto.model.ReportDataByPeriod;
-import ru.orangesoftware.financisto.report.*;
-import ru.orangesoftware.financisto.utils.CurrencyCache;
-import ru.orangesoftware.financisto.utils.MyPreferences;
-import ru.orangesoftware.financisto.utils.PinProtection;
-import ru.orangesoftware.financisto.utils.Utils;
-import ru.orangesoftware.financisto.view.Report2DChartView;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -28,6 +12,27 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.GregorianCalendar;
+
+import ru.orangesoftware.financisto.R;
+import ru.orangesoftware.financisto.db.DatabaseAdapter;
+import ru.orangesoftware.financisto.db.MyEntityManager;
+import ru.orangesoftware.financisto.graph.Report2DChart;
+import ru.orangesoftware.financisto.model.Currency;
+import ru.orangesoftware.financisto.model.ReportDataByPeriod;
+import ru.orangesoftware.financisto.report.AccountByPeriodReport;
+import ru.orangesoftware.financisto.report.CategoryByPeriodReport;
+import ru.orangesoftware.financisto.report.LocationByPeriodReport;
+import ru.orangesoftware.financisto.report.PayeeByPeriodReport;
+import ru.orangesoftware.financisto.report.ProjectByPeriodReport;
+import ru.orangesoftware.financisto.utils.CurrencyCache;
+import ru.orangesoftware.financisto.utils.MyPreferences;
+import ru.orangesoftware.financisto.utils.PinProtection;
+import ru.orangesoftware.financisto.utils.Utils;
+import ru.orangesoftware.financisto.view.Report2DChartView;
 
 /**
  * Activity to display 2D Reports.
@@ -86,8 +91,7 @@ public class Report2DChartActivity extends Activity {
 	private void init() {
 		// database adapter to query data
 		dbAdapter = new DatabaseAdapter(this);
-		dbAdapter.open();
-		
+
 		em = dbAdapter.em();
 		
 		// get report preferences to display chart
@@ -477,12 +481,6 @@ public class Report2DChartActivity extends Activity {
 		return periodLength;
 	}
 
-	@Override
-	protected void onDestroy() {
-		dbAdapter.close();
-		super.onDestroy();
-	}
-	
 	@Override
 	protected void onPause() {
 		super.onPause();

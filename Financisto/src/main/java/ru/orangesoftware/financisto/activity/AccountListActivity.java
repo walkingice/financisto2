@@ -23,10 +23,12 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.TextView;
+
+import java.util.List;
+
 import greendroid.widget.QuickActionGrid;
 import greendroid.widget.QuickActionWidget;
 import ru.orangesoftware.financisto.R;
-import ru.orangesoftware.financisto.adapter.AccountListAdapter2;
 import ru.orangesoftware.financisto.blotter.BlotterFilter;
 import ru.orangesoftware.financisto.blotter.TotalCalculationTask;
 import ru.orangesoftware.financisto.dialog.AccountInfoDialog;
@@ -34,10 +36,7 @@ import ru.orangesoftware.financisto.filter.Criteria;
 import ru.orangesoftware.financisto.model.Account;
 import ru.orangesoftware.financisto.model.Total;
 import ru.orangesoftware.financisto.utils.MenuItemInfo;
-import ru.orangesoftware.financisto.utils.MyPreferences;
 import ru.orangesoftware.financisto.view.NodeInflater;
-
-import java.util.List;
 
 import static ru.orangesoftware.financisto.utils.AndroidUtils.isGreenDroidSupported;
 import static ru.orangesoftware.financisto.utils.MyPreferences.isQuickMenuEnabledForAccount;
@@ -162,16 +161,17 @@ public class AccountListActivity extends AbstractListActivity {
 
 	@Override
 	protected ListAdapter createAdapter(Cursor cursor) {
-		return new AccountListAdapter2(this, cursor);
+		return null; //new AccountListAdapter2(this, cursor);
 	}
 
 	@Override
 	protected Cursor createCursor() {
-        if (MyPreferences.isHideClosedAccounts(this)) {
-            return em.getAllActiveAccounts();
-        } else {
-            return em.getAllAccounts();
-        }
+        return null;
+//        if (MyPreferences.isHideClosedAccounts(this)) {
+//            return em.getAllActiveAccounts();
+//        } else {
+//            return em.getAllAccounts();
+//        }
 	}
 
 	protected List<MenuItemInfo> createContextMenus(long id) {

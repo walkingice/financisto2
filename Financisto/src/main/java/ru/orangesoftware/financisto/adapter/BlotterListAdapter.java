@@ -13,13 +13,20 @@ package ru.orangesoftware.financisto.adapter;
 import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.text.format.DateUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.CheckBox;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.ResourceCursorAdapter;
+import android.widget.TextView;
+
+import java.util.Date;
+import java.util.HashMap;
+
 import ru.orangesoftware.financisto.R;
 import ru.orangesoftware.financisto.db.DatabaseAdapter;
 import ru.orangesoftware.financisto.db.DatabaseHelper.BlotterColumns;
@@ -31,9 +38,6 @@ import ru.orangesoftware.financisto.recur.Recurrence;
 import ru.orangesoftware.financisto.utils.CurrencyCache;
 import ru.orangesoftware.financisto.utils.MyPreferences;
 import ru.orangesoftware.financisto.utils.Utils;
-
-import java.util.Date;
-import java.util.HashMap;
 
 import static ru.orangesoftware.financisto.model.Category.isSplit;
 import static ru.orangesoftware.financisto.utils.TransactionTitleUtils.generateTransactionTitle;
@@ -137,7 +141,6 @@ public class BlotterListAdapter extends ResourceCursorAdapter {
             long fromBalance = cursor.getLong(BlotterColumns.from_account_balance.ordinal());
             long toBalance = cursor.getLong(BlotterColumns.to_account_balance.ordinal());
             u.setTransferAmountText(v.rightView, fromCurrency, fromAmount, toCurrency, toAmount);
-            v.rightView.setTextColor(dateViewColor);
             if (v.rightCenterView != null) {
                 u.setTransferBalanceText(v.rightCenterView, fromCurrency, fromBalance, toCurrency, toBalance);
             }
@@ -188,7 +191,6 @@ public class BlotterListAdapter extends ResourceCursorAdapter {
             if (isTemplate == 2 && recurrence != null) {
                 Recurrence r = Recurrence.parse(recurrence);
                 v.bottomView.setText(r.toInfoString(context));
-                v.bottomView.setTextColor(v.topView.getTextColors().getDefaultColor());
             } else {
                 setIndicatorColor(v, cursor);
                 long date = cursor.getLong(BlotterColumns.datetime.ordinal());
@@ -199,7 +201,6 @@ public class BlotterListAdapter extends ResourceCursorAdapter {
                 if (isTemplate == 0 && date > System.currentTimeMillis()) {
                     u.setFutureTextColor(v.bottomView);
                 } else {
-                    v.bottomView.setTextColor(v.topView.getTextColors().getDefaultColor());
                 }
             }
         }
@@ -227,7 +228,6 @@ public class BlotterListAdapter extends ResourceCursorAdapter {
         String category = getCategoryTitle(cursor, categoryId);
         String text = generateTransactionTitle(sb, payee, note, location, categoryId, category);
         noteView.setText(text);
-        noteView.setTextColor(Color.WHITE);
     }
 
     private String getCategoryTitle(Cursor cursor, long categoryId) {

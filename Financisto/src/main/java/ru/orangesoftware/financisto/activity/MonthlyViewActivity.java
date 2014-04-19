@@ -76,7 +76,6 @@ public class MonthlyViewActivity extends ListActivity {
     @Override
     public void onDestroy() {
         cancelCurrentTask();
-        dbAdapter.close();
     	super.onDestroy();
     }
 
@@ -107,8 +106,7 @@ public class MonthlyViewActivity extends ListActivity {
     	
     	// get account data
 		dbAdapter = new DatabaseAdapter(this);
-		dbAdapter.open();
-		
+
 		// set currency based on account
 		MyEntityManager em = dbAdapter.em();
         account = em.getAccount(accountId);

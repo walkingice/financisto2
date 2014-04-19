@@ -11,12 +11,17 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.view.View;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.SimpleCursorAdapter;
+import android.widget.Spinner;
+import android.widget.Toast;
+
+import java.util.List;
+
 import ru.orangesoftware.financisto.R;
 import ru.orangesoftware.financisto.db.DatabaseAdapter;
 import ru.orangesoftware.financisto.model.MultiChoiceItem;
-
-import java.util.List;
 
 public class QifImportActivity extends AbstractImportActivity implements ActivityLayoutListener {
 
@@ -33,7 +38,6 @@ public class QifImportActivity extends AbstractImportActivity implements Activit
     @Override
     protected void internalOnCreate() {
         db = new DatabaseAdapter(this);
-        db.open();
 
         Spinner currencySpinner = (Spinner)findViewById(R.id.spinnerCurrency);
         Cursor currencyCursor = db.em().getAllCurrencies("name");
@@ -64,12 +68,6 @@ public class QifImportActivity extends AbstractImportActivity implements Activit
                 finish();
             }
         });
-    }
-
-    @Override
-    protected void onDestroy() {
-        db.close();
-        super.onDestroy();
     }
 
     @Override

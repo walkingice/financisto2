@@ -71,7 +71,6 @@ public class ReportActivity extends ListActivity implements RefreshSupportedActi
 		setContentView(R.layout.report);
 
         db = new DatabaseAdapter(this);
-		db.open();
 
 		bFilter = (ImageButton)findViewById(R.id.bFilter);
 		bFilter.setOnClickListener(new OnClickListener(){
@@ -233,7 +232,6 @@ public class ReportActivity extends ListActivity implements RefreshSupportedActi
     @Override
 	protected void onDestroy() {
         cancelCurrentReportTask();
-		db.close();
 		super.onDestroy();
 	}
 

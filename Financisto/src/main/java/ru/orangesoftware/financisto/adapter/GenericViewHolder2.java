@@ -10,39 +10,58 @@
  ******************************************************************************/
 package ru.orangesoftware.financisto.adapter;
 
-import ru.orangesoftware.financisto.R;
-import android.view.View;
+import android.content.Context;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class GenericViewHolder2 {
+import org.androidannotations.annotations.EViewGroup;
+import org.androidannotations.annotations.ViewById;
+
+import ru.orangesoftware.financisto.R;
+
+@EViewGroup(R.layout.generic_list_item_2)
+public class GenericViewHolder2 extends RelativeLayout {
+
+    @ViewById(R.id.icon)
 	public ImageView iconView;
+
+    @ViewById(R.id.active_icon)
 	public ImageView iconOverView;
+
+    @ViewById(R.id.top)
 	public TextView topView;
+
+    @ViewById(R.id.center)
 	public TextView centerView;
+
+    @ViewById(R.id.bottom)
 	public TextView bottomView;
+
+    @ViewById(R.id.right)
 	public TextView rightView;
+
+    @ViewById(R.id.right_center)
 	public TextView rightCenterView;
+
+    @ViewById(R.id.progress)
 	public ProgressBar progressBar;
+
+    @ViewById(R.id.progress_text)
 	public TextView progressText;
-	
-	public static View create(View view) {
-		GenericViewHolder2 v = new GenericViewHolder2();
-		v.iconView = (ImageView)view.findViewById(R.id.icon);
-		v.iconOverView = (ImageView)view.findViewById(R.id.active_icon);
-		v.topView = (TextView)view.findViewById(R.id.top);
-		v.centerView = (TextView)view.findViewById(R.id.center);		
-		v.bottomView = (TextView)view.findViewById(R.id.bottom);
-		v.rightView = (TextView)view.findViewById(R.id.right);
-		v.rightCenterView = (TextView)view.findViewById(R.id.right_center);
-		v.rightCenterView.setVisibility(View.GONE);
-		v.progressBar = (ProgressBar)view.findViewById(R.id.progress);
-		v.progressBar.setVisibility(View.GONE);
-		v.progressText = (TextView)view.findViewById(R.id.progress_text);
-		v.progressText.setVisibility(View.GONE);
-		view.setTag(v);
-		return view;
-	}
+
+    public GenericViewHolder2(Context context) {
+        super(context);
+    }
+
+//    public static View create(View view) {
+//		GenericViewHolder2 v = new GenericViewHolder2();
+//		v.rightCenterView.setVisibility(View.GONE);
+//		v.progressBar.setVisibility(View.GONE);
+//		v.progressText.setVisibility(View.GONE);
+//		view.setTag(v);
+//		return view;
+//	}
 	
 }

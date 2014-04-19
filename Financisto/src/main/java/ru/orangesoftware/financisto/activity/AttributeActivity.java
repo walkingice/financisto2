@@ -10,23 +10,24 @@
  ******************************************************************************/
 package ru.orangesoftware.financisto.activity;
 
-import ru.orangesoftware.financisto.R;
-import ru.orangesoftware.financisto.db.DatabaseAdapter;
-import ru.orangesoftware.financisto.db.DatabaseHelper.AttributeColumns;
-import ru.orangesoftware.financisto.model.Attribute;
-import ru.orangesoftware.financisto.utils.PinProtection;
-import ru.orangesoftware.financisto.utils.Utils;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.AdapterView.OnItemSelectedListener;
+
+import ru.orangesoftware.financisto.R;
+import ru.orangesoftware.financisto.db.DatabaseAdapter;
+import ru.orangesoftware.financisto.db.DatabaseHelper.AttributeColumns;
+import ru.orangesoftware.financisto.model.Attribute;
+import ru.orangesoftware.financisto.utils.PinProtection;
+import ru.orangesoftware.financisto.utils.Utils;
 
 public class AttributeActivity extends Activity implements OnItemSelectedListener {
 	
@@ -49,8 +50,7 @@ public class AttributeActivity extends Activity implements OnItemSelectedListene
 		setContentView(R.layout.attribute);
 
 		db = new DatabaseAdapter(this);
-		db.open();
-		
+
 		typeSpinner = (Spinner)findViewById(R.id.type);
 		typeSpinner.setOnItemSelectedListener(this);
 
@@ -118,12 +118,6 @@ public class AttributeActivity extends Activity implements OnItemSelectedListene
 				defaultValueTextView.setText(attribute.defaultValue);				
 			}			
 		}
-	}
-
-	@Override
-	protected void onDestroy() {
-		db.close();
-		super.onDestroy();		
 	}
 
 	@Override

@@ -10,13 +10,14 @@
  ******************************************************************************/
 package ru.orangesoftware.financisto.export;
 
-import ru.orangesoftware.financisto.R;
-import ru.orangesoftware.financisto.db.DatabaseAdapter;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+
+import ru.orangesoftware.financisto.R;
+import ru.orangesoftware.financisto.db.DatabaseAdapter;
 import ru.orangesoftware.financisto.utils.MyPreferences;
 
 import static ru.orangesoftware.financisto.export.Export.uploadBackupFileToDropbox;
@@ -45,15 +46,12 @@ public abstract class ImportExportAsyncTask extends AsyncTask<String, String, Ob
     @Override
 	protected Object doInBackground(String... params) {
 		DatabaseAdapter db = new DatabaseAdapter(context);
-		db.open();
 		try {
 			return work(context, db, params);
 		} catch(Exception ex){
 			Log.e("Financisto", "Unable to do import/export", ex);
 			return ex;
-		} finally {
-			db.close();
-		}			
+		}
 	}
 
 	protected abstract Object work(Context context, DatabaseAdapter db, String...params) throws Exception;

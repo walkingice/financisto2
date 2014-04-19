@@ -10,28 +10,34 @@
  ******************************************************************************/
 package ru.orangesoftware.financisto.activity;
 
+import android.app.ListActivity;
+import android.content.Context;
+import android.content.Intent;
+import android.database.Cursor;
+import android.os.Bundle;
+import android.os.Parcelable;
+import android.util.Log;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.ImageButton;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+
 import java.util.LinkedList;
 import java.util.List;
 
-import android.content.Context;
-import android.os.Parcelable;
-import android.util.Log;
-import android.view.*;
 import ru.orangesoftware.financisto.R;
 import ru.orangesoftware.financisto.db.DatabaseAdapter;
 import ru.orangesoftware.financisto.db.MyEntityManager;
 import ru.orangesoftware.financisto.utils.MenuItemInfo;
 import ru.orangesoftware.financisto.utils.PinProtection;
-import android.app.ListActivity;
-import android.content.Intent;
-import android.database.Cursor;
-import android.os.Bundle;
-import android.view.ContextMenu.ContextMenuInfo;
-import android.view.View.OnClickListener;
-import android.widget.AdapterView;
-import android.widget.ImageButton;
-import android.widget.ListAdapter;
-import android.widget.ListView;
 
 public abstract class AbstractListActivity extends ListActivity implements RefreshSupportedActivity {
 	
@@ -64,8 +70,6 @@ public abstract class AbstractListActivity extends ListActivity implements Refre
 		setContentView(contentId);
 		
 		db = new DatabaseAdapter(this);
-		db.open();
-		
 		em = db.em();
 
         this.inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -100,12 +104,6 @@ public abstract class AbstractListActivity extends ListActivity implements Refre
 		});		
 	}		
 	
-	@Override
-	protected void onDestroy() {
-		db.close();
-		super.onDestroy();
-	}
-
 	@Override
 	protected void onPause() {
 		super.onPause();

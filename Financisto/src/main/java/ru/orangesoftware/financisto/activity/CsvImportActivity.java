@@ -11,14 +11,20 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.*;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.Toast;
+
+import java.util.List;
+
 import ru.orangesoftware.financisto.R;
 import ru.orangesoftware.financisto.adapter.MyEntityAdapter;
 import ru.orangesoftware.financisto.db.DatabaseAdapter;
 import ru.orangesoftware.financisto.model.Account;
 import ru.orangesoftware.financisto.utils.CurrencyExportPreferences;
-
-import java.util.List;
 
 
 public class CsvImportActivity extends AbstractImportActivity {
@@ -43,7 +49,6 @@ public class CsvImportActivity extends AbstractImportActivity {
     @Override
     protected void internalOnCreate() {
         db = new DatabaseAdapter(this);
-        db.open();
 
         accounts = db.em().getAllAccountsList();
         ArrayAdapter<Account> accountsAdapter = new MyEntityAdapter<Account>(this, android.R.layout.simple_spinner_item, android.R.id.text1, accounts);
@@ -77,12 +82,6 @@ public class CsvImportActivity extends AbstractImportActivity {
 
     }
 
-
-    @Override
-    protected void onDestroy() {
-        db.close();
-        super.onDestroy();
-    }
 
     @Override
     protected void updateResultIntentFromUi(Intent data) {

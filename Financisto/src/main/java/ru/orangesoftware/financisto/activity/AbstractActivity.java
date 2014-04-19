@@ -16,13 +16,14 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Toast;
+
+import java.util.List;
+
 import ru.orangesoftware.financisto.db.DatabaseAdapter;
 import ru.orangesoftware.financisto.db.MyEntityManager;
 import ru.orangesoftware.financisto.model.MultiChoiceItem;
 import ru.orangesoftware.financisto.utils.PinProtection;
 import ru.orangesoftware.financisto.view.NodeInflater;
-
-import java.util.List;
 
 public abstract class AbstractActivity extends Activity implements ActivityLayoutListener {
 
@@ -39,7 +40,6 @@ public abstract class AbstractActivity extends Activity implements ActivityLayou
 		NodeInflater nodeInflater = new NodeInflater(layoutInflater);
 		x = new ActivityLayout(nodeInflater, this);
 		db = new DatabaseAdapter(this);
-		db.open();
 		em = db.em();
 	}
 	
@@ -108,10 +108,4 @@ public abstract class AbstractActivity extends Activity implements ActivityLayou
 		}
 	}
 		
-	@Override
-	protected void onDestroy() {
-		db.close();
-		super.onDestroy();		
-	}
-	
 }

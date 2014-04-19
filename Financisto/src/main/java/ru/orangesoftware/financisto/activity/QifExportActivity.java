@@ -19,15 +19,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.Spinner;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import ru.orangesoftware.financisto.R;
 import ru.orangesoftware.financisto.db.DatabaseAdapter;
 import ru.orangesoftware.financisto.model.Account;
 import ru.orangesoftware.financisto.model.MultiChoiceItem;
 import ru.orangesoftware.financisto.utils.CurrencyExportPreferences;
 import ru.orangesoftware.financisto.view.NodeInflater;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class QifExportActivity extends AbstractExportActivity implements ActivityLayoutListener {
 
@@ -53,8 +54,6 @@ public class QifExportActivity extends AbstractExportActivity implements Activit
         final ActivityLayout activityLayout = new ActivityLayout(nodeInflater, this);
 
         db = new DatabaseAdapter(this);
-        db.open();
-
         accounts = db.em().getAllAccountsList();
 
         bAccounts = (Button)findViewById(R.id.bAccounts);
@@ -66,12 +65,6 @@ public class QifExportActivity extends AbstractExportActivity implements Activit
         });
 
         clearFilter();
-    }
-
-    @Override
-    protected void onDestroy() {
-        db.close();
-        super.onDestroy();
     }
 
     @Override

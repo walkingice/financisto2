@@ -8,6 +8,13 @@
 
 package ru.orangesoftware.financisto.export.flowzr;
 
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.os.AsyncTask;
+import android.preference.PreferenceManager;
+import android.util.Log;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -15,12 +22,6 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import ru.orangesoftware.financisto.R;
 import ru.orangesoftware.financisto.activity.FlowzrSyncActivity;
 import ru.orangesoftware.financisto.db.DatabaseAdapter;
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.os.AsyncTask;
-import android.preference.PreferenceManager;
-import android.util.Log;
 
 public class FlowzrSyncTask extends AsyncTask<String, String, Object> {
 	protected final Context context;
@@ -108,15 +109,8 @@ public class FlowzrSyncTask extends AsyncTask<String, String, Object> {
     
     @Override
 	protected Object doInBackground(String... params) {
-
     	DatabaseAdapter db = new DatabaseAdapter(context);
-		db.open();
-		try {
-			return work(context, db, params);	
-		} finally {
-			db.close();
-		}			
-		
+        return work(context, db, params);
 	}
 
     @Override

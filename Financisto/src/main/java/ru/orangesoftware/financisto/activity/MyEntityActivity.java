@@ -50,8 +50,7 @@ public abstract class MyEntityActivity<T extends MyEntity> extends Activity {
 		setContentView(R.layout.project);
 
 		db = new DatabaseAdapter(this);
-		db.open();
-		
+
 		em = db.em();
 
 		Button bOK = (Button)findViewById(R.id.bOK);
@@ -94,12 +93,6 @@ public abstract class MyEntityActivity<T extends MyEntity> extends Activity {
 		title.setText(entity.title);
 	}
 
-	@Override
-	protected void onDestroy() {
-		db.close();
-		super.onDestroy();
-	}
-	
 	@Override
 	protected void onPause() {
 		super.onPause();

@@ -163,34 +163,29 @@ public class MainActivity extends TabActivity implements TabHost.OnTabChangeList
     private void initialLoad() {
         long t3, t2, t1, t0 = System.currentTimeMillis();
         DatabaseAdapter db = new DatabaseAdapter(this);
-        db.open();
+        SQLiteDatabase x = db.db();
+        x.beginTransaction();
+        t1 = System.currentTimeMillis();
         try {
-            SQLiteDatabase x = db.db();
-            x.beginTransaction();
-            t1 = System.currentTimeMillis();
-            try {
-                updateFieldInTable(x, DatabaseHelper.CATEGORY_TABLE, 0, "title", getString(R.string.no_category));
-                updateFieldInTable(x, DatabaseHelper.CATEGORY_TABLE, -1, "title", getString(R.string.split));
-                updateFieldInTable(x, DatabaseHelper.PROJECT_TABLE, 0, "title", getString(R.string.no_project));
-                updateFieldInTable(x, DatabaseHelper.LOCATIONS_TABLE, 0, "name", getString(R.string.current_location));
-                x.setTransactionSuccessful();
-            } finally {
-                x.endTransaction();
-            }
-            t2 = System.currentTimeMillis();
-            if (MyPreferences.shouldUpdateHomeCurrency(this)) {
-                db.setDefaultHomeCurrency();
-            }
-            CurrencyCache.initialize(db.em());
-            t3 = System.currentTimeMillis();
-            if (MyPreferences.shouldRebuildRunningBalance(this)) {
-                db.rebuildRunningBalances();
-            }
-            if (MyPreferences.shouldUpdateAccountsLastTransactionDate(this)) {
-                db.updateAccountsLastTransactionDate();
-            }
+            updateFieldInTable(x, DatabaseHelper.CATEGORY_TABLE, 0, "title", getString(R.string.no_category));
+            updateFieldInTable(x, DatabaseHelper.CATEGORY_TABLE, -1, "title", getString(R.string.split));
+            updateFieldInTable(x, DatabaseHelper.PROJECT_TABLE, 0, "title", getString(R.string.no_project));
+            updateFieldInTable(x, DatabaseHelper.LOCATIONS_TABLE, 0, "name", getString(R.string.current_location));
+            x.setTransactionSuccessful();
         } finally {
-            db.close();
+            x.endTransaction();
+        }
+        t2 = System.currentTimeMillis();
+        if (MyPreferences.shouldUpdateHomeCurrency(this)) {
+            db.setDefaultHomeCurrency();
+        }
+        CurrencyCache.initialize(db.em());
+        t3 = System.currentTimeMillis();
+        if (MyPreferences.shouldRebuildRunningBalance(this)) {
+            db.rebuildRunningBalances();
+        }
+        if (MyPreferences.shouldUpdateAccountsLastTransactionDate(this)) {
+            db.updateAccountsLastTransactionDate();
         }
         long t4 = System.currentTimeMillis();
         Log.d("Financisto", "Load time = " + (t4 - t0) + "ms = " + (t2 - t1) + "ms+" + (t3 - t2) + "ms+" + (t4 - t3) + "ms");

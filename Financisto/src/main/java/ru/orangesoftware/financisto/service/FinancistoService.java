@@ -20,9 +20,10 @@ import android.database.Cursor;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.util.Log;
+
 import com.commonsware.cwac.wakeful.WakefulIntentService;
-import ru.orangesoftware.financisto.export.flowzr.FlowzrSyncEngine;
-import ru.orangesoftware.financisto.export.flowzr.FlowzrSyncOptions;
+
+import java.util.Date;
 
 import ru.orangesoftware.financisto.R;
 import ru.orangesoftware.financisto.activity.AbstractTransactionActivity;
@@ -30,15 +31,15 @@ import ru.orangesoftware.financisto.activity.AccountWidget;
 import ru.orangesoftware.financisto.activity.MassOpActivity;
 import ru.orangesoftware.financisto.backup.DatabaseExport;
 import ru.orangesoftware.financisto.blotter.BlotterFilter;
-import ru.orangesoftware.financisto.filter.WhereFilter;
 import ru.orangesoftware.financisto.db.DatabaseAdapter;
 import ru.orangesoftware.financisto.export.Export;
-import ru.orangesoftware.financisto.model.TransactionStatus;
+import ru.orangesoftware.financisto.export.flowzr.FlowzrSyncEngine;
+import ru.orangesoftware.financisto.export.flowzr.FlowzrSyncOptions;
+import ru.orangesoftware.financisto.filter.WhereFilter;
 import ru.orangesoftware.financisto.model.TransactionInfo;
+import ru.orangesoftware.financisto.model.TransactionStatus;
 import ru.orangesoftware.financisto.recur.NotificationOptions;
 import ru.orangesoftware.financisto.utils.MyPreferences;
-
-import java.util.Date;
 
 import static ru.orangesoftware.financisto.service.DailyAutoBackupScheduler.scheduleNextAutoBackup;
 import static ru.orangesoftware.financisto.service.FlowzrAutoSyncScheduler.scheduleNextAutoSync;
@@ -66,18 +67,8 @@ public class FinancistoService extends WakefulIntentService {
     public void onCreate() {
         super.onCreate();
         db = new DatabaseAdapter(this);
-        db.open();
         scheduler = new RecurrenceScheduler(db);
-        Log.i(TAG, "Created Finacisto service ...");
-    }
-
-    @Override
-    public void onDestroy() {
-        if (db != null) {
-            db.close();
-        }
-        Log.i(TAG, "Finacisto service ...");
-        super.onDestroy();
+        Log.i(TAG, "Created Financisto service ...");
     }
 
     @Override

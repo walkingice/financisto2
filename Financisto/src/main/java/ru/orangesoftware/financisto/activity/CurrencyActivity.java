@@ -20,6 +20,9 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
+
+import java.text.DecimalFormatSymbols;
+
 import ru.orangesoftware.financisto.R;
 import ru.orangesoftware.financisto.db.DatabaseAdapter;
 import ru.orangesoftware.financisto.db.MyEntityManager;
@@ -27,8 +30,6 @@ import ru.orangesoftware.financisto.model.Currency;
 import ru.orangesoftware.financisto.model.SymbolFormat;
 import ru.orangesoftware.financisto.utils.CurrencyCache;
 import ru.orangesoftware.financisto.utils.PinProtection;
-
-import java.text.DecimalFormatSymbols;
 
 import static ru.orangesoftware.financisto.utils.Utils.checkEditText;
 import static ru.orangesoftware.financisto.utils.Utils.text;
@@ -66,7 +67,6 @@ public class CurrencyActivity extends Activity {
 		setFeatureDrawableResource(Window.FEATURE_LEFT_ICON, R.drawable.ic_dialog_currency);
 
 		db = new DatabaseAdapter(this);
-		db.open();
 		em = db.em();
 
         name = (EditText)findViewById(R.id.name);
@@ -167,12 +167,6 @@ public class CurrencyActivity extends Activity {
 		return d;
 	}
 
-	@Override
-	protected void onDestroy() {
-		db.close();
-		super.onDestroy();
-	}
-	
 	@Override
 	protected void onPause() {
 		super.onPause();

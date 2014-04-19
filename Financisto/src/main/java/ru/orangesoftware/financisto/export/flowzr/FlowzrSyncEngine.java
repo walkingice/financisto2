@@ -150,8 +150,7 @@ public class FlowzrSyncEngine  {
     	this.flowzrSyncActivity=a;
     	FlowzrSyncActivity.isRunning=true;
         this.dba = new DatabaseAdapter(context);
-        dba.open();
-    	this.em=dba.em();		
+    	this.em=dba.em();
         this.db = dba.db();	
 		
         if (flowzrSyncActivity==null) {

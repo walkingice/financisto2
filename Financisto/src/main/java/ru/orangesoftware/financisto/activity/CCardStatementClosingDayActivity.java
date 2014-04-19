@@ -1,11 +1,5 @@
 package ru.orangesoftware.financisto.activity;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-
-import ru.orangesoftware.financisto.R;
-import ru.orangesoftware.financisto.db.DatabaseAdapter;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -17,6 +11,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TextView;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+
+import ru.orangesoftware.financisto.R;
+import ru.orangesoftware.financisto.db.DatabaseAdapter;
 
 /**
  * @author Abdsandryk
@@ -77,21 +78,11 @@ public class CCardStatementClosingDayActivity extends Activity {
     }
     
     /**
-     * When activity lifecycle ends, release resources
-     */
-    @Override
-    public void onDestroy() {
-    	dbAdapter.close();
-    	super.onDestroy();
-    }
-    
-    /**
      * Initialize data and GUI elements.
      */
     private void initialize() {
 		dbAdapter = new DatabaseAdapter(this);
-		dbAdapter.open();
-		
+
     	customCD = (RadioButton)findViewById(R.id.custom_closing_day);
     	regularCD = (RadioButton)findViewById(R.id.regular_closing_day);
     	newClosingDay = (EditText)findViewById(R.id.new_closing_day);
