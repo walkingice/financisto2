@@ -15,6 +15,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
+import org.androidannotations.annotations.Bean;
+import org.androidannotations.annotations.EBean;
+
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
@@ -26,20 +29,25 @@ import ru.orangesoftware.financisto.model.CardIssuer;
 import ru.orangesoftware.financisto.utils.MyPreferences;
 import ru.orangesoftware.financisto.utils.Utils;
 
+@EBean
 public class AccountListAdapter2 extends BaseAdapter {
 
-    private final List<Account> accounts;
+    @Bean
+	public Utils u;
 
-	private final Utils u;
-	private DateFormat df;
+    private DateFormat df;
     private boolean isShowAccountLastTransactionDate;
 
-	public AccountListAdapter2(Context context, List<Account> accounts) {
-        this.accounts = accounts;
-		this.u = new Utils(context);
+    private List<Account> accounts;
+
+	public AccountListAdapter2(Context context) {
 		this.df = DateUtils.getShortDateFormat(context);
         this.isShowAccountLastTransactionDate = MyPreferences.isShowAccountLastTransactionDate(context);
-	}		
+	}
+
+    public void initAccounts(List<Account> accounts) {
+        this.accounts = accounts;
+    }
 
     @Override
     public int getCount() {

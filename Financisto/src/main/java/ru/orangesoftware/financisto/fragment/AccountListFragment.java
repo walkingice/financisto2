@@ -1,15 +1,14 @@
 package ru.orangesoftware.financisto.fragment;
 
-import android.content.Intent;
-
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.OptionsItem;
 import org.androidannotations.annotations.OptionsMenu;
 
 import ru.orangesoftware.financisto.R;
-import ru.orangesoftware.financisto.activity.AccountActivity;
+import ru.orangesoftware.financisto.activity.AccountActivity_;
 import ru.orangesoftware.financisto.adapter.AccountListAdapter2;
+import ru.orangesoftware.financisto.adapter.AccountListAdapter2_;
 import ru.orangesoftware.financisto.bus.AccountList;
 import ru.orangesoftware.financisto.bus.GetAccountList;
 
@@ -23,14 +22,14 @@ public class AccountListFragment extends AbstractListFragment {
     }
 
     public void onEventMainThread(AccountList event) {
-        AccountListAdapter2 adapter = new AccountListAdapter2(getActivity(), event.accounts);
+        AccountListAdapter2 adapter = AccountListAdapter2_.getInstance_(getActivity());
+        adapter.initAccounts(event.accounts);
         setListAdapter(adapter);
     }
 
     @OptionsItem(R.id.menu_add_account)
     public void addAccount() {
-        Intent intent = new Intent(getActivity(), AccountActivity.class);
-        startActivity(intent);
+        AccountActivity_.intent(this).start();
     }
 
 }

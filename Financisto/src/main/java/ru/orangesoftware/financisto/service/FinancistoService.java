@@ -23,6 +23,9 @@ import android.util.Log;
 
 import com.commonsware.cwac.wakeful.WakefulIntentService;
 
+import org.androidannotations.annotations.Bean;
+import org.androidannotations.annotations.EService;
+
 import java.util.Date;
 
 import ru.orangesoftware.financisto.R;
@@ -44,6 +47,7 @@ import ru.orangesoftware.financisto.utils.MyPreferences;
 import static ru.orangesoftware.financisto.service.DailyAutoBackupScheduler.scheduleNextAutoBackup;
 import static ru.orangesoftware.financisto.service.FlowzrAutoSyncScheduler.scheduleNextAutoSync;
 
+@EService
 public class FinancistoService extends WakefulIntentService {
 
 	private static final String TAG = "FinancistoService";
@@ -56,8 +60,11 @@ public class FinancistoService extends WakefulIntentService {
     
 	private static final int RESTORED_NOTIFICATION_ID = 0;
 
-	private DatabaseAdapter db;
-    private RecurrenceScheduler scheduler;
+    @Bean
+	public DatabaseAdapter db;
+
+    @Bean
+    public RecurrenceScheduler scheduler;
 
     public FinancistoService() {
         super(TAG);
@@ -66,8 +73,6 @@ public class FinancistoService extends WakefulIntentService {
     @Override
     public void onCreate() {
         super.onCreate();
-        db = new DatabaseAdapter(this);
-        scheduler = new RecurrenceScheduler(db);
         Log.i(TAG, "Created Financisto service ...");
     }
 

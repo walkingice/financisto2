@@ -14,15 +14,17 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.TextView;
+
+import java.util.ArrayList;
+
 import ru.orangesoftware.financisto.R;
 import ru.orangesoftware.financisto.db.DatabaseHelper;
 import ru.orangesoftware.financisto.db.MyEntityManager;
+import ru.orangesoftware.financisto.db.MyEntityManager_;
 import ru.orangesoftware.financisto.model.MyEntity;
 import ru.orangesoftware.financisto.model.Project;
 import ru.orangesoftware.financisto.utils.MyPreferences;
 import ru.orangesoftware.financisto.utils.TransactionUtils;
-
-import java.util.ArrayList;
 
 import static ru.orangesoftware.financisto.activity.AbstractActivity.setVisibility;
 
@@ -45,9 +47,9 @@ public class ProjectSelector {
 
     private long selectedProjectId = 0;
 
-    public ProjectSelector(Activity activity, MyEntityManager em, ActivityLayout x) {
+    public ProjectSelector(Activity activity, ActivityLayout x) {
         this.activity = activity;
-        this.em = em;
+        this.em = MyEntityManager_.getInstance_(activity);
         this.x = x;
         this.isShowProject = MyPreferences.isShowProject(activity);
     }

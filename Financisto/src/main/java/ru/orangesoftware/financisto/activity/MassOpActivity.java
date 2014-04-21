@@ -8,15 +8,21 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.*;
-import ru.orangesoftware.financisto.R;
-import ru.orangesoftware.financisto.adapter.BlotterListAdapter;
-import ru.orangesoftware.financisto.filter.WhereFilter;
-import ru.orangesoftware.financisto.db.DatabaseAdapter;
-import ru.orangesoftware.financisto.utils.EnumUtils;
-import ru.orangesoftware.financisto.utils.LocalizableEnum;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ListAdapter;
+import android.widget.Spinner;
+import android.widget.Toast;
 
 import java.util.Arrays;
+
+import ru.orangesoftware.financisto.R;
+import ru.orangesoftware.financisto.adapter.BlotterListAdapter;
+import ru.orangesoftware.financisto.adapter.BlotterListAdapter_;
+import ru.orangesoftware.financisto.db.DatabaseAdapter;
+import ru.orangesoftware.financisto.filter.WhereFilter;
+import ru.orangesoftware.financisto.utils.EnumUtils;
+import ru.orangesoftware.financisto.utils.LocalizableEnum;
 
 public class MassOpActivity extends BlotterActivity {
 
@@ -105,7 +111,10 @@ public class MassOpActivity extends BlotterActivity {
 
 	@Override
 	protected ListAdapter createAdapter(Cursor cursor) {
-		return new BlotterListAdapter(this, db, R.layout.blotter_mass_op_list_item, cursor, true);
+        BlotterListAdapter_ adapter = BlotterListAdapter_.getInstance_(this);
+        adapter.initWithCursor(cursor);
+        adapter.initWithItemLayout(R.layout.blotter_mass_op_list_item);
+        return adapter;
 	}
 
 	private enum MassOp implements LocalizableEnum{

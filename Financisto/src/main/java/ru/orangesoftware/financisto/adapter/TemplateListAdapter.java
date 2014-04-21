@@ -10,16 +10,19 @@
  ******************************************************************************/
 package ru.orangesoftware.financisto.adapter;
 
-import ru.orangesoftware.financisto.R;
 import android.content.Context;
 import android.database.Cursor;
 import android.view.View;
+
+import ru.orangesoftware.financisto.R;
 import ru.orangesoftware.financisto.db.DatabaseAdapter;
 
 public class TemplateListAdapter extends BlotterListAdapter {
 
 	public TemplateListAdapter(Context context, DatabaseAdapter db, Cursor c) {
-		super(context, db, R.layout.template_list_item, c);
+		super(context);
+        initWithCursor(c);
+        initWithItemLayout(R.layout.template_list_item);
 	}
 
     @Override

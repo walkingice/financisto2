@@ -17,19 +17,30 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.*;
+import android.widget.AdapterView;
+import android.widget.ImageButton;
+import android.widget.ListAdapter;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.List;
+
 import greendroid.widget.QuickActionGrid;
 import greendroid.widget.QuickActionWidget;
 import ru.orangesoftware.financisto.R;
-import ru.orangesoftware.financisto.adapter.BlotterListAdapter;
+import ru.orangesoftware.financisto.adapter.BlotterListAdapter_;
 import ru.orangesoftware.financisto.adapter.TransactionsListAdapter;
 import ru.orangesoftware.financisto.blotter.AccountTotalCalculationTask;
 import ru.orangesoftware.financisto.blotter.BlotterTotalCalculationTask;
 import ru.orangesoftware.financisto.blotter.TotalCalculationTask;
-import ru.orangesoftware.financisto.filter.WhereFilter;
 import ru.orangesoftware.financisto.dialog.TransactionInfoDialog;
+import ru.orangesoftware.financisto.filter.WhereFilter;
 import ru.orangesoftware.financisto.model.Account;
 import ru.orangesoftware.financisto.model.AccountType;
 import ru.orangesoftware.financisto.model.Transaction;
@@ -37,8 +48,6 @@ import ru.orangesoftware.financisto.utils.ExecutableEntityEnum;
 import ru.orangesoftware.financisto.utils.MenuItemInfo;
 import ru.orangesoftware.financisto.utils.MyPreferences;
 import ru.orangesoftware.financisto.view.NodeInflater;
-
-import java.util.List;
 
 import static ru.orangesoftware.financisto.utils.AndroidUtils.isGreenDroidSupported;
 import static ru.orangesoftware.financisto.utils.EnumUtils.showPickOneDialog;
@@ -360,7 +369,7 @@ public class BlotterActivity extends AbstractListActivity {
 		if (accountId != -1) {
 			return new TransactionsListAdapter(this, db, cursor);
 		} else {
-			return new BlotterListAdapter(this, db, cursor);
+			return BlotterListAdapter_.getInstance_(this);
 		}		
 	}
 	

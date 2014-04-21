@@ -18,6 +18,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.util.Log;
 
+import org.androidannotations.annotations.Bean;
+import org.androidannotations.annotations.EBean;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -86,22 +89,21 @@ import static ru.orangesoftware.financisto.db.DatabaseHelper.V_BLOTTER;
 import static ru.orangesoftware.financisto.db.DatabaseHelper.V_BLOTTER_FOR_ACCOUNT_WITH_SPLITS;
 import static ru.orangesoftware.financisto.db.DatabaseHelper.V_CATEGORY;
 
+@EBean(scope = EBean.Scope.Singleton)
 public class DatabaseAdapter {
 
 	private final Context context;
-    private final DatabaseHelper dbHelper;
-	private final MyEntityManager em;
+
+    @Bean
+    public DatabaseHelper dbHelper;
+
+    @Bean
+    public MyEntityManager em;
 
     private boolean updateAccountBalance = true;
 
-    public DatabaseAdapter(Context context) {
-        this(context, DatabaseHelper.getHelper(context));
-    }
-
-	public DatabaseAdapter(Context context, DatabaseHelper dbHelper) {
+	public DatabaseAdapter(Context context) {
 		this.context = context;
-        this.dbHelper = dbHelper;
-        this.em = new MyEntityManager(context, dbHelper);
 	}
 	
 	public SQLiteDatabase db() {

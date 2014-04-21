@@ -9,17 +9,18 @@ package ru.orangesoftware.financisto.backup;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
-import ru.orangesoftware.financisto.db.DatabaseAdapter;
-import ru.orangesoftware.financisto.db.MyEntityManager;
-import ru.orangesoftware.financisto.service.RecurrenceScheduler;
-import ru.orangesoftware.financisto.utils.CurrencyCache;
-import ru.orangesoftware.financisto.utils.IntegrityFix;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
+
+import ru.orangesoftware.financisto.db.DatabaseAdapter;
+import ru.orangesoftware.financisto.db.MyEntityManager;
+import ru.orangesoftware.financisto.service.RecurrenceScheduler;
+import ru.orangesoftware.financisto.service.RecurrenceScheduler_;
+import ru.orangesoftware.financisto.utils.CurrencyCache;
+import ru.orangesoftware.financisto.utils.IntegrityFix;
 
 import static ru.orangesoftware.financisto.backup.Backup.tableHasSystemIds;
 
@@ -74,7 +75,7 @@ public abstract class FullDatabaseImport {
     }
 
     private void scheduleAll() {
-        RecurrenceScheduler scheduler = new RecurrenceScheduler(dbAdapter);
+        RecurrenceScheduler scheduler = RecurrenceScheduler_.getInstance_(context);
         scheduler.scheduleAll(context);
 	}
 

@@ -12,17 +12,12 @@ package ru.orangesoftware.financisto.db;
 
 import android.content.Context;
 
+import org.androidannotations.annotations.EBean;
+
 import static ru.orangesoftware.financisto.utils.EnumUtils.asStringArray;
 
+@EBean(scope = EBean.Scope.Singleton)
 public class DatabaseHelper extends DatabaseSchemaEvolution {
-
-    private static DatabaseHelper instance;
-
-    public static synchronized DatabaseHelper getHelper(Context context) {
-        if (instance == null)
-            instance = new DatabaseHelper(context);
-        return instance;
-    }
 
 	public DatabaseHelper(Context context) {
 		super(context, Database.DATABASE_NAME, null, Database.DATABASE_VERSION);

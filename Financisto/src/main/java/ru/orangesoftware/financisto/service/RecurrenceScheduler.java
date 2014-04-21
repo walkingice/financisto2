@@ -15,6 +15,16 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+
+import org.androidannotations.annotations.Bean;
+import org.androidannotations.annotations.EBean;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
+
 import ru.orangesoftware.financisto.db.DatabaseAdapter;
 import ru.orangesoftware.financisto.db.MyEntityManager;
 import ru.orangesoftware.financisto.model.RestoredTransaction;
@@ -25,8 +35,7 @@ import ru.orangesoftware.financisto.recur.DateRecurrenceIterator;
 import ru.orangesoftware.financisto.recur.Recurrence;
 import ru.orangesoftware.financisto.utils.MyPreferences;
 
-import java.util.*;
-
+@EBean(scope = EBean.Scope.Singleton)
 public class RecurrenceScheduler {
 
     private static final String TAG = "RecurrenceScheduler";
@@ -35,13 +44,11 @@ public class RecurrenceScheduler {
 
     public static final String SCHEDULED_TRANSACTION_ID = "scheduledTransactionId";
 
-    private final DatabaseAdapter db;
-    private final MyEntityManager em;
+    @Bean
+    public DatabaseAdapter db;
 
-    public RecurrenceScheduler(DatabaseAdapter db) {
-        this.db = db;
-        this.em = db.em();
-    }
+    @Bean
+    public MyEntityManager em;
 
     public int scheduleAll(Context context) {
         long now = System.currentTimeMillis();

@@ -30,25 +30,59 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
-import android.widget.*;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListAdapter;
+import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
+import android.widget.TimePicker;
+
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.EActivity;
+
+import java.io.File;
+import java.text.DateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
 import ru.orangesoftware.financisto.R;
 import ru.orangesoftware.financisto.datetime.DateUtils;
-import ru.orangesoftware.financisto.db.DatabaseHelper.*;
-import ru.orangesoftware.financisto.model.*;
+import ru.orangesoftware.financisto.db.DatabaseHelper.AccountColumns;
+import ru.orangesoftware.financisto.db.DatabaseHelper.TransactionColumns;
+import ru.orangesoftware.financisto.model.Account;
+import ru.orangesoftware.financisto.model.Attribute;
+import ru.orangesoftware.financisto.model.Category;
+import ru.orangesoftware.financisto.model.MyLocation;
+import ru.orangesoftware.financisto.model.Payee;
+import ru.orangesoftware.financisto.model.SystemAttribute;
+import ru.orangesoftware.financisto.model.Transaction;
+import ru.orangesoftware.financisto.model.TransactionAttribute;
+import ru.orangesoftware.financisto.model.TransactionStatus;
 import ru.orangesoftware.financisto.recur.NotificationOptions;
 import ru.orangesoftware.financisto.recur.Recurrence;
-import ru.orangesoftware.financisto.utils.*;
+import ru.orangesoftware.financisto.utils.EnumUtils;
+import ru.orangesoftware.financisto.utils.MyPreferences;
+import ru.orangesoftware.financisto.utils.TransactionUtils;
+import ru.orangesoftware.financisto.utils.Utils;
 import ru.orangesoftware.financisto.view.AttributeView;
 import ru.orangesoftware.financisto.view.AttributeViewFactory;
 import ru.orangesoftware.financisto.widget.RateLayoutView;
 
-import java.io.File;
-import java.text.DateFormat;
-import java.util.*;
-
-import static ru.orangesoftware.financisto.utils.ThumbnailUtil.*;
+import static ru.orangesoftware.financisto.utils.ThumbnailUtil.PICTURES_DIR;
+import static ru.orangesoftware.financisto.utils.ThumbnailUtil.PICTURES_THUMB_DIR;
+import static ru.orangesoftware.financisto.utils.ThumbnailUtil.PICTURE_FILE_NAME_FORMAT;
+import static ru.orangesoftware.financisto.utils.ThumbnailUtil.createAndStoreImageThumbnail;
 import static ru.orangesoftware.financisto.utils.Utils.text;
 
+@EActivity
 public abstract class AbstractTransactionActivity extends AbstractActivity implements CategorySelector.CategorySelectorListener {
 	
 	public static final String TRAN_ID_EXTRA = "tranId";
@@ -133,17 +167,19 @@ public abstract class AbstractTransactionActivity extends AbstractActivity imple
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		
-		df = DateUtils.getLongDateFormat(this);
-		tf = DateUtils.getTimeFormat(this);
-		
-		long t0 = System.currentTimeMillis();
-		
-		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-		
-		setContentView(getLayoutId());
-		
+        super.onCreate(savedInstanceState);
+
+        df = DateUtils.getLongDateFormat(this);
+        tf = DateUtils.getTimeFormat(this);
+
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+        setContentView(getLayoutId());
+    }
+
+    @AfterViews
+    public void initViews() {
+        long t0 = System.currentTimeMillis();
+
 		isRememberLastAccount = MyPreferences.isRememberAccount(this);
 		isRememberLastCategory = isRememberLastAccount && MyPreferences.isRememberCategory(this);
 		isRememberLastLocation = isRememberLastCategory && MyPreferences.isRememberLocation(this);
@@ -154,11 +190,11 @@ public abstract class AbstractTransactionActivity extends AbstractActivity imple
 		isShowIsCCardPayment = MyPreferences.isShowIsCCardPayment(this);
         isOpenCalculatorForTemplates = MyPreferences.isOpenCalculatorForTemplates(this);
 
-        categorySelector = new CategorySelector(this, db, x);
+        categorySelector = new CategorySelector(this, x);
         categorySelector.setListener(this);
         fetchCategories();
 
-        projectSelector = new ProjectSelector(this, em, x);
+        projectSelector = new ProjectSelector(this, x);
         projectSelector.fetchProjects();
 
 		if (isShowLocation) {
@@ -324,6 +360,9 @@ public abstract class AbstractTransactionActivity extends AbstractActivity imple
 		Log.i("TransactionActivity", "onCreate "+(t1-t0)+"ms");
 	}
 
+    protected void internalOnCreate() {
+    }
+
     protected void createPayeeNode(LinearLayout layout) {
         payeeAdapter = TransactionUtils.createPayeeAdapter(this, db);
         payeeText = new AutoCompleteTextView(this);
@@ -378,9 +417,6 @@ public abstract class AbstractTransactionActivity extends AbstractActivity imple
         }
         return attributes;
     }
-
-    protected void internalOnCreate() {
-	}
 
 	protected void selectCurrentLocation(boolean forceUseGps) {
         setCurrentLocation = true;

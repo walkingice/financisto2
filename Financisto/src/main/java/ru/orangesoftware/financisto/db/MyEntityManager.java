@@ -14,7 +14,8 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
+
+import org.androidannotations.annotations.EBean;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -54,13 +55,14 @@ import static ru.orangesoftware.financisto.db.DatabaseHelper.BUDGET_TABLE;
 import static ru.orangesoftware.financisto.db.DatabaseHelper.CURRENCY_TABLE;
 import static ru.orangesoftware.financisto.utils.StringUtil.capitalize;
 
+@EBean(scope = EBean.Scope.Singleton)
 public class MyEntityManager extends EntityManager {
-	
-	private final Context context;
-	
-	public MyEntityManager(Context context, SQLiteOpenHelper dbHelper) {
-		super(dbHelper);
-		this.context = context;
+
+	public final Context context;
+
+	public MyEntityManager(Context context) {
+		super(DatabaseHelper_.getInstance_(context));
+        this.context = context;
 	}
 	
 	private <T extends MyEntity> ArrayList<T> getAllEntitiesList(Class<T> clazz, boolean include0) {

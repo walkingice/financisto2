@@ -4,6 +4,8 @@
     <color name="holo_blue_light">#ff33b5e5</color>
     <!-- A light Holo shade of gray -->
     <color name="holo_gray_light">#33999999</color>
+    <!-- A dark Holo shade of gray -->
+    <color name="holo_gray_dark">@android:color/secondary_text_light</color>
     <!-- A light Holo shade of green -->
     <color name="holo_green_light">#ff99cc00</color>
     <!-- A light Holo shade of red -->
@@ -25,12 +27,14 @@
     <!-- A really bright Holo shade of gray -->
     <color name="holo_gray_bright">#33CCCCCC</color>
 
-    <color name="scheduled">#7cc623</color>
-    <color name="positive_amount">#39b54a</color>
-    <color name="negative_amount">#f26522</color>
-    <color name="transfer_color">#f7941d</color>
-    <color name="future_color">#fff200</color>
-    <color name="restored_transaction_color">#df0024</color>
+    <color name="scheduled">@color/holo_green_dark</color>
+    <color name="zero_amount">@color/holo_gray_dark</color>
+    <color name="balance_amount">@color/holo_gray_dark</color>
+    <color name="positive_amount">@color/holo_green_dark</color>
+    <color name="negative_amount">@color/holo_red_dark</color>
+    <color name="transfer_color">@color/holo_orange_dark</color>
+    <color name="future_color">@color/holo_orange_light</color>
+    <color name="restored_transaction_color">@color/holo_red_dark</color>
     <color name="pending_transaction_color">#303030</color>
     <color name="unreconciled_transaction_color">#737373</color>
     <color name="reconciled_transaction_color">#006a25</color>

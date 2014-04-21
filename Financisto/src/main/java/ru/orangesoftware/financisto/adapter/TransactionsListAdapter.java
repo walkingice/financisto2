@@ -26,7 +26,8 @@ import static ru.orangesoftware.financisto.utils.TransactionTitleUtils.generateT
 public class TransactionsListAdapter extends BlotterListAdapter {
 	
 	public TransactionsListAdapter(Context context, DatabaseAdapter db, Cursor c) {
-		super(context, db, c);
+		super(context);
+        initWithCursor(c);
 	}
 
     @Override

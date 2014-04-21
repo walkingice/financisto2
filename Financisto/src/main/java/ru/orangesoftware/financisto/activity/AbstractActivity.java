@@ -17,6 +17,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Toast;
 
+import org.androidannotations.annotations.Bean;
+import org.androidannotations.annotations.EActivity;
+
 import java.util.List;
 
 import ru.orangesoftware.financisto.db.DatabaseAdapter;
@@ -25,9 +28,13 @@ import ru.orangesoftware.financisto.model.MultiChoiceItem;
 import ru.orangesoftware.financisto.utils.PinProtection;
 import ru.orangesoftware.financisto.view.NodeInflater;
 
+@EActivity
 public abstract class AbstractActivity extends Activity implements ActivityLayoutListener {
 
+    @Bean
 	protected DatabaseAdapter db;
+
+    @Bean
 	protected MyEntityManager em;
 	
 	protected ActivityLayout x;
@@ -35,12 +42,9 @@ public abstract class AbstractActivity extends Activity implements ActivityLayou
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
 		LayoutInflater layoutInflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		NodeInflater nodeInflater = new NodeInflater(layoutInflater);
 		x = new ActivityLayout(nodeInflater, this);
-		db = new DatabaseAdapter(this);
-		em = db.em();
 	}
 	
 	@Override

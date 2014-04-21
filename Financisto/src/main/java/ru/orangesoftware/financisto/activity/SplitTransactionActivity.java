@@ -4,15 +4,16 @@ import android.content.Intent;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import ru.orangesoftware.financisto.R;
 import ru.orangesoftware.financisto.model.Category;
 import ru.orangesoftware.financisto.model.Currency;
 import ru.orangesoftware.financisto.model.TransactionAttribute;
 import ru.orangesoftware.financisto.widget.AmountInput;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by IntelliJ IDEA.
@@ -49,7 +50,7 @@ public class SplitTransactionActivity extends AbstractSplitActivity implements C
 
     @Override
     protected void fetchData() {
-        categorySelector = new CategorySelector(this, db, x);
+        categorySelector = new CategorySelector(this, x);
         categorySelector.setListener(this);
         categorySelector.doNotShowSplitCategory();
         categorySelector.fetchCategories(false);

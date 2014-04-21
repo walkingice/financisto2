@@ -2,30 +2,34 @@ package ru.orangesoftware.financisto.bus;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.widget.ListAdapter;
+
+import org.androidannotations.annotations.Bean;
+import org.androidannotations.annotations.EBean;
 
 import java.util.List;
 
-import ru.orangesoftware.financisto.adapter.BlotterListAdapter;
-import ru.orangesoftware.financisto.adapter.TransactionsListAdapter;
 import ru.orangesoftware.financisto.db.DatabaseAdapter;
 import ru.orangesoftware.financisto.db.MyEntityManager;
 import ru.orangesoftware.financisto.filter.WhereFilter;
 import ru.orangesoftware.financisto.model.Account;
 import ru.orangesoftware.financisto.utils.MyPreferences;
 
+@EBean(scope = EBean.Scope.Singleton)
 public class UIEventHandler {
 
     private final Context context;
-    private final DatabaseAdapter db;
-    private final MyEntityManager em;
-    private final GreenRobotBus bus;
 
-    public UIEventHandler(Context context, DatabaseAdapter db, GreenRobotBus bus) {
+    @Bean
+    public DatabaseAdapter db;
+
+    @Bean
+    public MyEntityManager em;
+
+    @Bean
+    public GreenRobotBus bus;
+
+    public UIEventHandler(Context context) {
         this.context = context;
-        this.db = db;
-        this.bus = bus;
-        this.em = db.em();
     }
 
     public void onEventBackgroundThread(GetAccountList event) {

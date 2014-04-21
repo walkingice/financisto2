@@ -39,26 +39,13 @@ public class MainActivity2 extends FragmentActivity {
 
         final ActionBar actionBar = getActionBar();
         actionBar.setHomeButtonEnabled(false);
-        //actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
         PagerTabStrip pagerTabStrip = (PagerTabStrip)findViewById(R.id.pager_strip);
         pagerTabStrip.setDrawFullUnderline(true);
-        //pagerTabStrip.setTabIndicatorColor(android.R.drawable.tab_indicator_ab_demo_search);
 
         pagerAdapter = new AppSectionsPagerAdapter(getSupportFragmentManager(), this);
         pager = (ViewPager) findViewById(R.id.pager);
         pager.setAdapter(pagerAdapter);
-        pager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-            @Override
-            public void onPageSelected(int position) {
-                //actionBar.setSelectedNavigationItem(position);
-            }
-        });
-
-        for (int i = 0; i < pagerAdapter.getCount(); i++) {
-            //actionBar.addTab(actionBar.newTab().setText(pagerAdapter.getPageTitle(i)).setTabListener(this));
-        }
-
     }
 
     public static class AppSectionsPagerAdapter extends FragmentPagerAdapter {
@@ -82,7 +69,7 @@ public class MainActivity2 extends FragmentActivity {
 
         @Override
         public int getCount() {
-            return 4;
+            return 2;
         }
 
         @Override

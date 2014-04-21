@@ -19,6 +19,9 @@ import android.text.InputType;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.*;
+
+import org.androidannotations.annotations.EActivity;
+
 import ru.orangesoftware.financisto.R;
 import ru.orangesoftware.financisto.adapter.EntityEnumAdapter;
 import ru.orangesoftware.financisto.model.*;
@@ -28,6 +31,7 @@ import ru.orangesoftware.financisto.widget.AmountInput;
 
 import static ru.orangesoftware.financisto.utils.Utils.text;
 
+@EActivity
 public class AccountActivity extends AbstractActivity {
 	
 	public static final String ACCOUNT_ID_EXTRA = "accountId";

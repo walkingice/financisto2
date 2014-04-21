@@ -16,10 +16,18 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
 import ru.orangesoftware.financisto.R;
 import ru.orangesoftware.financisto.db.DatabaseAdapter;
+import ru.orangesoftware.financisto.db.DatabaseAdapter_;
 import ru.orangesoftware.financisto.db.DatabaseHelper;
 import ru.orangesoftware.financisto.db.MyEntityManager;
+import ru.orangesoftware.financisto.db.MyEntityManager_;
 import ru.orangesoftware.financisto.model.Attribute;
 import ru.orangesoftware.financisto.model.Category;
 import ru.orangesoftware.financisto.model.Transaction;
@@ -28,13 +36,6 @@ import ru.orangesoftware.financisto.utils.TransactionUtils;
 import ru.orangesoftware.financisto.view.AttributeView;
 import ru.orangesoftware.financisto.view.AttributeViewFactory;
 
-import java.util.*;
-
-/**
- * Created by IntelliJ IDEA.
- * User: denis.solonenko
- * Date: 7/4/12 5:35 PM
- */
 public class CategorySelector {
 
     private final Activity activity;
@@ -51,10 +52,10 @@ public class CategorySelector {
     private CategorySelectorListener listener;
     private boolean showSplitCategory = true;
 
-    public CategorySelector(Activity activity, DatabaseAdapter db, ActivityLayout x) {
+    public CategorySelector(Activity activity, ActivityLayout x) {
         this.activity = activity;
-        this.db = db;
-        this.em = db.em();
+        this.db = DatabaseAdapter_.getInstance_(activity);
+        this.em = MyEntityManager_.getInstance_(activity);
         this.x = x;
     }
 

@@ -14,7 +14,6 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
@@ -24,34 +23,39 @@ import android.text.style.TextAppearanceSpan;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import org.androidannotations.annotations.EBean;
+import org.androidannotations.annotations.res.ColorRes;
+
+import java.math.BigDecimal;
+
 import ru.orangesoftware.financisto.R;
 import ru.orangesoftware.financisto.model.Account;
 import ru.orangesoftware.financisto.model.Currency;
 import ru.orangesoftware.financisto.model.Total;
 
-import java.math.BigDecimal;
-
+@EBean(scope = EBean.Scope.Singleton)
 public class Utils {
 	
 	public static final BigDecimal HUNDRED = new BigDecimal(100);
     public static final String TRANSFER_DELIMITER = " \u00BB ";
 
-    private static final int zeroColor = Resources.getSystem().getColor(android.R.color.secondary_text_dark);
-
-    private final Context context;
     private final StringBuilder sb = new StringBuilder();
 
-	private final int positiveColor;
-	private final int negativeColor;	
-    private final int transferColor;
-    private final int futureColor;
+    private final Context context;
+
+    @ColorRes(R.color.zero_amount)
+    public int zeroColor;
+    @ColorRes(R.color.positive_amount)
+    public int positiveColor;
+    @ColorRes(R.color.negative_amount)
+    public int negativeColor;
+    @ColorRes(R.color.transfer_color)
+    public int transferColor;
+    @ColorRes(R.color.future_color)
+    public int futureColor;
 
 	public Utils(Context context) {
-		Resources r = context.getResources();
-		this.positiveColor = r.getColor(R.color.positive_amount);
-		this.negativeColor = r.getColor(R.color.negative_amount);
-        this.transferColor = r.getColor(R.color.transfer_color);
-        this.futureColor = r.getColor(R.color.future_color);
         this.context = context;
 	}
 

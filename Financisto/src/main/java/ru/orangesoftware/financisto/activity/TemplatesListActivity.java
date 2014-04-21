@@ -10,15 +10,17 @@
  ******************************************************************************/
 package ru.orangesoftware.financisto.activity;
 
-import android.widget.ListAdapter;
-import ru.orangesoftware.financisto.R;
-import ru.orangesoftware.financisto.adapter.BlotterListAdapter;
-import ru.orangesoftware.financisto.blotter.BlotterFilter;
-import ru.orangesoftware.financisto.filter.WhereFilter;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ListAdapter;
 import android.widget.TextView;
+
+import ru.orangesoftware.financisto.R;
+import ru.orangesoftware.financisto.adapter.BlotterListAdapter;
+import ru.orangesoftware.financisto.adapter.BlotterListAdapter_;
+import ru.orangesoftware.financisto.blotter.BlotterFilter;
+import ru.orangesoftware.financisto.filter.WhereFilter;
 
 
 public class TemplatesListActivity extends BlotterActivity {
@@ -41,12 +43,10 @@ public class TemplatesListActivity extends BlotterActivity {
 
     @Override
     protected ListAdapter createAdapter(Cursor cursor) {
-        return new BlotterListAdapter(this, db, cursor) {
-            @Override
-            protected boolean isShowRunningBalance() {
-                return false;
-            }
-        };
+        BlotterListAdapter adapter = BlotterListAdapter_.getInstance_(this);
+        adapter.initWithCursor(cursor);
+        adapter.showRunningBalance = false;
+        return adapter;
     }
 
     @Override

@@ -22,8 +22,8 @@
 		android:text="Title" android:layout_height="fill_parent"
 		android:layout_width="fill_parent" android:background="#333333" />
 	<View android:layout_width="fill_parent"
-    	android:layout_height="1dp"
-    	android:background="@drawable/divider_horizontal_dark"
+    	android:layout_height="wrap_content"
+        android:background="?android:attr/dividerVertical"
     	android:duplicateParentState="true"/>
 	<LinearLayout android:layout_height="wrap_content"
 		android:layout_width="fill_parent" android:id="@+id/layout"

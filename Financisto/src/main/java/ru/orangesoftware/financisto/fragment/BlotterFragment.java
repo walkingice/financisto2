@@ -4,10 +4,14 @@ import android.support.v4.app.FragmentActivity;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.OptionsItem;
 import org.androidannotations.annotations.OptionsMenu;
 
 import ru.orangesoftware.financisto.R;
+import ru.orangesoftware.financisto.activity.TransactionActivity_;
+import ru.orangesoftware.financisto.activity.TransferActivity_;
 import ru.orangesoftware.financisto.adapter.BlotterListAdapter;
+import ru.orangesoftware.financisto.adapter.BlotterListAdapter_;
 import ru.orangesoftware.financisto.adapter.TransactionsListAdapter;
 import ru.orangesoftware.financisto.bus.GetTransactionList;
 import ru.orangesoftware.financisto.bus.TransactionList;
@@ -32,9 +36,34 @@ public class BlotterFragment extends AbstractListFragment {
         if (event.accountId != -1) {
             adapter = new TransactionsListAdapter(context, db, event.cursor);
         } else {
-            adapter = new BlotterListAdapter(context, db, event.cursor);
+            adapter = BlotterListAdapter_.getInstance_(context);
         }
+        adapter.initWithCursor(event.cursor);
         setListAdapter(adapter);
+    }
+
+    @OptionsItem(R.id.menu_add_transaction)
+    public void addTransaction() {
+        TransactionActivity_.intent(this).start();
+//        Intent intent = new Intent(getActivity(), TransactionActivity.class);
+//        long accountId = blotterFilter.getAccountId();
+//        if (accountId != -1) {
+//            intent.putExtra(TransactionActivity.ACCOUNT_ID_EXTRA, accountId);
+//        }
+//        intent.putExtra(TransactionActivity.TEMPLATE_EXTRA, blotterFilter.getIsTemplate());
+//        startActivity(intent);
+    }
+
+    @OptionsItem(R.id.menu_add_transfer)
+    public void addTransfer() {
+        TransferActivity_.intent(this).start();
+//        Intent intent = new Intent(getActivity(), TransactionActivity.class);
+//        long accountId = blotterFilter.getAccountId();
+//        if (accountId != -1) {
+//            intent.putExtra(TransactionActivity.ACCOUNT_ID_EXTRA, accountId);
+//        }
+//        intent.putExtra(TransactionActivity.TEMPLATE_EXTRA, blotterFilter.getIsTemplate());
+//        startActivity(intent);
     }
 
 }

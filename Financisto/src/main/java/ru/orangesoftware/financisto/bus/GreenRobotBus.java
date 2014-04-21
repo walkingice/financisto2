@@ -14,7 +14,9 @@ public class GreenRobotBus {
     }
 
     public void register(Object subscriber) {
-        bus.register(subscriber);
+        if (!bus.isRegistered(subscriber)) {
+            bus.register(subscriber);
+        }
     }
 
     public void unregister(Object subscriber) {

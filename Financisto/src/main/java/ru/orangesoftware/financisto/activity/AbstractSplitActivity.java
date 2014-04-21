@@ -50,7 +50,7 @@ public abstract class AbstractSplitActivity extends AbstractActivity {
         setFeatureDrawableResource(Window.FEATURE_LEFT_ICON, R.drawable.ic_dialog_currency);
 
         fetchData();
-        projectSelector = new ProjectSelector(this, em, x);
+        projectSelector = new ProjectSelector(this, x);
         projectSelector.fetchProjects();
 
         utils  = new Utils(this);

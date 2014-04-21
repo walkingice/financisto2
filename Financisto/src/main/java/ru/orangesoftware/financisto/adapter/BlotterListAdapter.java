@@ -24,11 +24,15 @@ import android.widget.RelativeLayout;
 import android.widget.ResourceCursorAdapter;
 import android.widget.TextView;
 
+import org.androidannotations.annotations.Bean;
+import org.androidannotations.annotations.EBean;
+import org.androidannotations.annotations.res.DimensionPixelSizeRes;
+import org.androidannotations.annotations.res.DrawableRes;
+
 import java.util.Date;
 import java.util.HashMap;
 
 import ru.orangesoftware.financisto.R;
-import ru.orangesoftware.financisto.db.DatabaseAdapter;
 import ru.orangesoftware.financisto.db.DatabaseHelper.BlotterColumns;
 import ru.orangesoftware.financisto.db.MyEntityManager;
 import ru.orangesoftware.financisto.model.CategoryEntity;
@@ -42,47 +46,53 @@ import ru.orangesoftware.financisto.utils.Utils;
 import static ru.orangesoftware.financisto.model.Category.isSplit;
 import static ru.orangesoftware.financisto.utils.TransactionTitleUtils.generateTransactionTitle;
 
+@EBean
 public class BlotterListAdapter extends ResourceCursorAdapter {
 
     private final Date dt = new Date();
 
     protected final StringBuilder sb = new StringBuilder();
-    protected final Drawable icBlotterIncome;
-    protected final Drawable icBlotterExpense;
-    protected final Drawable icBlotterTransfer;
-    protected final Drawable icBlotterSplit;
-    protected final Utils u;
-    protected final DatabaseAdapter db;
-    protected final MyEntityManager em;
+
+    @Bean
+    public Utils u;
+
+    @Bean
+    protected MyEntityManager em;
+
+    @DrawableRes(R.drawable.ic_action_arrow_left_bottom)
+    public Drawable icBlotterIncome;
+
+    @DrawableRes(R.drawable.ic_action_arrow_right_top)
+    public Drawable icBlotterExpense;
+
+    @DrawableRes(R.drawable.ic_blotter_transfer)
+    public Drawable icBlotterTransfer;
+
+    @DrawableRes(R.drawable.ic_blotter_split)
+    public Drawable icBlotterSplit;
+
+    @DimensionPixelSizeRes(R.dimen.transaction_icon_padding)
+    public int topPadding;
 
     private final int colors[];
 
     private boolean allChecked = true;
     private final HashMap<Long, Boolean> checkedItems = new HashMap<Long, Boolean>();
 
-    private boolean showRunningBalance;
-    private int topPadding;
+    public boolean showRunningBalance;
 
-    public BlotterListAdapter(Context context, DatabaseAdapter db, Cursor c) {
-        this(context, db, R.layout.blotter_list_item, c, false);
-    }
-
-    public BlotterListAdapter(Context context, DatabaseAdapter db, int layoutId, Cursor c) {
-        this(context, db, layoutId, c, false);
-    }
-
-    public BlotterListAdapter(Context context, DatabaseAdapter db, int layoutId, Cursor c, boolean autoRequery) {
-        super(context, layoutId, c, autoRequery);
-        this.icBlotterIncome = context.getResources().getDrawable(R.drawable.ic_blotter_income);
-        this.icBlotterExpense = context.getResources().getDrawable(R.drawable.ic_blotter_expense);
-        this.icBlotterTransfer = context.getResources().getDrawable(R.drawable.ic_blotter_transfer);
-        this.icBlotterSplit = context.getResources().getDrawable(R.drawable.ic_blotter_split);
-        this.u = new Utils(context);
+    public BlotterListAdapter(Context context) {
+        super(context, R.layout.blotter_list_item, null, false);
         this.colors = initializeColors(context);
         this.showRunningBalance = MyPreferences.isShowRunningBalance(context);
-        this.topPadding = context.getResources().getDimensionPixelSize(R.dimen.transaction_icon_padding);
-        this.db = db;
-        this.em = db.em();
+    }
+
+    public void initWithCursor(Cursor cursor) {
+        changeCursor(cursor);
+    }
+
+    public void initWithItemLayout(int layoutId) {
+        setViewResource(layoutId);
     }
 
     private int[] initializeColors(Context context) {
@@ -134,8 +144,6 @@ public class BlotterListAdapter extends ResourceCursorAdapter {
             long toCurrencyId = cursor.getLong(BlotterColumns.to_account_currency_id.ordinal());
             Currency toCurrency = CurrencyCache.getCurrency(em, toCurrencyId);
 
-            int dateViewColor = v.bottomView.getCurrentTextColor();
-
             long fromAmount = cursor.getLong(BlotterColumns.from_amount.ordinal());
             long toAmount = cursor.getLong(BlotterColumns.to_amount.ordinal());
             long fromBalance = cursor.getLong(BlotterColumns.from_account_balance.ordinal());
@@ -168,14 +176,18 @@ public class BlotterListAdapter extends ResourceCursorAdapter {
                 int categoryType = cursor.getInt(BlotterColumns.category_type.ordinal());
                 if (categoryType == CategoryEntity.TYPE_INCOME) {
                     v.iconView.setImageDrawable(icBlotterIncome);
+                    v.iconView.setColorFilter(u.positiveColor);
                 } else if (categoryType == CategoryEntity.TYPE_EXPENSE) {
                     v.iconView.setImageDrawable(icBlotterExpense);
+                    v.iconView.setColorFilter(u.negativeColor);
                 }
             } else {
                 if (amount > 0) {
                     v.iconView.setImageDrawable(icBlotterIncome);
+                    v.iconView.setColorFilter(u.positiveColor);
                 } else if (amount < 0) {
                     v.iconView.setImageDrawable(icBlotterExpense);
+                    v.iconView.setColorFilter(u.negativeColor);
                 }
             }
             if (v.rightCenterView != null) {
