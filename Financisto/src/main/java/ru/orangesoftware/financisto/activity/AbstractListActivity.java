@@ -35,7 +35,9 @@ import java.util.List;
 
 import ru.orangesoftware.financisto.R;
 import ru.orangesoftware.financisto.db.DatabaseAdapter;
+import ru.orangesoftware.financisto.db.DatabaseAdapter_;
 import ru.orangesoftware.financisto.db.MyEntityManager;
+import ru.orangesoftware.financisto.db.MyEntityManager_;
 import ru.orangesoftware.financisto.utils.MenuItemInfo;
 import ru.orangesoftware.financisto.utils.PinProtection;
 
@@ -69,8 +71,8 @@ public abstract class AbstractListActivity extends ListActivity implements Refre
 		
 		setContentView(contentId);
 		
-		db = new DatabaseAdapter(this);
-		em = db.em();
+		db = DatabaseAdapter_.getInstance_(this);
+        em = MyEntityManager_.getInstance_(this);
 
         this.inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		internalOnCreate(savedInstanceState);

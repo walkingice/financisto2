@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.OptionsMenu;
 
 import ru.orangesoftware.financisto.R;
 import ru.orangesoftware.financisto.db.DatabaseHelper.AccountColumns;
@@ -25,6 +26,7 @@ import ru.orangesoftware.financisto.model.Transaction;
 import ru.orangesoftware.financisto.utils.MyPreferences;
 
 @EActivity
+@OptionsMenu(R.menu.transaction_menu)
 public class TransferActivity extends AbstractTransactionActivity {
 
     private TextView accountFromText;

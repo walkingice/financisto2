@@ -15,8 +15,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
@@ -25,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.OptionsMenu;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -59,13 +58,13 @@ import static ru.orangesoftware.financisto.utils.AndroidUtils.isGreenDroidSuppor
 import static ru.orangesoftware.financisto.utils.Utils.isNotEmpty;
 
 @EActivity
+@OptionsMenu(R.menu.transaction_menu)
 public class TransactionActivity extends AbstractTransactionActivity {
 
 	public static final String CURRENT_BALANCE_EXTRA = "accountCurrentBalance";
 	public static final String AMOUNT_EXTRA = "accountAmount";
     public static final String ACTIVITY_STATE = "ACTIVITY_STATE";
 
-	private static final int MENU_TURN_GPS_ON = Menu.FIRST;
     private static final int SPLIT_REQUEST = 5001;
 
     private final Currency currencyAsAccount = new Currency();
@@ -413,25 +412,6 @@ public class TransactionActivity extends AbstractTransactionActivity {
         return a;
     }
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		super.onCreateOptionsMenu(menu);
-		MenuItem menuItem = menu.add(0, MENU_TURN_GPS_ON, 0, R.string.force_gps_location);
-		menuItem.setIcon(android.R.drawable.ic_menu_mylocation);
-		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		super.onOptionsItemSelected(item);
-		switch (item.getItemId()) {
-		case MENU_TURN_GPS_ON:
-			selectCurrentLocation(true);
-			break;
-		}
-		return false;
-	}
-
     @Override
     protected void onClick(View v, int id) {
         super.onClick(v, id);
@@ -468,7 +448,7 @@ public class TransactionActivity extends AbstractTransactionActivity {
         Transaction split = viewToSplitMap.get(v);
         if (split != null) {
             split.unsplitAmount = split.fromAmount + calculateUnsplitAmount();
-            editSplit(split, split.toAccountId > 0 ? SplitTransferActivity.class : SplitTransactionActivity.class);
+            editSplit(split, split.toAccountId > 0);
         }
     }
 
@@ -533,13 +513,15 @@ public class TransactionActivity extends AbstractTransactionActivity {
         split.fromAccountId = getSelectedAccountId();
         split.fromAmount = split.unsplitAmount = calculateUnsplitAmount();
         split.originalCurrencyId = selectedOriginCurrencyId;
-        editSplit(split, asTransfer ? SplitTransferActivity.class : SplitTransactionActivity.class);
+        editSplit(split, asTransfer);
     }
 
-    private void editSplit(Transaction split, Class splitActivityClass) {
-        Intent intent = new Intent(this, splitActivityClass);
-        split.toIntentAsSplit(intent);
-        startActivityForResult(intent, SPLIT_REQUEST);
+    private void editSplit(Transaction split, boolean asTransfer) {
+        if (asTransfer) {
+            SplitTransferActivity_.intent(this).split(split).startForResult(SPLIT_REQUEST);
+        } else {
+            SplitTransactionActivity_.intent(this).split(split).startForResult(SPLIT_REQUEST);
+        }
     }
 
     @Override

@@ -27,7 +27,7 @@ import java.util.Map;
 @Table(name = "transactions")
 public class Transaction extends TransactionBase {
 
-    private static final String SPLIT_BLOB = "SPLIT_BLOB";
+    private static final String SPLIT_EXTRA = "split";
 
 	@Column(name = "category_id")
 	public long categoryId;
@@ -99,11 +99,11 @@ public class Transaction extends TransactionBase {
 	}
 
     public void toIntentAsSplit(Intent intent) {
-        intent.putExtra(SPLIT_BLOB, this);
+        intent.putExtra(SPLIT_EXTRA, this);
     }
 
     public static Transaction fromIntentAsSplit(Intent intent) {
-        return (Transaction)intent.getSerializableExtra(SPLIT_BLOB);
+        return (Transaction)intent.getSerializableExtra(SPLIT_EXTRA);
 	}
 
 	public static Transaction fromBlotterCursor(Cursor c) {
@@ -161,11 +161,7 @@ public class Transaction extends TransactionBase {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(new Date(dateTime)).append(":");
-        sb.append("FA(").append(fromAccountId).append(")->").append(fromAmount).append(",");
-        sb.append("TA(").append(toAccountId).append(")->").append(toAmount);
-        return sb.toString();
+        return String.valueOf(new Date(dateTime)) + ":" + "FA(" + fromAccountId + ")->" + fromAmount + "," + "TA(" + toAccountId + ")->" + toAmount;
     }
 
 }

@@ -17,28 +17,43 @@ import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.*;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListAdapter;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.Extra;
+import org.androidannotations.annotations.OptionsItem;
+import org.androidannotations.annotations.OptionsMenu;
 
 import ru.orangesoftware.financisto.R;
 import ru.orangesoftware.financisto.adapter.EntityEnumAdapter;
-import ru.orangesoftware.financisto.model.*;
+import ru.orangesoftware.financisto.model.Account;
+import ru.orangesoftware.financisto.model.AccountType;
+import ru.orangesoftware.financisto.model.CardIssuer;
+import ru.orangesoftware.financisto.model.Currency;
+import ru.orangesoftware.financisto.model.Transaction;
 import ru.orangesoftware.financisto.utils.TransactionUtils;
 import ru.orangesoftware.financisto.utils.Utils;
 import ru.orangesoftware.financisto.widget.AmountInput;
 
 import static ru.orangesoftware.financisto.utils.Utils.text;
 
-@EActivity
+@EActivity(R.layout.account)
+@OptionsMenu(R.menu.account_menu)
 public class AccountActivity extends AbstractActivity {
-	
-	public static final String ACCOUNT_ID_EXTRA = "accountId";
-	
+
 	private static final int NEW_CURRENCY_REQUEST = 1;
-	
-	private AmountInput amountInput;
+
+    @Extra
+    public long accountId = -1;
+
+    private AmountInput amountInput;
 	private AmountInput limitInput;
 	private View limitAmountView;
 	private EditText accountTitle;
@@ -65,11 +80,8 @@ public class AccountActivity extends AbstractActivity {
 
 	private Account account = new Account();
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.account);
-		
+    @AfterViews
+    public void afterViews() {
 		accountTitle = new EditText(this);
 		accountTitle.setSingleLine();
 		
@@ -134,18 +146,14 @@ public class AccountActivity extends AbstractActivity {
 		limitAmountView = x.addEditNode(layout, R.string.limit_amount, limitInput);
 		setVisibility(limitAmountView, View.GONE);
 
-		Intent intent = getIntent();
-		if (intent != null) {
-			long accountId = intent.getLongExtra(ACCOUNT_ID_EXTRA, -1);
-			if (accountId != -1) {
-				this.account = em.getAccount(accountId);
-				if (this.account == null) {
-					this.account = new Account();
-				}
-			} else {
-				selectAccountType(AccountType.valueOf(account.type));
-			}
-		}
+        if (accountId != -1) {
+            this.account = em.getAccount(accountId);
+            if (this.account == null) {
+                this.account = new Account();
+            }
+        } else {
+            selectAccountType(AccountType.valueOf(account.type));
+        }
 
 		if (account.id == -1) {
 			x.addEditNode(layout, R.string.opening_amount, amountInput);
@@ -165,85 +173,78 @@ public class AccountActivity extends AbstractActivity {
 			editAccount();
 		}
 
-		Button bOK = (Button)findViewById(R.id.bOK);
-		bOK.setOnClickListener(new OnClickListener(){
-			@Override
-			public void onClick(View arg0) {
-				if (account.currency == null) {
-					Toast.makeText(AccountActivity.this, R.string.select_currency, Toast.LENGTH_SHORT).show();
-					return;	
-				}
-				if (Utils.isEmpty(accountTitle)) {
-					accountTitle.setError(getString(R.string.title));
-					return;
-				}
-				AccountType type = AccountType.valueOf(account.type);
-				if (type.hasIssuer) {
-					account.issuer = Utils.text(issuerName);
-				}
-				if (type.hasNumber) {
-					account.number = Utils.text(numberText);
-				}
-				
-				/********** validate closing and payment days **********/
-				if (type.isCreditCard) {
-					String closingDay = Utils.text(closingDayText);
-					account.closingDay = closingDay == null ? 0 : Integer.parseInt(closingDay);
-					if (account.closingDay != 0) {
-						if (account.closingDay>31) {
-							Toast.makeText(AccountActivity.this, R.string.closing_day_error, Toast.LENGTH_SHORT).show();
-							return;	
-						}	
-					}
-					
-					String paymentDay = Utils.text(paymentDayText);
-					account.paymentDay = paymentDay == null ? 0 : Integer.parseInt(paymentDay);	
-					if (account.paymentDay != 0) {
-						if (account.paymentDay>31) {
-							Toast.makeText(AccountActivity.this, R.string.payment_day_error, Toast.LENGTH_SHORT).show();
-							return;	
-						}
-					}
-				}	
-
-				account.title = text(accountTitle);
-				account.creationDate = System.currentTimeMillis();
-				String sortOrder = text(sortOrderText);
-				account.sortOrder = sortOrder == null ? 0 : Integer.parseInt(sortOrder);
-				account.isIncludeIntoTotals  = isIncludedIntoTotals.isChecked();
-				account.limitAmount = -Math.abs(limitInput.getAmount());
-                account.note = text(noteText);
-				
-				long accountId = em.saveAccount(account);
-				long amount = amountInput.getAmount();
-				if (amount != 0) {
-					Transaction t = new Transaction();
-					t.fromAccountId = accountId;
-					t.categoryId = 0;
-					t.note = getResources().getText(R.string.opening_amount) + " (" +account.title + ")";
-					t.fromAmount = amount;
-					db.insertOrUpdate(t, null);
-				}
-				Intent intent = new Intent();
-				intent.putExtra(ACCOUNT_ID_EXTRA, accountId);
-				setResult(RESULT_OK, intent);
-				finish();
-			}
-
-		});
-
-		Button bCancel = (Button)findViewById(R.id.bCancel);
-		bCancel.setOnClickListener(new OnClickListener(){
-			@Override
-			public void onClick(View arg0) {
-				setResult(RESULT_CANCELED);
-				finish();
-			}			
-		});
-		
 	}
 
-	@Override
+    @OptionsItem(R.id.menu_save)
+    public void onSave() {
+        if (account.currency == null) {
+            Toast.makeText(this, R.string.select_currency, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (Utils.isEmpty(accountTitle)) {
+            accountTitle.setError(getString(R.string.title));
+            return;
+        }
+        AccountType type = AccountType.valueOf(account.type);
+        if (type.hasIssuer) {
+            account.issuer = Utils.text(issuerName);
+        }
+        if (type.hasNumber) {
+            account.number = Utils.text(numberText);
+        }
+
+        /********** validate closing and payment days **********/
+        if (type.isCreditCard) {
+            String closingDay = Utils.text(closingDayText);
+            account.closingDay = closingDay == null ? 0 : Integer.parseInt(closingDay);
+            if (account.closingDay != 0) {
+                if (account.closingDay>31) {
+                    Toast.makeText(this, R.string.closing_day_error, Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            }
+
+            String paymentDay = Utils.text(paymentDayText);
+            account.paymentDay = paymentDay == null ? 0 : Integer.parseInt(paymentDay);
+            if (account.paymentDay != 0) {
+                if (account.paymentDay>31) {
+                    Toast.makeText(this, R.string.payment_day_error, Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            }
+        }
+
+        account.title = text(accountTitle);
+        account.creationDate = System.currentTimeMillis();
+        String sortOrder = text(sortOrderText);
+        account.sortOrder = sortOrder == null ? 0 : Integer.parseInt(sortOrder);
+        account.isIncludeIntoTotals  = isIncludedIntoTotals.isChecked();
+        account.limitAmount = -Math.abs(limitInput.getAmount());
+        account.note = text(noteText);
+
+        long accountId = em.saveAccount(account);
+        long amount = amountInput.getAmount();
+        if (amount != 0) {
+            Transaction t = new Transaction();
+            t.fromAccountId = accountId;
+            t.categoryId = 0;
+            t.note = getResources().getText(R.string.opening_amount) + " (" +account.title + ")";
+            t.fromAmount = amount;
+            db.insertOrUpdate(t, null);
+        }
+        Intent intent = new Intent();
+        intent.putExtra("accountId", accountId);
+        setResult(RESULT_OK, intent);
+        finish();
+    }
+
+    @OptionsItem(R.id.menu_cancel)
+    public void onCancel() {
+        setResult(RESULT_CANCELED);
+        finish();
+    }
+
+    @Override
 	protected void onClick(View v, int id) {
 		switch(id) {
 			case R.id.is_included_into_totals:

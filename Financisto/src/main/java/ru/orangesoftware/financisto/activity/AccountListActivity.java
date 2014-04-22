@@ -252,9 +252,7 @@ public class AccountListActivity extends AbstractListActivity {
 	}
 
     private void editAccount(long id) {
-        Intent intent = new Intent(AccountListActivity.this, AccountActivity.class);
-        intent.putExtra(AccountActivity.ACCOUNT_ID_EXTRA, id);
-        startActivityForResult(intent, EDIT_ACCOUNT_REQUEST);
+        AccountActivity_.intent(this).accountId(id).startForResult(EDIT_ACCOUNT_REQUEST);
     }
 
     private long selectedId = -1;

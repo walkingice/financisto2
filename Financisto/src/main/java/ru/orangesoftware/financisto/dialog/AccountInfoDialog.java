@@ -10,17 +10,23 @@ package ru.orangesoftware.financisto.dialog;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import ru.orangesoftware.financisto.R;
-import ru.orangesoftware.financisto.activity.AccountActivity;
+import ru.orangesoftware.financisto.activity.AccountActivity_;
 import ru.orangesoftware.financisto.activity.AccountListActivity;
 import ru.orangesoftware.financisto.db.DatabaseAdapter;
 import ru.orangesoftware.financisto.db.MyEntityManager;
-import ru.orangesoftware.financisto.model.*;
+import ru.orangesoftware.financisto.model.Account;
+import ru.orangesoftware.financisto.model.AccountType;
+import ru.orangesoftware.financisto.model.CardIssuer;
 import ru.orangesoftware.financisto.utils.Utils;
 import ru.orangesoftware.financisto.view.NodeInflater;
 
@@ -117,9 +123,7 @@ public class AccountInfoDialog {
             @Override
             public void onClick(View arg0) {
                 d.dismiss();
-                Intent intent = new Intent(parentActivity, AccountActivity.class);
-                intent.putExtra(AccountActivity.ACCOUNT_ID_EXTRA, accountId);
-                parentActivity.startActivityForResult(intent, AccountListActivity.EDIT_ACCOUNT_REQUEST);
+                AccountActivity_.intent(parentActivity).accountId(accountId).startForResult(AccountListActivity.EDIT_ACCOUNT_REQUEST);
             }
         });
 

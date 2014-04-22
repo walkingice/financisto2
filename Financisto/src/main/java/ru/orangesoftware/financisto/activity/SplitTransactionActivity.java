@@ -5,6 +5,8 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import org.androidannotations.annotations.EActivity;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +22,7 @@ import ru.orangesoftware.financisto.widget.AmountInput;
  * User: Denis Solonenko
  * Date: 4/21/11 7:17 PM
  */
+@EActivity
 public class SplitTransactionActivity extends AbstractSplitActivity implements CategorySelector.CategorySelectorListener {
 
     private TextView amountTitle;

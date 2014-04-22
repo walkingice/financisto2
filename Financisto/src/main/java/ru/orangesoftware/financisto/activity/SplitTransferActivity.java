@@ -7,6 +7,9 @@ import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.androidannotations.annotations.EActivity;
+
 import ru.orangesoftware.financisto.R;
 import ru.orangesoftware.financisto.db.DatabaseHelper;
 import ru.orangesoftware.financisto.model.Account;
@@ -19,6 +22,7 @@ import ru.orangesoftware.financisto.widget.RateLayoutView;
  * User: Denis Solonenko
  * Date: 4/21/11 7:17 PM
  */
+@EActivity
 public class SplitTransferActivity extends AbstractSplitActivity {
 
     private RateLayoutView rateView;

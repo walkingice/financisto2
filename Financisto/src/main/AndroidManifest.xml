@@ -265,8 +265,8 @@
         <activity android:name=".activity.AboutActivity" android:label="@string/about"/>
         <activity android:name=".activity.WebViewActivity" android:label="@string/about"/>
 
-        <activity android:name=".activity.SplitTransactionActivity" android:label="@string/split_transaction" />
-        <activity android:name=".activity.SplitTransferActivity" android:label="@string/split_transfer"/>
+        <activity android:name=".activity.SplitTransactionActivity_" android:label="@string/split_transaction" />
+        <activity android:name=".activity.SplitTransferActivity_" android:label="@string/split_transfer"/>
 
         <activity android:name=".dialog.FolderBrowser" android:label="@string/select_folder"/>
         <activity android:name=".activity.CategorySelectorActivity" android:label="@string/select_category"/>

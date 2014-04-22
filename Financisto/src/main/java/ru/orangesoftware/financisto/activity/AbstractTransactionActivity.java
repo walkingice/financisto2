@@ -27,6 +27,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.InputType;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -46,6 +47,8 @@ import android.widget.TimePicker;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.OptionsItem;
+import org.androidannotations.annotations.OptionsMenuItem;
 
 import java.io.File;
 import java.text.DateFormat;
@@ -98,7 +101,10 @@ public abstract class AbstractTransactionActivity extends AbstractActivity imple
 	private static final int PICTURE_REQUEST = 4005;
 
 	private static final TransactionStatus[] statuses = TransactionStatus.values();
-	
+
+    @OptionsMenuItem(R.id.menu_save_and_new)
+    protected MenuItem saveAndNewMenuItem;
+
     protected RateLayoutView rateView;
 
     protected EditText templateName;
@@ -302,35 +308,10 @@ public abstract class AbstractTransactionActivity extends AbstractActivity imple
 			deleteAfterExpired.inflateView(layout, value != null ? value : sa.defaultValue);
 		}
 
-        Button bSave = (Button) findViewById(R.id.bSave);
-		bSave.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View arg0) {
-                saveAndFinish();
-            }
-
-        });
-
-        final boolean isEdit = transaction.id > 0;
-		Button bSaveAndNew = (Button)findViewById(R.id.bSaveAndNew);
-        if (isEdit) {
-            bSaveAndNew.setText(R.string.cancel);
+        if (transaction.id > 0) {
+            saveAndNewMenuItem.setTitle(R.string.cancel);
         }
-		bSaveAndNew.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View arg0) {
-                if (isEdit) {
-                    setResult(RESULT_CANCELED);
-                    finish();
-                } else {
-                    if (saveAndFinish()) {
-                        intent.putExtra(DATETIME_EXTRA, transaction.dateTime);
-                        startActivityForResult(intent, -1);
-                    }
-                }
-            }
-        });
-		
+
 		if (transactionId != -1) {
             isOpenCalculatorForTemplates &= isNewFromTemplate;
 			editTransaction(transaction);
@@ -384,7 +365,8 @@ public abstract class AbstractTransactionActivity extends AbstractActivity imple
 
     protected abstract void fetchCategories();
 
-    private boolean saveAndFinish() {
+    @OptionsItem(R.id.menu_save)
+    protected boolean saveAndFinish() {
         long id = save();
         if (id > 0) {
             Intent data = new Intent();
@@ -394,6 +376,19 @@ public abstract class AbstractTransactionActivity extends AbstractActivity imple
             return true;
         }
         return false;
+    }
+
+    @OptionsItem(R.id.menu_save_and_new)
+    protected void saveAndNew() {
+        if (transaction.id > 0) {
+            setResult(RESULT_CANCELED);
+            finish();
+        } else {
+            if (saveAndFinish()) {
+                //intent.putExtra(DATETIME_EXTRA, transaction.dateTime);
+                //startActivityForResult(intent, -1);
+            }
+        }
     }
 
     private long save() {
@@ -416,6 +411,11 @@ public abstract class AbstractTransactionActivity extends AbstractActivity imple
             attributes.add(ta);
         }
         return attributes;
+    }
+
+    @OptionsItem(R.id.menu_force_gps_location)
+    protected void selectCurrentLocation() {
+        selectCurrentLocation(true);
     }
 
 	protected void selectCurrentLocation(boolean forceUseGps) {

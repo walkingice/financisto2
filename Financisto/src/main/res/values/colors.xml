@@ -33,7 +33,8 @@
     <color name="positive_amount">@color/holo_green_dark</color>
     <color name="negative_amount">@color/holo_red_dark</color>
     <color name="transfer_color">@color/holo_orange_dark</color>
-    <color name="future_color">@color/holo_orange_light</color>
+    <color name="future_color">@color/holo_orange_dark</color>
+    <color name="split_color">@color/holo_blue_dark</color>
     <color name="restored_transaction_color">@color/holo_red_dark</color>
     <color name="pending_transaction_color">#303030</color>
     <color name="unreconciled_transaction_color">#737373</color>

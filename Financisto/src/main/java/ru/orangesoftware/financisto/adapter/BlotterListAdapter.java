@@ -65,10 +65,10 @@ public class BlotterListAdapter extends ResourceCursorAdapter {
     @DrawableRes(R.drawable.ic_action_arrow_right_top)
     public Drawable icBlotterExpense;
 
-    @DrawableRes(R.drawable.ic_blotter_transfer)
+    @DrawableRes(R.drawable.ic_action_arrow_top_down)
     public Drawable icBlotterTransfer;
 
-    @DrawableRes(R.drawable.ic_blotter_split)
+    @DrawableRes(R.drawable.ic_action_share)
     public Drawable icBlotterSplit;
 
     @DimensionPixelSizeRes(R.dimen.transaction_icon_padding)
@@ -153,6 +153,7 @@ public class BlotterListAdapter extends ResourceCursorAdapter {
                 u.setTransferBalanceText(v.rightCenterView, fromCurrency, fromBalance, toCurrency, toBalance);
             }
             v.iconView.setImageDrawable(icBlotterTransfer);
+            v.iconView.setColorFilter(u.transferColor);
         } else {
             String fromAccountTitle = cursor.getString(BlotterColumns.from_account_title.ordinal());
             v.topView.setText(fromAccountTitle);
@@ -172,6 +173,7 @@ public class BlotterListAdapter extends ResourceCursorAdapter {
             long categoryId = cursor.getLong(BlotterColumns.category_id.ordinal());
             if (isSplit(categoryId)) {
                 v.iconView.setImageDrawable(icBlotterSplit);
+                v.iconView.setColorFilter(u.splitColor);
             } else if (amount == 0) {
                 int categoryType = cursor.getInt(BlotterColumns.category_type.ordinal());
                 if (categoryType == CategoryEntity.TYPE_INCOME) {

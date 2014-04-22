@@ -9,6 +9,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Bean;
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.Extra;
+import org.androidannotations.annotations.ViewById;
+
 import ru.orangesoftware.financisto.R;
 import ru.orangesoftware.financisto.model.Account;
 import ru.orangesoftware.financisto.model.Currency;
@@ -24,19 +31,26 @@ import static ru.orangesoftware.financisto.utils.Utils.text;
  * User: Denis Solonenko
  * Date: 4/21/11 7:17 PM
  */
+@EActivity
 public abstract class AbstractSplitActivity extends AbstractActivity {
 
-    protected EditText noteText;
-    protected TextView unsplitAmountText;
+    @Bean
+    protected Utils utils;
+
+    @Extra
+    protected Transaction split;
 
     protected Account fromAccount;
     protected Currency originalCurrency;
-    protected Utils utils;
-    protected Transaction split;
-
     private ProjectSelector projectSelector;
 
     private final int layoutId;
+
+    @ViewById(R.id.list)
+    protected LinearLayout layout;
+
+    protected EditText noteText;
+    protected TextView unsplitAmountText;
 
     protected AbstractSplitActivity(int layoutId) {
         this.layoutId = layoutId;
@@ -45,24 +59,21 @@ public abstract class AbstractSplitActivity extends AbstractActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_LEFT_ICON);
         setContentView(layoutId);
-        setFeatureDrawableResource(Window.FEATURE_LEFT_ICON, R.drawable.ic_dialog_currency);
+    }
 
+    @AfterViews
+    public void afterViews() {
         fetchData();
         projectSelector = new ProjectSelector(this, x);
         projectSelector.fetchProjects();
 
-        utils  = new Utils(this);
-        split = Transaction.fromIntentAsSplit(getIntent());
         if (split.fromAccountId > 0) {
-            fromAccount = db.em().getAccount(split.fromAccountId);
+            fromAccount = em.getAccount(split.fromAccountId);
         }
         if (split.originalCurrencyId > 0) {
             originalCurrency = CurrencyCache.getCurrency(em, split.originalCurrencyId);
         }
-
-        LinearLayout layout = (LinearLayout)findViewById(R.id.list);
 
         createUI(layout);
         createCommonUI(layout);

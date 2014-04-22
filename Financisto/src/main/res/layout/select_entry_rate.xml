@@ -12,7 +12,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:id="@+id/top_layout" android:layout_width="fill_parent"
 	android:layout_height="wrap_content" android:paddingRight="?android:attr/scrollbarSize"
-	android:background="@android:drawable/list_selector_background"
+	android:background="?android:attr/listChoiceBackgroundIndicator"
 	android:orientation="horizontal" android:gravity="center_vertical"
 	android:minHeight="@dimen/select_entry_height">
 	<!-- ?android:attr/listPreferredItemHeight -->
@@ -27,7 +27,7 @@
 			android:duplicateParentState="true" />
 		<ImageButton android:id="@+id/rateCalculator"
 			android:layout_width="wrap_content" android:layout_height="wrap_content"
-			android:layout_below="@+id/label" android:src="@drawable/calculator"
+			android:layout_below="@+id/label" android:src="@drawable/ic_action_calculator"
 			android:layout_alignParentRight="true" />
 		<ImageButton android:layout_width="wrap_content"
 			android:layout_height="wrap_content" android:layout_below="@+id/label"
