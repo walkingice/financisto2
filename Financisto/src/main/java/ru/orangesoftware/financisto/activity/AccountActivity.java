@@ -41,6 +41,7 @@ import ru.orangesoftware.financisto.model.Transaction;
 import ru.orangesoftware.financisto.utils.TransactionUtils;
 import ru.orangesoftware.financisto.utils.Utils;
 import ru.orangesoftware.financisto.widget.AmountInput;
+import ru.orangesoftware.financisto.widget.AmountInput_;
 
 import static ru.orangesoftware.financisto.utils.Utils.text;
 
@@ -107,10 +108,10 @@ public class AccountActivity extends AbstractActivity {
 		paymentDayText.setHint(R.string.payment_day_hint);
 		paymentDayText.setSingleLine();
 
-		amountInput = new AmountInput(this);
+		amountInput = AmountInput_.build(this);
 		amountInput.setOwner(this);
 
-		limitInput = new AmountInput(this);
+		limitInput = AmountInput_.build(this);
 		limitInput.setOwner(this);
 
 		LinearLayout layout = (LinearLayout)findViewById(R.id.layout);		

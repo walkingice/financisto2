@@ -16,6 +16,7 @@ import ru.orangesoftware.financisto.model.Category;
 import ru.orangesoftware.financisto.model.Currency;
 import ru.orangesoftware.financisto.model.TransactionAttribute;
 import ru.orangesoftware.financisto.widget.AmountInput;
+import ru.orangesoftware.financisto.widget.AmountInput_;
 
 /**
  * Created by IntelliJ IDEA.
@@ -38,7 +39,7 @@ public class SplitTransactionActivity extends AbstractSplitActivity implements C
     protected void createUI(LinearLayout layout) {
         categorySelector.createNode(layout, false);
 
-        amountInput = new AmountInput(this);
+        amountInput = AmountInput_.build(this);
         amountInput.setOwner(this);
         amountInput.setOnAmountChangedListener(new AmountInput.OnAmountChangedListener() {
             @Override

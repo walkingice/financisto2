@@ -8,19 +8,18 @@
   Contributors:
       Denis Solonenko - initial API and implementation
 -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:minHeight="@dimen/select_entry_height">
+    android:layout_height="wrap_content">
 
-    <ToggleButton
-        android:id="@+id/toggle"
+    <ImageSwitcher
+        android:id="@+id/signSwitcher"
+        style="@style/ListButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/btn_toggle_income_expense_bg"
-        style="@style/ListButton"
-        android:textOff=""
-        android:textOn="" />
+        android:layout_gravity="center_vertical"
+        android:inAnimation="@android:anim/slide_in_left"
+        android:outAnimation="@android:anim/slide_out_right" />
 
     <EditText
         android:id="@+id/primary"
@@ -28,13 +27,13 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="right|center_vertical"
+        android:inputType="number"
         android:maxLength="16"
         android:numeric="integer"
         android:phoneNumber="true"
         android:singleLine="true"
         android:textSize="20sp"
-        android:textStyle="bold"
-        android:inputType="number" />
+        android:textStyle="bold" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -49,13 +48,13 @@
         android:layout_width="50dp"
         android:layout_height="wrap_content"
         android:gravity="left|center_vertical"
+        android:inputType="number"
         android:maxLength="2"
         android:numeric="integer"
         android:phoneNumber="true"
         android:singleLine="true"
         android:textSize="20sp"
-        android:textStyle="bold"
-        android:inputType="number" />
+        android:textStyle="bold" />
 
     <ImageButton
         android:id="@+id/amount_input"
@@ -71,4 +70,4 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical" />
 
-</LinearLayout>
+</merge>

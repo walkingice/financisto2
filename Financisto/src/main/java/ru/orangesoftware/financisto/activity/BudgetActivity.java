@@ -14,17 +14,31 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.*;
-import ru.orangesoftware.financisto.R;
-import ru.orangesoftware.financisto.model.*;
-import ru.orangesoftware.financisto.utils.RecurUtils;
-import ru.orangesoftware.financisto.utils.RecurUtils.Recur;
-import ru.orangesoftware.financisto.utils.Utils;
-import ru.orangesoftware.financisto.widget.AmountInput;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ListAdapter;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import ru.orangesoftware.financisto.R;
+import ru.orangesoftware.financisto.model.Account;
+import ru.orangesoftware.financisto.model.Budget;
+import ru.orangesoftware.financisto.model.Category;
+import ru.orangesoftware.financisto.model.Currency;
+import ru.orangesoftware.financisto.model.MultiChoiceItem;
+import ru.orangesoftware.financisto.model.MyEntity;
+import ru.orangesoftware.financisto.model.Project;
+import ru.orangesoftware.financisto.utils.RecurUtils;
+import ru.orangesoftware.financisto.utils.RecurUtils.Recur;
+import ru.orangesoftware.financisto.utils.Utils;
+import ru.orangesoftware.financisto.widget.AmountInput;
+import ru.orangesoftware.financisto.widget.AmountInput_;
 
 public class BudgetActivity extends AbstractActivity {
 	
@@ -89,7 +103,7 @@ public class BudgetActivity extends AbstractActivity {
                 R.id.type, R.string.budget_type_saving,
                 R.string.budget_type_saving_summary, true);
 
-		amountInput = new AmountInput(this);
+		amountInput = AmountInput_.build(this);
 		amountInput.setOwner(this);
         amountInput.setIncome();
         amountInput.disableIncomeExpenseButton();
