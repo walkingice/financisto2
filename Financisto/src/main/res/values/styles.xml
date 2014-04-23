@@ -84,6 +84,10 @@
         <item name="android:src">@drawable/ic_action_calculator</item>
     </style>
 
+    <style name="DownloadButton" parent="ListButton">
+        <item name="android:src">@drawable/ic_action_download</item>
+    </style>
+
     <style name="TallTitleBarTheme" parent="android:Theme.NoTitleBar">
         <item name="android:windowContentOverlay">@null</item>
     </style>
