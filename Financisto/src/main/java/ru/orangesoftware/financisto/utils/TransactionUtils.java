@@ -14,16 +14,18 @@ import android.content.Context;
 import android.database.Cursor;
 import android.widget.ListAdapter;
 import android.widget.SimpleCursorAdapter;
+
+import java.util.List;
+
 import ru.orangesoftware.financisto.adapter.CategoryListAdapter;
 import ru.orangesoftware.financisto.adapter.MyEntityAdapter;
 import ru.orangesoftware.financisto.db.DatabaseAdapter;
 import ru.orangesoftware.financisto.db.DatabaseHelper.AccountColumns;
 import ru.orangesoftware.financisto.db.MyEntityManager;
+import ru.orangesoftware.financisto.model.Account;
 import ru.orangesoftware.financisto.model.Currency;
 import ru.orangesoftware.financisto.model.Payee;
 import ru.orangesoftware.financisto.model.Project;
-
-import java.util.List;
 
 public class TransactionUtils {
 
@@ -31,6 +33,10 @@ public class TransactionUtils {
 		return new SimpleCursorAdapter(context, android.R.layout.simple_spinner_dropdown_item, accountCursor, 
 				new String[]{"e_"+AccountColumns.TITLE}, new int[]{android.R.id.text1});		
 	}
+
+    public static ListAdapter createAccountAdapter(Context context, List<Account> accounts) {
+        return new MyEntityAdapter<Account>(context, android.R.layout.simple_spinner_dropdown_item, android.R.id.text1, accounts);
+    }
 
     public static ListAdapter createAccountMultiChoiceAdapter(Context context, Cursor accountCursor) {
         return new SimpleCursorAdapter(context, android.R.layout.simple_list_item_multiple_choice, accountCursor,

@@ -100,8 +100,7 @@ public class CategorySelector {
                 break;
             }
             case R.id.category_add: {
-                Intent intent = new Intent(activity, CategoryActivity.class);
-                activity.startActivityForResult(intent, R.id.category_add);
+                CategoryActivity_.intent(activity).startForResult(R.id.category_add);
                 break;
             }
             case R.id.category_split:

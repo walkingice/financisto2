@@ -15,14 +15,23 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.view.View;
-import android.widget.*;
+import android.widget.CheckBox;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListAdapter;
+import android.widget.TextView;
+
+import java.util.List;
+
 import ru.orangesoftware.financisto.R;
 import ru.orangesoftware.financisto.model.MultiChoiceItem;
 import ru.orangesoftware.financisto.utils.Utils;
 import ru.orangesoftware.financisto.view.NodeInflater;
-import ru.orangesoftware.financisto.view.NodeInflater.*;
-
-import java.util.List;
+import ru.orangesoftware.financisto.view.NodeInflater.Builder;
+import ru.orangesoftware.financisto.view.NodeInflater.CheckBoxBuilder;
+import ru.orangesoftware.financisto.view.NodeInflater.EditBuilder;
+import ru.orangesoftware.financisto.view.NodeInflater.ListBuilder;
+import ru.orangesoftware.financisto.view.NodeInflater.PictureBuilder;
 
 public class ActivityLayout {
 
@@ -177,9 +186,7 @@ public class ActivityLayout {
     public View addNodeUnsplit(LinearLayout layout) {
         ListBuilder b = inflater.new ListBuilder(layout, R.layout.select_entry_unsplit);
         View v = b.withButtonId(R.id.add_split, listener).withId(R.id.unsplit_action, listener).withLabel(R.string.unsplit_amount).withData("0").create();
-        ImageView transferImageView = (ImageView)v.findViewById(R.id.transfer);
-        transferImageView.setId(R.id.add_split_transfer);
-        transferImageView.setImageResource(R.drawable.ic_btn_round_transfer);
+        ImageView transferImageView = (ImageView)v.findViewById(R.id.add_split_transfer);
         transferImageView.setOnClickListener(listener);
         return v;
     }

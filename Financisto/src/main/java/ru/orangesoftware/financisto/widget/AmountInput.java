@@ -167,7 +167,7 @@ public class AmountInput extends LinearLayout {
                 ImageView v = new ImageView(getContext());
                 v.setScaleType(ImageView.ScaleType.FIT_CENTER);
                 v.setLayoutParams(new ImageSwitcher.LayoutParams(
-                        LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+                        LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
                 return v;
             }
         });

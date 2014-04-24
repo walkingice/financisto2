@@ -16,16 +16,25 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.*;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.ListAdapter;
+import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.Map;
+
 import ru.orangesoftware.financisto.R;
 import ru.orangesoftware.financisto.adapter.CategoryListAdapter2;
 import ru.orangesoftware.financisto.model.Category;
 import ru.orangesoftware.financisto.model.CategoryTree;
-
-import java.util.ArrayList;
-import java.util.Map;
 
 public class CategoryListActivity2 extends AbstractListActivity {
 	
@@ -73,8 +82,7 @@ public class CategoryListActivity2 extends AbstractListActivity {
 
 	@Override
 	protected void addItem() {
-		Intent intent = new Intent(CategoryListActivity2.this, CategoryActivity.class);
-		startActivityForResult(intent, NEW_CATEGORY_REQUEST);
+        CategoryActivity_.intent(this).startForResult(NEW_CATEGORY_REQUEST);
 	}
 
 	@Override
@@ -125,9 +133,7 @@ public class CategoryListActivity2 extends AbstractListActivity {
 
 	@Override
 	public void editItem(View v, int position, long id) {
-		Intent intent = new Intent(CategoryListActivity2.this, CategoryActivity.class);
-		intent.putExtra(CategoryActivity.CATEGORY_ID_EXTRA, id);
-		startActivityForResult(intent, EDIT_CATEGORY_REQUEST);		
+        CategoryActivity_.intent(this).categoryId(id).startForResult(EDIT_CATEGORY_REQUEST);
 	}
 
 	@Override

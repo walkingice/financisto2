@@ -891,5 +891,7 @@
     <string name="restore_database_online_dropbox">Dropbox Restore</string>
     <string name="backup_database_dropbox_inprogress">Backing up database...</string>
     <string name="add_template">Add template</string>
+    <string name="category_type">Category type</string>
+    <string name="category_type_inherited">Inherited (%s)</string>
 
 </resources>

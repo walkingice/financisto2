@@ -2,10 +2,7 @@ package ru.orangesoftware.financisto.activity;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Bundle;
 import android.view.View;
-import android.view.Window;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -14,6 +11,7 @@ import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
+import org.androidannotations.annotations.OptionsItem;
 import org.androidannotations.annotations.ViewById;
 
 import ru.orangesoftware.financisto.R;
@@ -44,23 +42,11 @@ public abstract class AbstractSplitActivity extends AbstractActivity {
     protected Currency originalCurrency;
     private ProjectSelector projectSelector;
 
-    private final int layoutId;
-
     @ViewById(R.id.list)
     protected LinearLayout layout;
 
     protected EditText noteText;
     protected TextView unsplitAmountText;
-
-    protected AbstractSplitActivity(int layoutId) {
-        this.layoutId = layoutId;
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(layoutId);
-    }
 
     @AfterViews
     public void afterViews() {
@@ -87,23 +73,6 @@ public abstract class AbstractSplitActivity extends AbstractActivity {
         x.addEditNode(layout, R.string.note, noteText);
 
         projectSelector.createNode(layout);
-
-        Button bSave = (Button) findViewById(R.id.bSave);
-		bSave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View arg0) {
-                saveAndFinish();
-            }
-        });
-
-        Button bCancel = (Button) findViewById(R.id.bCancel);
-		bCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View arg0) {
-                setResult(RESULT_CANCELED);
-                finish();
-            }
-        });
     }
 
     protected abstract void fetchData();
@@ -126,13 +95,20 @@ public abstract class AbstractSplitActivity extends AbstractActivity {
         projectSelector.onActivityResult(requestCode, resultCode, data);
     }
 
-    private void saveAndFinish() {
+    @OptionsItem(R.id.menu_save)
+    protected void saveAndFinish() {
         Intent data = new Intent();
         if (updateFromUI()) {
             split.toIntentAsSplit(data);
             setResult(Activity.RESULT_OK, data);
             finish();
         }
+    }
+
+    @OptionsItem(R.id.menu_cancel)
+    protected void cancel() {
+        setResult(RESULT_CANCELED);
+        finish();
     }
 
     protected boolean updateFromUI() {

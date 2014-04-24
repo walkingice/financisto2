@@ -216,7 +216,7 @@
         <activity android:name=".activity.ReportFilterActivity" android:configChanges="orientation|keyboardHidden"
                   android:label="@string/filter" android:theme="@android:style/Theme.Dialog"/>
 
-		<activity android:name=".activity.CategoryActivity" android:configChanges="orientation|keyboardHidden"
+		<activity android:name=".activity.CategoryActivity_" android:configChanges="orientation|keyboardHidden"
 			android:label="@string/category"/>
 
 		<activity android:name=".widget.QuickAmountInput"
@@ -269,7 +269,7 @@
         <activity android:name=".activity.SplitTransferActivity_" android:label="@string/split_transfer"/>
 
         <activity android:name=".dialog.FolderBrowser" android:label="@string/select_folder"/>
-        <activity android:name=".activity.CategorySelectorActivity" android:label="@string/select_category"/>
+        <activity android:name=".activity.CategorySelectorActivity_" android:label="@string/select_category"/>
 
         <activity android:name=".activity.AccountListTotalsDetailsActivity" android:configChanges="orientation|keyboardHidden"
                   android:label="@string/totals" android:theme="@android:style/Theme.Dialog"/>

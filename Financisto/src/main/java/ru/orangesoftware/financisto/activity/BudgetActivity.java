@@ -237,10 +237,9 @@ public class BudgetActivity extends AbstractActivity {
 		case R.id.category:
 			x.selectMultiChoice(this, R.id.category, R.string.categories, categories);
 			break;
-		case R.id.category_add: {
-			Intent intent = new Intent(this, CategoryActivity.class);
-			startActivityForResult(intent, NEW_CATEGORY_REQUEST);
-			} break;
+		case R.id.category_add:
+            CategoryActivity_.intent(this).startForResult(NEW_CATEGORY_REQUEST);
+			break;
 		case R.id.project:
 			x.selectMultiChoice(this, R.id.project, R.string.projects, projects);
 			break;

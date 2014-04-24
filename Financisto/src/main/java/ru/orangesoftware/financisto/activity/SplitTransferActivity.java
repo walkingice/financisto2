@@ -1,7 +1,6 @@
 package ru.orangesoftware.financisto.activity;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
@@ -9,10 +8,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.OptionsMenu;
+
+import java.util.List;
 
 import ru.orangesoftware.financisto.R;
-import ru.orangesoftware.financisto.db.DatabaseHelper;
 import ru.orangesoftware.financisto.model.Account;
+import ru.orangesoftware.financisto.model.MyEntity;
 import ru.orangesoftware.financisto.utils.TransactionUtils;
 import ru.orangesoftware.financisto.widget.AmountInput;
 import ru.orangesoftware.financisto.widget.RateLayoutView;
@@ -22,18 +24,15 @@ import ru.orangesoftware.financisto.widget.RateLayoutView;
  * User: Denis Solonenko
  * Date: 4/21/11 7:17 PM
  */
-@EActivity
+@EActivity(R.layout.split_fixed)
+@OptionsMenu(R.menu.split_menu)
 public class SplitTransferActivity extends AbstractSplitActivity {
 
     private RateLayoutView rateView;
 
     protected TextView accountText;
-    protected Cursor accountCursor;
+    protected List<Account> accounts;
     protected ListAdapter accountAdapter;
-
-    public SplitTransferActivity() {
-        super(R.layout.split_fixed);
-    }
 
     @Override
     protected void createUI(LinearLayout layout) {
@@ -50,9 +49,8 @@ public class SplitTransferActivity extends AbstractSplitActivity {
 
     @Override
     protected void fetchData() {
-        accountCursor = db.em().getAllActiveAccounts();
-        startManagingCursor(accountCursor);
-        accountAdapter = TransactionUtils.createAccountAdapter(this, accountCursor);
+        accounts = em.getAllAccountsList(true);
+        accountAdapter = TransactionUtils.createAccountAdapter(this, accounts);
     }
 
     @Override
@@ -104,8 +102,8 @@ public class SplitTransferActivity extends AbstractSplitActivity {
     protected void onClick(View v, int id) {
         super.onClick(v, id);
         if (id == R.id.account) {
-            x.select(this, R.id.account, R.string.account_to, accountCursor, accountAdapter,
-                    DatabaseHelper.AccountColumns.ID, split.toAccountId);
+            int selectedPos = MyEntity.indexOf(accounts, split.toAccountId);
+            x.selectItemId(this, R.id.account, R.string.account_to, accountAdapter, selectedPos);
         }
     }
 

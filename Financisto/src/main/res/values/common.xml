@@ -22,7 +22,11 @@
 	<dimen name="select_entry_height_no_label">46dp</dimen>
 	<dimen name="title_entry_height">25dp</dimen>
 	<dimen name="amount_picker_width">47dp</dimen>
-	<string-array name="numbers">
+    <!-- Minimum height used with @drawable/list_section_divider_holo_custom.
+     Right now the drawable has implicit 32dip minimal height, which is confusing.
+     This value is for making the hidden configuration explicit in xml. -->
+    <dimen name="list_section_divider_min_height">32dip</dimen>
+    <string-array name="numbers">
 		<item>1</item>
 		<item>2</item>
 		<item>3</item>

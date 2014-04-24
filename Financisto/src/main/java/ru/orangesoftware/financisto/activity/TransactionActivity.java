@@ -22,6 +22,7 @@ import android.widget.ListAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.OptionsMenu;
 
@@ -69,13 +70,15 @@ public class TransactionActivity extends AbstractTransactionActivity {
 
     private final Currency currencyAsAccount = new Currency();
 
+    @Bean
+    protected Utils u;
+
     private long idSequence = 0;
     private final IdentityHashMap<View, Transaction> viewToSplitMap = new IdentityHashMap<View, Transaction>();
 
 	private TextView differenceText;
 	private boolean isUpdateBalanceMode = false;
 	private long currentBalance;
-	private Utils u;
 
     private LinearLayout splitsLayout;
     private TextView unsplitAmountText;
@@ -84,16 +87,12 @@ public class TransactionActivity extends AbstractTransactionActivity {
     private QuickActionWidget unsplitActionGrid;
     private long selectedOriginCurrencyId = -1;
 
-    public TransactionActivity() {
-	}
-
 	protected int getLayoutId() {
 		return MyPreferences.isUseFixedLayout(this) ? R.layout.transaction_fixed : R.layout.transaction_free;
 	}
 
 	@Override
 	protected void internalOnCreate() {
-		u = new Utils(this);
 		Intent intent = getIntent();
 		if (intent != null) {
 			if (intent.hasExtra(CURRENT_BALANCE_EXTRA)) {

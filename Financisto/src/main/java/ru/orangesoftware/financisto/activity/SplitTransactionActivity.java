@@ -6,6 +6,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.OptionsMenu;
 
 import java.util.HashMap;
 import java.util.List;
@@ -23,17 +24,14 @@ import ru.orangesoftware.financisto.widget.AmountInput_;
  * User: Denis Solonenko
  * Date: 4/21/11 7:17 PM
  */
-@EActivity
+@EActivity(R.layout.split_fixed)
+@OptionsMenu(R.menu.split_menu)
 public class SplitTransactionActivity extends AbstractSplitActivity implements CategorySelector.CategorySelectorListener {
 
     private TextView amountTitle;
     private AmountInput amountInput;
 
     private CategorySelector categorySelector;
-
-    public SplitTransactionActivity() {
-        super(R.layout.split_fixed);
-    }
 
     @Override
     protected void createUI(LinearLayout layout) {

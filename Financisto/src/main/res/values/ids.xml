@@ -74,4 +74,5 @@
     <item type="id" name="backup"/>
     <item type="id" name="category_pick"/>
     <item type="id" name="original_currency"/>
+    <item type="id" name="category_type"/>
 </resources>
