@@ -1,0 +1,1 @@
+ALTER TABLE payee ADD COLUMN is_active boolean not null default 1;

@@ -10,18 +10,18 @@
  ******************************************************************************/
 package ru.orangesoftware.financisto.activity;
 
-import java.util.List;
-
-import android.view.View;
-import ru.orangesoftware.financisto.R;
-import ru.orangesoftware.financisto.adapter.AttributeListAdapter;
-import ru.orangesoftware.financisto.db.DatabaseHelper.AttributeColumns;
-import ru.orangesoftware.financisto.utils.MenuItemInfo;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.view.View;
 import android.widget.ListAdapter;
+
+import java.util.List;
+
+import ru.orangesoftware.financisto.R;
+import ru.orangesoftware.financisto.adapter.AttributeListAdapter;
+import ru.orangesoftware.financisto.utils.MenuItemInfo;
 
 public class AttributeListActivity extends AbstractListActivity {
 	
@@ -43,8 +43,7 @@ public class AttributeListActivity extends AbstractListActivity {
 
 	@Override
 	protected void addItem() {
-		Intent intent = new Intent(this, AttributeActivity.class);
-		startActivityForResult(intent, 1);
+        AttributeActivity_.intent(this).startForResult(1);
 	}
 
 	@Override
@@ -84,10 +83,8 @@ public class AttributeListActivity extends AbstractListActivity {
 
 	@Override
 	public void editItem(View v, int position, long id) {
-		Intent intent = new Intent(this, AttributeActivity.class);
-		intent.putExtra(AttributeColumns.ID, id);
-		startActivityForResult(intent, 2);		
-	}	
+        AttributeActivity_.intent(this).attributeId(id).startForResult(2);
+	}
 	
 	@Override
 	protected void viewItem(View v, int position, long id) {

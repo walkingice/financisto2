@@ -10,12 +10,17 @@
  ******************************************************************************/
 package ru.orangesoftware.financisto.activity;
 
+import org.androidannotations.annotations.EActivity;
+
+import ru.orangesoftware.financisto.R;
 import ru.orangesoftware.financisto.model.Payee;
 
+@EActivity(R.layout.project)
 public class PayeeActivity extends MyEntityActivity<Payee> {
 
-    public PayeeActivity() {
-        super(Payee.class);
+    @Override
+    protected Class<Payee> getEntityClass() {
+        return Payee.class;
     }
 
 }

@@ -10,14 +10,11 @@
  ******************************************************************************/
 package ru.orangesoftware.financisto.model;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "project")
-public class Project extends MyEntity {
+public class Project extends ActiveMyEntity {
 
-    @Column(name = "is_active")
-    public boolean isActive;
 }

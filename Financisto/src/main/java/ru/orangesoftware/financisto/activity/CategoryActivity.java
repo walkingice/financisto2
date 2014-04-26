@@ -243,16 +243,13 @@ public class CategoryActivity extends AbstractActivity {
                         AttributeColumns.ID, -1);
                 break;
             case R.id.add_attribute: {
-                Intent intent = new Intent(this, AttributeActivity.class);
-                startActivityForResult(intent, NEW_ATTRIBUTE_REQUEST);
+                AttributeActivity_.intent(this).startForResult(NEW_ATTRIBUTE_REQUEST);
             }
             break;
             case R.id.edit_attribute: {
                 Object o = v.getTag();
                 if (o instanceof Attribute) {
-                    Intent intent = new Intent(this, AttributeActivity.class);
-                    intent.putExtra(AttributeColumns.ID, ((Attribute) o).id);
-                    startActivityForResult(intent, EDIT_ATTRIBUTE_REQUEST);
+                    AttributeActivity_.intent(this).attributeId(((Attribute) o).id).startForResult(EDIT_ATTRIBUTE_REQUEST);
                 }
             }
             break;

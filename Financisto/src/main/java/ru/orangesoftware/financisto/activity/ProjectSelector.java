@@ -72,8 +72,7 @@ public class ProjectSelector {
                 pickProject();
                 break;
             case R.id.project_add: {
-                Intent intent = new Intent(activity, ProjectActivity.class);
-                activity.startActivityForResult(intent, R.id.project_add);
+                ProjectActivity_.intent(activity).startForResult(R.id.project_add);
                 break;
             }
         }

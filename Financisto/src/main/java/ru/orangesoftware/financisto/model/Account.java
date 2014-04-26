@@ -17,7 +17,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "ACCOUNT")
+@Table(name = "account")
 public class Account extends MyEntity {
 	
 	@Column(name = "creation_date")

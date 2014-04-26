@@ -16,7 +16,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "payee")
-public class Payee extends MyEntity {
+public class Payee extends ActiveMyEntity {
 
     @Column(name = "last_category_id")
     public long lastCategoryId;

@@ -15,14 +15,15 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ListAdapter;
-import ru.orangesoftware.financisto.R;
-import ru.orangesoftware.financisto.adapter.EntityListAdapter;
-import ru.orangesoftware.financisto.filter.Criteria;
-import ru.orangesoftware.financisto.model.MyEntity;
 
 import java.util.List;
 
-public abstract class MyEntityListActivity<T extends MyEntity> extends AbstractListActivity {
+import ru.orangesoftware.financisto.R;
+import ru.orangesoftware.financisto.adapter.EntityListAdapter;
+import ru.orangesoftware.financisto.filter.Criteria;
+import ru.orangesoftware.financisto.model.ActiveMyEntity;
+
+public abstract class MyEntityListActivity<T extends ActiveMyEntity> extends AbstractListActivity {
 
 	private static final int NEW_ENTITY_REQUEST = 1;
 	private static final int EDIT_ENTITY_REQUEST = 2;
@@ -46,11 +47,8 @@ public abstract class MyEntityListActivity<T extends MyEntity> extends AbstractL
 
     @Override
 	protected void addItem() {
-		Intent intent = new Intent(MyEntityListActivity.this, getEditActivityClass());
-		startActivityForResult(intent, NEW_ENTITY_REQUEST);
+        startActivity(-1, NEW_ENTITY_REQUEST);
 	}
-
-    protected abstract Class<? extends MyEntityActivity> getEditActivityClass();
 
     @Override
 	protected ListAdapter createAdapter(Cursor cursor) {
@@ -86,12 +84,12 @@ public abstract class MyEntityListActivity<T extends MyEntity> extends AbstractL
 
 	@Override
 	public void editItem(View v, int position, long id) {
-		Intent intent = new Intent(MyEntityListActivity.this, getEditActivityClass());
-		intent.putExtra(MyEntityActivity.ENTITY_ID_EXTRA, id);
-		startActivityForResult(intent, EDIT_ENTITY_REQUEST);
-	}	
-	
-	@Override
+        startActivity(id, EDIT_ENTITY_REQUEST);
+	}
+
+    protected abstract void startActivity(long id, int requestCode);
+
+    @Override
 	protected void viewItem(View v, int position, long id) {
 		T e = em.load(clazz, id);
 		Intent intent = new Intent(this, BlotterActivity.class);
