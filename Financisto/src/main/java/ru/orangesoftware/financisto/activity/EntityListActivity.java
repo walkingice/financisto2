@@ -66,13 +66,13 @@ public class EntityListActivity extends ListActivity {
         PAYEES(R.string.payees, R.drawable.menu_entities_payees){
             @Override
             public void startActivity(Context context) {
-                context.startActivity(new Intent(context, PayeeListActivity.class));
+                PayeeListActivity_.intent(context).start();
             }
         },
         PROJECTS(R.string.projects, R.drawable.menu_entities_projects){
             @Override
             public void startActivity(Context context) {
-                context.startActivity(new Intent(context, ProjectListActivity.class));
+                ProjectListActivity_.intent(context).start();
             }
         },
         LOCATIONS(R.string.locations, R.drawable.menu_entities_locations){

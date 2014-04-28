@@ -10,7 +10,7 @@
  ******************************************************************************/
 package ru.orangesoftware.financisto.activity;
 
-import android.view.View;
+import org.androidannotations.annotations.EActivity;
 
 import java.util.ArrayList;
 
@@ -19,6 +19,7 @@ import ru.orangesoftware.financisto.blotter.BlotterFilter;
 import ru.orangesoftware.financisto.filter.Criteria;
 import ru.orangesoftware.financisto.model.Project;
 
+@EActivity
 public class ProjectListActivity extends MyEntityListActivity<Project> {
 
     public ProjectListActivity() {
@@ -31,8 +32,8 @@ public class ProjectListActivity extends MyEntityListActivity<Project> {
     }
 
     @Override
-    protected String getContextMenuHeaderTitle(int position) {
-        return getString(R.string.project);
+    protected int getEmptyListTextResId() {
+        return R.string.no_projects;
     }
 
     @Override
@@ -41,9 +42,9 @@ public class ProjectListActivity extends MyEntityListActivity<Project> {
     }
 
     @Override
-    protected void deleteItem(View v, int position, long id) {
+    protected void deleteItem(long id) {
         em.deleteProject(id);
-        recreateCursor();
+        reload();
     }
 
     @Override

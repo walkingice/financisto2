@@ -10,6 +10,8 @@
  ******************************************************************************/
 package ru.orangesoftware.financisto.activity;
 
+import org.androidannotations.annotations.EActivity;
+
 import java.util.List;
 
 import ru.orangesoftware.financisto.R;
@@ -17,6 +19,7 @@ import ru.orangesoftware.financisto.blotter.BlotterFilter;
 import ru.orangesoftware.financisto.filter.Criteria;
 import ru.orangesoftware.financisto.model.Payee;
 
+@EActivity
 public class PayeeListActivity extends MyEntityListActivity<Payee> {
 
     public PayeeListActivity() {
@@ -29,8 +32,8 @@ public class PayeeListActivity extends MyEntityListActivity<Payee> {
     }
 
     @Override
-    protected String getContextMenuHeaderTitle(int position) {
-        return getString(R.string.payee);
+    protected int getEmptyListTextResId() {
+        return R.string.no_payees;
     }
 
     @Override

@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   Copyright (c) 2010 Denis Solonenko.
   All rights reserved. This program and the accompanying materials
   are made available under the terms of the GNU Public License v2.0
@@ -11,7 +10,7 @@
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ru.orangesoftware.financisto"
-    android:installLocation="internalOnly" >
+    android:installLocation="internalOnly">
 
     <supports-screens
         android:anyDensity="true"
@@ -63,7 +62,7 @@
         android:icon="@drawable/icon"
         android:label="@string/app_name"
         android:theme="@style/Theme.Financisto"
-        android:uiOptions="splitActionBarWhenNarrow" >
+        android:uiOptions="splitActionBarWhenNarrow">
         <uses-library
             android:name="com.google.android.maps"
             android:required="false" />
@@ -74,7 +73,7 @@
 
         <receiver
             android:name="ru.orangesoftware.financisto.activity.AccountWidget"
-            android:label="@string/widget_2x1" >
+            android:label="@string/widget_2x1">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="ru.orangesoftware.financisto.UPDATE_WIDGET" />
@@ -86,7 +85,7 @@
         </receiver>
         <receiver
             android:name="ru.orangesoftware.financisto.activity.AccountWidget3x1"
-            android:label="@string/widget_3x1" >
+            android:label="@string/widget_3x1">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="ru.orangesoftware.financisto.UPDATE_WIDGET" />
@@ -98,7 +97,7 @@
         </receiver>
         <receiver
             android:name="ru.orangesoftware.financisto.activity.AccountWidget4x1"
-            android:label="@string/widget_4x1" >
+            android:label="@string/widget_4x1">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="ru.orangesoftware.financisto.UPDATE_WIDGET" />
@@ -108,7 +107,7 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_4x1" />
         </receiver>
-        <receiver android:name="ru.orangesoftware.financisto.activity.ScheduledAlarmReceiver" >
+        <receiver android:name="ru.orangesoftware.financisto.activity.ScheduledAlarmReceiver">
             <intent-filter>
                 <action android:name="ru.orangesoftware.financisto.SCHEDULED_ALARM" />
                 <action android:name="ru.orangesoftware.financisto.SCHEDULED_BACKUP" />
@@ -118,7 +117,7 @@
         </receiver>
         <receiver
             android:name="ru.orangesoftware.financisto.export.flowzr.GcmBroadcastReceiver"
-            android:permission="com.google.android.c2dm.permission.SEND" >
+            android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
 
@@ -128,7 +127,7 @@
 
         <service android:name="ru.orangesoftware.financisto.export.flowzr.GCMIntentService" />
 
-        <receiver android:name="ru.orangesoftware.financisto.activity.PackageReplaceReceiver" >
+        <receiver android:name="ru.orangesoftware.financisto.activity.PackageReplaceReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.PACKAGE_REPLACED" />
 
@@ -138,7 +137,7 @@
             </intent-filter>
         </receiver>
 
-        <service android:name="ru.orangesoftware.financisto.service.FinancistoService_" >
+        <service android:name="ru.orangesoftware.financisto.service.FinancistoService_">
             <intent-filter>
                 <action android:name="ru.orangesoftware.financisto.SCHEDULE_ONE" />
                 <action android:name="ru.orangesoftware.financisto.SCHEDULE_ALL" />
@@ -153,13 +152,12 @@
             android:name="ru.orangesoftware.financisto.activity.MainActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/app_name"
-            android:taskAffinity=".MainActivity" >
-        </activity>
+            android:taskAffinity=".MainActivity"/>
         <activity
             android:name="ru.orangesoftware.financisto.activity.MainActivity2_"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/app_name"
-            android:taskAffinity=".MainActivity" >
+            android:taskAffinity=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -172,7 +170,7 @@
             android:icon="@drawable/icon_transaction"
             android:label="@string/transaction"
             android:taskAffinity=".TransactionActivity"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustResize" >
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="ru.orangesoftware.financisto.NEW_TRANSACTION" />
@@ -186,7 +184,7 @@
             android:icon="@drawable/icon_transfer"
             android:label="@string/transfer"
             android:taskAffinity=".TransferActivity"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustResize" >
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="ru.orangesoftware.financisto.NEW_TRANSFER" />
@@ -314,16 +312,18 @@
             android:label="@string/project"
             android:theme="@android:style/Theme.Holo.Light.Dialog" />
         <activity
-            android:name="ru.orangesoftware.financisto.activity.ProjectListActivity"
-            android:label="@string/projects" />
+            android:name="ru.orangesoftware.financisto.activity.ProjectListActivity_"
+            android:label="@string/projects"
+            android:parentActivityName=".activity.MainActivity2_" />
         <activity
             android:name="ru.orangesoftware.financisto.activity.PayeeActivity_"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/payee"
             android:theme="@android:style/Theme.Holo.Light.Dialog" />
         <activity
-            android:name="ru.orangesoftware.financisto.activity.PayeeListActivity"
-            android:label="@string/payees" />
+            android:name="ru.orangesoftware.financisto.activity.PayeeListActivity_"
+            android:label="@string/payees"
+            android:parentActivityName=".activity.MainActivity2_" />
         <activity
             android:name="ru.orangesoftware.financisto.activity.LocationsListActivity"
             android:label="@string/locations" />
@@ -407,16 +407,17 @@
         <activity
             android:name="ru.orangesoftware.financisto.activity.EntityListActivity_"
             android:label="@string/entities"
-            android:parentActivityName=".activity.MainActivity2_"/>
+            android:parentActivityName=".activity.MainActivity2_" />
 
         <activity
             android:name="com.dropbox.client2.android.AuthActivity"
             android:configChanges="orientation|keyboard"
-            android:launchMode="singleTask" >
+            android:launchMode="singleTask">
             <intent-filter>
                 <!-- Change this to be db- followed by your app key -->
                 <data android:scheme="db-INSERT-APP-KEY-HERE" />
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.BROWSABLE" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
