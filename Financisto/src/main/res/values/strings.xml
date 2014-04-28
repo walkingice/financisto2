@@ -893,5 +893,7 @@
     <string name="add_template">Add template</string>
     <string name="category_type">Category type</string>
     <string name="category_type_inherited">Inherited (%s)</string>
+    <string name="drawer_open">Open</string>
+    <string name="drawer_close">Close</string>
 
 </resources>

@@ -10,8 +10,6 @@
  ******************************************************************************/
 package ru.orangesoftware.financisto.adapter;
 
-import ru.orangesoftware.financisto.R;
-import ru.orangesoftware.financisto.utils.EntityEnum;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,12 +18,17 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import ru.orangesoftware.financisto.R;
+import ru.orangesoftware.financisto.utils.EntityEnum;
+
 public class EntityEnumAdapter<T extends EntityEnum> extends BaseAdapter {
-	
+
+    private final int layoutId;
 	private final T[] values;
 	private final LayoutInflater inflater;
 	
-	public EntityEnumAdapter(Context context, T[] values) {
+	public EntityEnumAdapter(Context context,  int layoutId, T[] values) {
+        this.layoutId = layoutId;
 		this.values = values;
 		this.inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
@@ -48,7 +51,7 @@ public class EntityEnumAdapter<T extends EntityEnum> extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		if (convertView == null) {
-			convertView = inflater.inflate(R.layout.entity_enum_list_item, parent, false);
+			convertView = inflater.inflate(layoutId, parent, false);
 		}
 		ImageView icon = (ImageView)convertView.findViewById(R.id.icon);
 		TextView title = (TextView)convertView.findViewById(R.id.line1);

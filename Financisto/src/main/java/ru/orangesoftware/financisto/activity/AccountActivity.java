@@ -38,6 +38,7 @@ import ru.orangesoftware.financisto.model.AccountType;
 import ru.orangesoftware.financisto.model.CardIssuer;
 import ru.orangesoftware.financisto.model.Currency;
 import ru.orangesoftware.financisto.model.Transaction;
+import ru.orangesoftware.financisto.utils.EnumUtils;
 import ru.orangesoftware.financisto.utils.TransactionUtils;
 import ru.orangesoftware.financisto.utils.Utils;
 import ru.orangesoftware.financisto.widget.AmountInput;
@@ -116,10 +117,10 @@ public class AccountActivity extends AbstractActivity {
 
 		LinearLayout layout = (LinearLayout)findViewById(R.id.layout);		
 
-		accountTypeAdapter = new EntityEnumAdapter<AccountType>(this, AccountType.values());
+		accountTypeAdapter = EnumUtils.createEntityEnumAdapter(this, AccountType.values());
 		accountTypeNode = x.addListNodeIcon(layout, R.id.account_type, R.string.account_type, R.string.account_type);
 		
-		cardIssuerAdapter = new EntityEnumAdapter<CardIssuer>(this, CardIssuer.values());
+		cardIssuerAdapter = EnumUtils.createEntityEnumAdapter(this, CardIssuer.values());
 		cardIssuerNode = x.addListNodeIcon(layout, R.id.card_issuer, R.string.card_issuer, R.string.card_issuer);
 		setVisibility(cardIssuerNode, View.GONE);
 		

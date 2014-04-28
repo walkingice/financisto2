@@ -11,11 +11,13 @@
 package ru.orangesoftware.financisto.utils;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.widget.ListAdapter;
-import ru.orangesoftware.financisto.adapter.EntityEnumAdapter;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.widget.ArrayAdapter;
+import android.widget.ListAdapter;
+
+import ru.orangesoftware.financisto.R;
+import ru.orangesoftware.financisto.adapter.EntityEnumAdapter;
 
 public abstract class EnumUtils {
 
@@ -35,7 +37,7 @@ public abstract class EnumUtils {
 	}
 	
 	public static <T extends EntityEnum> EntityEnumAdapter<T> createEntityEnumAdapter(Context context, T...values) {
-		return new EntityEnumAdapter<T>(context, values);		
+		return new EntityEnumAdapter<T>(context, R.layout.entity_enum_list_item, values);
 	}
 
 	public static ArrayAdapter<String> createSpinnerAdapter(Context context, LocalizableEnum...values) {

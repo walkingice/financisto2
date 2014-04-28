@@ -7,8 +7,8 @@
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="modules">
           <set>
-            <option value="H:\Work\Java\Android\FinancistoAndroid" />
-            <option value="H:\Work\Java\Android\FinancistoAndroid\Financisto" />
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/Financisto" />
           </set>
         </option>
       </GradleProjectSettings>
