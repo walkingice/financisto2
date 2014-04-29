@@ -48,10 +48,10 @@ public class EntityListActivity extends ListActivity {
         CURRENCIES(R.string.currencies, R.drawable.menu_entities_currencies){
             @Override
             public void startActivity(Context context) {
-                context.startActivity(new Intent(context, CurrencyListActivity.class));
+                CurrencyListActivity_.intent(context).start();
             }
         },
-        EXCHANGE_RATES(R.string.exchange_rates, R.drawable.menu_entities_exchange_rates){
+        EXCHANGE_RATES(R.string.exchange_rates, R.drawable.ic_action_line_chart){
             @Override
             public void startActivity(Context context) {
                 context.startActivity(new Intent(context, ExchangeRatesListActivity.class));

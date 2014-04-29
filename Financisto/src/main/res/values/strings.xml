@@ -52,7 +52,7 @@
 	<string name="transfer">Transfer</string>
 	<string name="confirmation">Confirmation</string>	
 	<string name="delete_category_dialog">Delete the category and all sub-categories (if any)?</string>
-	<string name="currency_delete_alert">Can\'t delete the currency which is in use.</string>	
+	<string name="currency_delete_alert">Can not delete the currency which is in use.</string>
 	<string name="yes">Yes</string>
 	<string name="no">No</string>
 	<string name="error">Error</string>

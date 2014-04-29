@@ -46,6 +46,8 @@
     <style name="ListButton" parent="android:Widget.Holo.Button.Borderless.Small">
         <item name="android:minHeight">40dip</item>
         <item name="android:minWidth">40dip</item>
+        <item name="android:focusable">false</item>
+        <item name="android:focusableInTouchMode">false</item>
     </style>
 
     <style name="MinusButton" parent="ListButton">

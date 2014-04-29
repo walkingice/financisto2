@@ -234,7 +234,8 @@
             android:name="ru.orangesoftware.financisto.activity.LocationActivity"
             android:label="@string/location" />
         <activity
-            android:name="ru.orangesoftware.financisto.activity.CurrencyListActivity"
+            android:name="ru.orangesoftware.financisto.activity.CurrencyListActivity_"
+            android:parentActivityName=".activity.MainActivity2_"
             android:label="@string/currencies" />
         <activity
             android:name="ru.orangesoftware.financisto.activity.ExchangeRatesListActivity"
@@ -261,7 +262,7 @@
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/report" />
         <activity
-            android:name="ru.orangesoftware.financisto.activity.CurrencyActivity"
+            android:name="ru.orangesoftware.financisto.activity.CurrencyActivity_"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/currency" />
         <activity
