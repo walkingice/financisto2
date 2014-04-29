@@ -15,13 +15,19 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.*;
-import ru.orangesoftware.financisto.R;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import ru.orangesoftware.financisto.R;
 
 import static ru.orangesoftware.financisto.utils.Utils.text;
 
@@ -113,7 +119,7 @@ public class FolderBrowser extends ListActivity {
             result = false;
         } finally {
             if (!result) {
-                Toast.makeText(this, R.string.create_new_folder_fail, Toast.LENGTH_LONG);
+                Toast.makeText(this, R.string.create_new_folder_fail, Toast.LENGTH_LONG).show();
             }
             browseTo(selectedFolder);
         }
