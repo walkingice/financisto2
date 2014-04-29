@@ -54,7 +54,7 @@ public class EntityListActivity extends ListActivity {
         EXCHANGE_RATES(R.string.exchange_rates, R.drawable.ic_action_line_chart){
             @Override
             public void startActivity(Context context) {
-                context.startActivity(new Intent(context, ExchangeRatesListActivity.class));
+                ExchangeRatesListActivity_.intent(context).start();
             }
         },
         CATEGORIES(R.string.categories, R.drawable.menu_entities_categories){

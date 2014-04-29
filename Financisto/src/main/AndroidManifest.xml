@@ -238,11 +238,13 @@
             android:parentActivityName=".activity.MainActivity2_"
             android:label="@string/currencies" />
         <activity
-            android:name="ru.orangesoftware.financisto.activity.ExchangeRatesListActivity"
+            android:name="ru.orangesoftware.financisto.activity.ExchangeRatesListActivity_"
+            android:parentActivityName=".activity.MainActivity2_"
             android:label="@string/exchange_rates" />
         <activity
-            android:name="ru.orangesoftware.financisto.activity.ExchangeRateActivity"
+            android:name="ru.orangesoftware.financisto.activity.ExchangeRateActivity_"
             android:configChanges="orientation|keyboardHidden"
+            android:parentActivityName=".activity.MainActivity2_"
             android:label="@string/exchange_rate" />
         <activity
             android:name="ru.orangesoftware.financisto.activity.AccountListActivity"

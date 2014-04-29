@@ -898,5 +898,6 @@
     <string name="add">Add</string>
     <string name="no_payees">No payees</string>
     <string name="delete_confirm">Delete \'%s\'?</string>
+    <string name="swap">Swap</string>
 
 </resources>

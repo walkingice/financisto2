@@ -84,8 +84,7 @@ public class CurrencyListActivity extends ListActivity {
 
     @OptionsItem(R.id.menu_rates)
     protected void onShowRates() {
-        Intent intent = new Intent(CurrencyListActivity.this, ExchangeRatesListActivity.class);
-        startActivity(intent);
+        ExchangeRatesListActivity_.intent(this).start();
     }
 
     @ItemClick(android.R.id.list)
