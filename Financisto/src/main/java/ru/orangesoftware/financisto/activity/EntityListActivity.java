@@ -60,7 +60,7 @@ public class EntityListActivity extends ListActivity {
         CATEGORIES(R.string.categories, R.drawable.menu_entities_categories){
             @Override
             public void startActivity(Context context) {
-                context.startActivity(new Intent(context, CategoryListActivity2.class));
+                CategoryListActivity2_.intent(context).start();
             }
         },
         PAYEES(R.string.payees, R.drawable.menu_entities_payees){

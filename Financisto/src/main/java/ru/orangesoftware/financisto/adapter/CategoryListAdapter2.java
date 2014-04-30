@@ -10,28 +10,34 @@
  ******************************************************************************/
 package ru.orangesoftware.financisto.adapter;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Map;
-
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
-import ru.orangesoftware.financisto.R;
-import ru.orangesoftware.financisto.model.Category;
-import ru.orangesoftware.financisto.model.CategoryTree;
-import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Map;
+
+import ru.orangesoftware.financisto.R;
+import ru.orangesoftware.financisto.bus.DeleteEntity;
+import ru.orangesoftware.financisto.bus.EditEntity;
+import ru.orangesoftware.financisto.bus.GreenRobotBus;
+import ru.orangesoftware.financisto.model.Category;
+import ru.orangesoftware.financisto.model.CategoryTree;
+
 public class CategoryListAdapter2 extends BaseAdapter {
 
 	private final LayoutInflater inflater;
+    private final GreenRobotBus bus;
+
 	private CategoryTree<Category> categories;
 	private Map<Long, String> attributes;
 
@@ -45,12 +51,14 @@ public class CategoryListAdapter2 extends BaseAdapter {
 
     private final int levelPadding;
 
-	public CategoryListAdapter2(Context context, CategoryTree<Category> categories) {
+	public CategoryListAdapter2(Context context, GreenRobotBus bus, CategoryTree<Category> categories, Map<Long, String> attributes) {
 		this.inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this.bus = bus;
 		this.categories = categories;
+        this.attributes = attributes;
         Resources resources = context.getResources();
-        this.expandedDrawable = resources.getDrawable(R.drawable.expander_ic_maximized);
-		this.collapsedDrawable = resources.getDrawable(R.drawable.expander_ic_minimized);
+        this.expandedDrawable = resources.getDrawable(R.drawable.ic_action_expanded);
+		this.collapsedDrawable = resources.getDrawable(R.drawable.ic_action_collapsed);
         this.incomeColor = resources.getColor(R.color.category_type_income);
         this.expenseColor = resources.getColor(R.color.category_type_expense);
         this.levelPadding = resources.getDimensionPixelSize(R.dimen.category_padding);
@@ -98,45 +106,53 @@ public class CategoryListAdapter2 extends BaseAdapter {
 		} else {
 			h = (Holder)convertView.getTag();
 		}
-        TextView indicator = h.indicator;
-		ImageView span = h.span;
-		TextView title = h.title;
-		TextView label = h.label;
-		final Category c = getItem(position);
-		title.setText(c.title);
-        int padding  = levelPadding*(c.level-1);
+        final Category c = getItem(position);
+		h.title.setText(Category.getTitle(c.title, c.level));
+        int padding = levelPadding*(c.level-1);
 		if (c.hasChildren()) {
-			span.setImageDrawable(state.contains(c.id) ? expandedDrawable : collapsedDrawable);
-			span.setClickable(true);
-			span.setOnClickListener(new OnClickListener(){
-				@Override
-				public void onClick(View v) {
-					onListItemClick(c.id);
-				}
-			});
-            span.setPadding(padding, 0, 0, 0);
-			span.setVisibility(View.VISIBLE);
+			h.span.setImageDrawable(state.contains(c.id) ? expandedDrawable : collapsedDrawable);
+			h.span.setClickable(true);
+			h.span.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onListItemClick(c.id);
+                }
+            });
+            h.span.setPadding(padding, 0, 0, 0);
+			h.span.setVisibility(View.VISIBLE);
             padding += collapsedDrawable.getMinimumWidth();
 		} else {
             padding += levelPadding/2;
-			span.setVisibility(View.GONE);
+			h.span.setVisibility(View.GONE);
 		}
-        title.setPadding(padding, 0, 0, 0);
-        label.setPadding(padding, 0, 0, 0);
+        h.title.setPadding(padding, 0, 0, 0);
+        h.label.setPadding(padding, 0, 0, 0);
 		long id = c.id;
 		if (attributes != null && attributes.containsKey(id)) {
-			label.setText(attributes.get(id));
-			label.setVisibility(View.VISIBLE);
+			h.label.setText(attributes.get(id));
+			h.label.setVisibility(View.VISIBLE);
 		} else {
-			label.setVisibility(View.GONE);
+			h.label.setVisibility(View.GONE);
 		}
         if (c.isIncome()) {
-            indicator.setBackgroundColor(incomeColor);
+            h.indicator.setBackgroundColor(incomeColor);
         } else if (c.isExpense()) {
-            indicator.setBackgroundColor(expenseColor);
+            h.indicator.setBackgroundColor(expenseColor);
         } else {
-            indicator.setBackgroundColor(Color.WHITE);
+            h.indicator.setBackgroundColor(Color.WHITE);
         }
+        h.edit.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bus.post(new EditEntity(c.getId()));
+            }
+        });
+        h.delete.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bus.post(new DeleteEntity(c.getId()));
+            }
+        });
 		return convertView;
 	}
 	
@@ -190,6 +206,8 @@ public class CategoryListAdapter2 extends BaseAdapter {
 		public ImageView span;
 		public TextView title;
 		public TextView label;
+        public ImageView edit;
+        public ImageView delete;
 
 		public static Holder create(View convertView) {
 			Holder h = new Holder();
@@ -197,6 +215,8 @@ public class CategoryListAdapter2 extends BaseAdapter {
 			h.span = (ImageView)convertView.findViewById(R.id.span);
 			h.title = (TextView)convertView.findViewById(R.id.line1);
 			h.label = (TextView)convertView.findViewById(R.id.label);
+            h.edit = (ImageView)convertView.findViewById(R.id.edit);
+            h.delete = (ImageView)convertView.findViewById(R.id.delete);
 			convertView.setTag(h);
 			return h;
 		}

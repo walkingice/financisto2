@@ -250,7 +250,8 @@
             android:name="ru.orangesoftware.financisto.activity.AccountListActivity"
             android:label="@string/accounts" />
         <activity
-            android:name="ru.orangesoftware.financisto.activity.CategoryListActivity2"
+            android:name="ru.orangesoftware.financisto.activity.CategoryListActivity2_"
+            android:parentActivityName=".activity.MainActivity2_"
             android:label="@string/categories" />
         <activity
             android:name="ru.orangesoftware.financisto.activity.AttributeListActivity"
