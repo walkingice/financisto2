@@ -30,7 +30,6 @@
         android:layout_alignParentTop="false"
         android:layout_alignWithParentIfMissing="false"
         android:layout_toRightOf="@id/indicator"
-        android:src="@drawable/expander_ic_minimized"
         android:layout_centerVertical="true" />
 
     <TextView
