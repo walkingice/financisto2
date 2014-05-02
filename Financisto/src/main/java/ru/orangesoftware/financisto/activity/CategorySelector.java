@@ -17,7 +17,6 @@ import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -159,7 +158,7 @@ public class CategorySelector {
 
     public void addAttributes(Transaction transaction) {
         attributesLayout.removeAllViews();
-        ArrayList<Attribute> attributes = db.getAllAttributesForCategory(selectedCategoryId);
+        List<Attribute> attributes = db.getAllAttributesForCategory(selectedCategoryId);
         Map<Long, String> values = transaction.categoryAttributes;
         for (Attribute a : attributes) {
             AttributeView av = inflateAttribute(a);

@@ -11,88 +11,91 @@
 package ru.orangesoftware.financisto.activity;
 
 import android.app.AlertDialog;
+import android.app.ListActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
-import android.view.View;
-import android.widget.ListAdapter;
+
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Bean;
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.ItemClick;
+import org.androidannotations.annotations.OptionsItem;
+import org.androidannotations.annotations.OptionsMenu;
 
 import java.util.List;
 
 import ru.orangesoftware.financisto.R;
 import ru.orangesoftware.financisto.adapter.AttributeListAdapter;
-import ru.orangesoftware.financisto.utils.MenuItemInfo;
+import ru.orangesoftware.financisto.bus.DeleteEntity;
+import ru.orangesoftware.financisto.bus.GreenRobotBus;
+import ru.orangesoftware.financisto.db.MyEntityManager;
+import ru.orangesoftware.financisto.model.Attribute;
 
-public class AttributeListActivity extends AbstractListActivity {
-	
-	public AttributeListActivity() {
-		super(R.layout.attributes_list);
-	}
-	
-	@Override
-	protected List<MenuItemInfo> createContextMenus(long id) {
-		List<MenuItemInfo> menus = super.createContextMenus(id);
-		for (MenuItemInfo m : menus) {
-			if (m.menuId == MENU_VIEW) {
-				m.enabled = false;
-				break;
-			}
-		}
-		return menus;
-	}
+@EActivity(R.layout.attributes_list)
+@OptionsMenu(R.menu.attributes_list_menu)
+public class AttributeListActivity extends ListActivity {
 
-	@Override
+    @Bean
+    protected MyEntityManager em;
+
+    @Bean
+    protected GreenRobotBus bus;
+
+    @Override
+    protected void onPause() {
+        bus.unregister(this);
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        bus.register(this);
+    }
+
+    @AfterViews
+    protected void afterViews() {
+        reload();
+    }
+
+    private void reload() {
+        List<Attribute> attributes = em.getAllAttributes();
+        AttributeListAdapter adapter = new AttributeListAdapter(this, bus, attributes);
+        setListAdapter(adapter);
+    }
+
+    @OptionsItem(R.id.menu_add)
 	protected void addItem() {
         AttributeActivity_.intent(this).startForResult(1);
 	}
 
 	@Override
-	protected ListAdapter createAdapter(Cursor cursor) {
-		return new AttributeListAdapter(db, this, cursor);
-	}
-
-	@Override
-	protected Cursor createCursor() {
-		return db.getAllAttributes();
-	}
-	
-	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (resultCode == RESULT_OK) {
-			cursor.requery();
+			reload();
 		}
 	}
 
-	@Override
-	protected void deleteItem(View v, int position, final long id) {
+    @SuppressWarnings("unused")
+	public void onEventMainThread(final DeleteEntity event) {
 		new AlertDialog.Builder(this)
 			.setTitle(R.string.delete)
-			.setIcon(android.R.drawable.ic_dialog_alert)
-			.setMessage(R.string.attribute_delete_alert)			
+			.setMessage(R.string.attribute_delete_alert)
 			.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener(){
 				@Override
 				public void onClick(DialogInterface arg0, int arg1) {
-					db.deleteAttribute(id);
-					cursor.requery();
+					em.deleteAttribute(event.id);
+					reload();
 				}				
 			})
 			.setNegativeButton(R.string.cancel, null)
 			.show();		
 	}
 
-	@Override
-	public void editItem(View v, int position, long id) {
-        AttributeActivity_.intent(this).attributeId(id).startForResult(2);
+    @ItemClick(android.R.id.list)
+	public void editItem(Attribute attribute) {
+        AttributeActivity_.intent(this).attributeId(attribute.id).startForResult(2);
 	}
-	
-	@Override
-	protected void viewItem(View v, int position, long id) {
-		editItem(v, position, id);
-	}		
 
-	@Override
-	protected String getContextMenuHeaderTitle(int position) {
-		return getString(R.string.attribute);
-	}
 }

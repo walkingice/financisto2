@@ -528,7 +528,7 @@ public class FlowzrSyncEngine  {
 	       	 	            Map<Long, String> attributesMap = dba.getAllAttributesForTransaction(c.getInt(0));
 	       	 	            String transaction_attribute="";
 	       	 	            for (long attributeId : attributesMap.keySet()) {
-	       	 	                transaction_attribute+= dba.getAttribute(attributeId).remoteKey + "=" + attributesMap.get(attributeId) +";";
+	       	 	                transaction_attribute+= em.get(Attribute.class, attributeId).remoteKey + "=" + attributesMap.get(attributeId) +";";
 	       	 	            } 
 	       	 	            rowObject.put( "transaction_attribute" ,  transaction_attribute );        	 				
 	       	 			}        	    			
@@ -741,7 +741,7 @@ public class FlowzrSyncEngine  {
 			return null;
 		}
 		
-		Attribute tEntity=dba.getAttribute(localKey);
+		Attribute tEntity=em.get(Attribute.class,localKey);
 		
 		try {			
 			tEntity.remoteKey=jsonObjectEntity.getString("key");
@@ -755,7 +755,7 @@ public class FlowzrSyncEngine  {
 			if (jsonObjectEntity.has("list_values")) {			
 				tEntity.listValues=jsonObjectEntity.getString("list_values");
 			}
-			dba.insertOrUpdate(tEntity);
+			em.saveOrUpdate(tEntity);
 			return tEntity;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -826,7 +826,7 @@ public class FlowzrSyncEngine  {
 				for (String attr_key: jsonObjectEntity.getString("attributes").split(";")) {
 						int l=(int) getLocalKey(DatabaseHelper.ATTRIBUTES_TABLE, attr_key);
 						if (l>0) {						
-							Attribute attr=dba.getAttribute(l);
+							Attribute attr=em.get(Attribute.class,l);
 							attributes.add(attr);
 						}
 				}				

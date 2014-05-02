@@ -79,8 +79,7 @@ public class CategoryListActivity2 extends ListActivity {
 
     @OptionsItem(R.id.menu_attributes)
     protected void showAttributes() {
-        Intent intent = new Intent(this, AttributeListActivity.class);
-        startActivityForResult(intent, 0);
+        AttributeListActivity_.intent(this).startForResult(0);
     }
 
     @OptionsItem(R.id.menu_expand)

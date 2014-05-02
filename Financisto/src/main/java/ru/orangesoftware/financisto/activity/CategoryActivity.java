@@ -19,7 +19,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ScrollView;
-import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
 import org.androidannotations.annotations.AfterViews;
@@ -31,9 +30,11 @@ import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.res.StringArrayRes;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import ru.orangesoftware.financisto.R;
 import ru.orangesoftware.financisto.adapter.CategoryListAdapter;
+import ru.orangesoftware.financisto.adapter.MyEntityAdapter;
 import ru.orangesoftware.financisto.db.DatabaseHelper.AttributeColumns;
 import ru.orangesoftware.financisto.db.DatabaseHelper.CategoryColumns;
 import ru.orangesoftware.financisto.model.Attribute;
@@ -56,7 +57,7 @@ public class CategoryActivity extends AbstractActivity {
     @StringArrayRes(R.array.attribute_types)
     protected String[] types;
 
-    private Cursor attributeCursor;
+    private List<Attribute> attributes;
     private ListAdapter attributeAdapter;
 
     private EditText categoryTitle;
@@ -87,10 +88,7 @@ public class CategoryActivity extends AbstractActivity {
             category = db.getCategory(categoryId);
         }
 
-        attributeCursor = db.getAllAttributes();
-        startManagingCursor(attributeCursor);
-        attributeAdapter = new SimpleCursorAdapter(this, android.R.layout.simple_spinner_dropdown_item,
-                attributeCursor, new String[]{AttributeColumns.NAME}, new int[]{android.R.id.text1});
+        fetchAttributes();
 
         if (category.id == -1) {
             categoryCursor = db.getCategories(true);
@@ -117,6 +115,11 @@ public class CategoryActivity extends AbstractActivity {
                 db, this, android.R.layout.simple_spinner_dropdown_item, categoryCursor);
 
         editCategory();
+    }
+
+    private void fetchAttributes() {
+        attributes = em.getAllAttributes();
+        attributeAdapter = new MyEntityAdapter<Attribute>(this, android.R.layout.simple_spinner_dropdown_item, attributes);
     }
 
     @OptionsItem(R.id.menu_save)
@@ -187,7 +190,7 @@ public class CategoryActivity extends AbstractActivity {
         if (categoryId == -1) {
             categoryId = 0;
         }
-        ArrayList<Attribute> attributes = db.getAttributesForCategory(categoryId);
+        List<Attribute> attributes = db.getAttributesForCategory(categoryId);
         for (Attribute a : attributes) {
             addAttribute(a);
         }
@@ -195,7 +198,7 @@ public class CategoryActivity extends AbstractActivity {
 
     private void addParentAttributes() {
         long categoryId = category.getParentId();
-        ArrayList<Attribute> attributes = db.getAllAttributesForCategory(categoryId);
+        List<Attribute> attributes = db.getAllAttributesForCategory(categoryId);
         if (attributes.size() > 0) {
             for (Attribute a : attributes) {
                 View v = x.inflater.new Builder(parentAttributesLayout, R.layout.select_entry_simple).create();
@@ -239,8 +242,7 @@ public class CategoryActivity extends AbstractActivity {
                 }
                 break;
             case R.id.new_attribute:
-                x.select(this, R.id.new_attribute, R.string.attribute, attributeCursor, attributeAdapter,
-                        AttributeColumns.ID, -1);
+                x.selectItemId(this, R.id.new_attribute, R.string.attribute, attributeAdapter, -1);
                 break;
             case R.id.add_attribute: {
                 AttributeActivity_.intent(this).startForResult(NEW_ATTRIBUTE_REQUEST);
@@ -268,7 +270,7 @@ public class CategoryActivity extends AbstractActivity {
                 selectParentCategory(selectedId);
                 break;
             case R.id.new_attribute:
-                Attribute a = db.getAttribute(selectedId);
+                Attribute a = em.get(Attribute.class, selectedId);
                 addAttribute(a);
                 break;
         }
@@ -301,7 +303,7 @@ public class CategoryActivity extends AbstractActivity {
                 case NEW_ATTRIBUTE_REQUEST: {
                     long attributeId = data.getLongExtra(AttributeColumns.ID, -1);
                     if (attributeId != -1) {
-                        Attribute a = db.getAttribute(attributeId);
+                        Attribute a = em.get(Attribute.class, attributeId);
                         addAttribute(a);
                     }
                 }
@@ -309,8 +311,8 @@ public class CategoryActivity extends AbstractActivity {
                 case EDIT_ATTRIBUTE_REQUEST: {
                     long attributeId = data.getLongExtra(AttributeColumns.ID, -1);
                     if (attributeId != -1) {
-                        Attribute a = db.getAttribute(attributeId);
-                        attributeCursor.requery();
+                        Attribute a = em.get(Attribute.class, attributeId);
+                        fetchAttributes();
                         updateAttribute(attributesLayout, a);
                         updateAttribute(parentAttributesLayout, a);
                     }

@@ -302,7 +302,7 @@ public abstract class AbstractTransactionActivity extends AbstractActivity imple
 		if (transaction.isScheduled()) {
 			recurText = x.addListNode(layout, R.id.recurrence_pattern, R.string.recur, R.string.recur_interval_no_recur);
 			notificationText = x.addListNode(layout, R.id.notification, R.string.notification, R.string.notification_options_default);
-			Attribute sa = db.getSystemAttribute(SystemAttribute.DELETE_AFTER_EXPIRED);
+			Attribute sa = em.getSystemAttribute(SystemAttribute.DELETE_AFTER_EXPIRED);
 			deleteAfterExpired = AttributeViewFactory.createViewForAttribute(this, sa);
 			String value = transaction.getSystemAttribute(SystemAttribute.DELETE_AFTER_EXPIRED);
 			deleteAfterExpired.inflateView(layout, value != null ? value : sa.defaultValue);

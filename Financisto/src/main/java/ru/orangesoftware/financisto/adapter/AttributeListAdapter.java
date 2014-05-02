@@ -10,34 +10,93 @@
  ******************************************************************************/
 package ru.orangesoftware.financisto.adapter;
 
-import ru.orangesoftware.financisto.R;
-import ru.orangesoftware.financisto.db.DatabaseAdapter;
-import ru.orangesoftware.financisto.model.Attribute;
 import android.content.Context;
-import android.database.Cursor;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
 
-public class AttributeListAdapter extends AbstractGenericListAdapter {
-	
+import java.util.List;
+
+import ru.orangesoftware.financisto.R;
+import ru.orangesoftware.financisto.bus.DeleteEntity;
+import ru.orangesoftware.financisto.bus.GreenRobotBus;
+import ru.orangesoftware.financisto.model.Attribute;
+
+public class AttributeListAdapter extends BaseAdapter {
+
+    private final GreenRobotBus bus;
 	private final String[] attributeTypes;
+    private final List<Attribute> attributes;
 
-	public AttributeListAdapter(DatabaseAdapter db, Context context, Cursor c) {
-		super(db, context, c);
-		attributeTypes = context.getResources().getStringArray(R.array.attribute_types);
+	public AttributeListAdapter(Context context, GreenRobotBus bus, List<Attribute> attributes) {
+        this.bus = bus;
+		this.attributeTypes = context.getResources().getStringArray(R.array.attribute_types);
+        this.attributes = attributes;
 	}
 
-	@Override
-	protected void bindView(GenericViewHolder v, Context context, Cursor cursor) {
-		Attribute a = Attribute.fromCursor(cursor);
-		v.lineView.setText(a.name);
-		v.numberView.setText(attributeTypes[a.type-1]);
-		String defaultValue = a.getDefaultValue();
-		if (defaultValue != null) {
-			v.amountView.setVisibility(View.VISIBLE);
-			v.amountView.setText(defaultValue);
-		} else {
-			v.amountView.setVisibility(View.GONE);
-		}
-	}
+    @Override
+    public int getCount() {
+        return attributes.size();
+    }
+
+    @Override
+    public Attribute getItem(int position) {
+        return attributes.get(position);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return getItem(position).getId();
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        AttributeViewHolder h;
+        if (convertView == null) {
+            LayoutInflater layoutInflater = (LayoutInflater) parent.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView = layoutInflater.inflate(R.layout.attribute_list_item, parent, false);
+            h = AttributeViewHolder.createAndTag(convertView);
+        } else {
+            h = (AttributeViewHolder)convertView.getTag();
+        }
+        final Attribute a = getItem(position);
+        h.name.setText(a.name);
+        h.type.setText(attributeTypes[a.type-1]);
+        String defaultValue = a.getDefaultValue();
+        if (defaultValue != null) {
+            h.defaultValue.setVisibility(View.VISIBLE);
+            h.defaultValue.setText(defaultValue);
+        } else {
+            h.defaultValue.setVisibility(View.INVISIBLE);
+        }
+        h.delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bus.post(new DeleteEntity(a.id));
+            }
+        });
+        return convertView;
+    }
+
+    private static class AttributeViewHolder {
+
+        public TextView name;
+        public TextView type;
+        public TextView defaultValue;
+        public ImageView delete;
+
+        public static AttributeViewHolder createAndTag(View view) {
+            AttributeViewHolder views = new AttributeViewHolder();
+            views.name = (TextView)view.findViewById(R.id.name);
+            views.type = (TextView)view.findViewById(R.id.type);
+            views.defaultValue = (TextView)view.findViewById(R.id.default_value);
+            views.delete = (ImageView) view.findViewById(R.id.delete);
+            view.setTag(views);
+            return views;
+        }
+    }
 
 }
