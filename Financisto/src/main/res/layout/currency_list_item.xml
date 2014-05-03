@@ -16,13 +16,15 @@
 
     <ImageView
         android:id="@+id/icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
         android:src="@drawable/ic_home_currency"
         android:layout_toRightOf="@+id/name"
         android:scaleType="center"
         android:layout_alignParentBottom="false"
-        android:layout_alignBottom="@+id/name" />
+        android:baselineAlignBottom="false"
+        android:layout_alignBottom="@+id/name"
+        android:layout_marginLeft="6dp" />
 
     <ImageView
         android:layout_width="wrap_content"
