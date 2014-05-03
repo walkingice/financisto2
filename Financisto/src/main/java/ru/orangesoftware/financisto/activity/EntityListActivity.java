@@ -45,7 +45,7 @@ public class EntityListActivity extends ListActivity {
 
     private enum Entity implements EntityEnum {
 
-        CURRENCIES(R.string.currencies, R.drawable.menu_entities_currencies){
+        CURRENCIES(R.string.currencies, R.drawable.ic_action_currencies){
             @Override
             public void startActivity(Context context) {
                 CurrencyListActivity_.intent(context).start();
@@ -57,25 +57,25 @@ public class EntityListActivity extends ListActivity {
                 ExchangeRatesListActivity_.intent(context).start();
             }
         },
-        CATEGORIES(R.string.categories, R.drawable.menu_entities_categories){
+        CATEGORIES(R.string.categories, R.drawable.ic_action_category){
             @Override
             public void startActivity(Context context) {
                 CategoryListActivity2_.intent(context).start();
             }
         },
-        PAYEES(R.string.payees, R.drawable.menu_entities_payees){
+        PAYEES(R.string.payees, R.drawable.ic_action_users){
             @Override
             public void startActivity(Context context) {
                 PayeeListActivity_.intent(context).start();
             }
         },
-        PROJECTS(R.string.projects, R.drawable.menu_entities_projects){
+        PROJECTS(R.string.projects, R.drawable.ic_action_gear){
             @Override
             public void startActivity(Context context) {
                 ProjectListActivity_.intent(context).start();
             }
         },
-        LOCATIONS(R.string.locations, R.drawable.menu_entities_locations){
+        LOCATIONS(R.string.locations, R.drawable.ic_action_location_2){
             @Override
             public void startActivity(Context context) {
                 context.startActivity(new Intent(context, LocationsListActivity.class));
