@@ -38,6 +38,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import greendroid.widget.QuickAction;
 import greendroid.widget.QuickActionGrid;
 import greendroid.widget.QuickActionWidget;
 import ru.orangesoftware.financisto.R;
@@ -116,11 +117,11 @@ public class TransactionActivity extends AbstractTransactionActivity {
     private void prepareUnsplitActionGrid() {
         if (isGreenDroidSupported()) {
             unsplitActionGrid = new QuickActionGrid(this);
-            unsplitActionGrid.addQuickAction(new MyQuickAction(this, R.drawable.ic_input_add, R.string.transaction));
-            unsplitActionGrid.addQuickAction(new MyQuickAction(this, R.drawable.ic_input_transfer, R.string.transfer));
-            unsplitActionGrid.addQuickAction(new MyQuickAction(this, R.drawable.gd_action_bar_share, R.string.unsplit_adjust_amount));
-            unsplitActionGrid.addQuickAction(new MyQuickAction(this, R.drawable.gd_action_bar_share, R.string.unsplit_adjust_evenly));
-            unsplitActionGrid.addQuickAction(new MyQuickAction(this, R.drawable.gd_action_bar_share, R.string.unsplit_adjust_last));
+            unsplitActionGrid.addQuickAction(new QuickAction(this, R.drawable.ic_action_add, R.string.transaction));
+            unsplitActionGrid.addQuickAction(new QuickAction(this, R.drawable.ic_action_transfer_thin, R.string.transfer));
+            unsplitActionGrid.addQuickAction(new QuickAction(this, R.drawable.ic_action_share, R.string.unsplit_adjust_amount));
+            unsplitActionGrid.addQuickAction(new QuickAction(this, R.drawable.ic_action_share, R.string.unsplit_adjust_evenly));
+            unsplitActionGrid.addQuickAction(new QuickAction(this, R.drawable.ic_action_share, R.string.unsplit_adjust_last));
             unsplitActionGrid.setOnQuickActionClickListener(unsplitActionListener);
         }
     }

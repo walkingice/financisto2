@@ -31,6 +31,7 @@ import android.widget.Toast;
 
 import java.util.List;
 
+import greendroid.widget.QuickAction;
 import greendroid.widget.QuickActionGrid;
 import greendroid.widget.QuickActionWidget;
 import ru.orangesoftware.financisto.R;
@@ -196,12 +197,12 @@ public class BlotterActivity extends AbstractListActivity {
     protected void prepareTransactionActionGrid() {
         if (isGreenDroidSupported()) {
             transactionActionGrid = new QuickActionGrid(this);
-            transactionActionGrid.addQuickAction(new MyQuickAction(this, R.drawable.gd_action_bar_info, R.string.info));
-            transactionActionGrid.addQuickAction(new MyQuickAction(this, R.drawable.gd_action_bar_edit, R.string.edit));
-            transactionActionGrid.addQuickAction(new MyQuickAction(this, R.drawable.gd_action_bar_trashcan, R.string.delete));
-            transactionActionGrid.addQuickAction(new MyQuickAction(this, R.drawable.gd_action_bar_share, R.string.duplicate));
-            transactionActionGrid.addQuickAction(new MyQuickAction(this, R.drawable.ic_action_bar_mark, R.string.clear));
-            transactionActionGrid.addQuickAction(new MyQuickAction(this, R.drawable.ic_action_bar_double_mark, R.string.reconcile));
+            transactionActionGrid.addQuickAction(new QuickAction(this, R.drawable.gd_action_bar_info, R.string.info));
+            transactionActionGrid.addQuickAction(new QuickAction(this, R.drawable.gd_action_bar_edit, R.string.edit));
+            transactionActionGrid.addQuickAction(new QuickAction(this, R.drawable.gd_action_bar_trashcan, R.string.delete));
+            transactionActionGrid.addQuickAction(new QuickAction(this, R.drawable.gd_action_bar_share, R.string.duplicate));
+            transactionActionGrid.addQuickAction(new QuickAction(this, R.drawable.ic_action_bar_mark, R.string.clear));
+            transactionActionGrid.addQuickAction(new QuickAction(this, R.drawable.ic_action_bar_double_mark, R.string.reconcile));
             transactionActionGrid.setOnQuickActionClickListener(transactionActionListener);
         }
     }
@@ -235,9 +236,9 @@ public class BlotterActivity extends AbstractListActivity {
     private void prepareAddButtonActionGrid() {
         if (isGreenDroidSupported()) {
             addButtonActionGrid = new QuickActionGrid(this);
-            addButtonActionGrid.addQuickAction(new MyQuickAction(this, R.drawable.ic_input_add, R.string.transaction));
-            addButtonActionGrid.addQuickAction(new MyQuickAction(this, R.drawable.ic_input_transfer, R.string.transfer));
-            addButtonActionGrid.addQuickAction(new MyQuickAction(this, R.drawable.ic_input_templates, R.string.template));
+            addButtonActionGrid.addQuickAction(new QuickAction(this, R.drawable.ic_input_add, R.string.transaction));
+            addButtonActionGrid.addQuickAction(new QuickAction(this, R.drawable.ic_input_transfer, R.string.transfer));
+            addButtonActionGrid.addQuickAction(new QuickAction(this, R.drawable.ic_input_templates, R.string.template));
             addButtonActionGrid.setOnQuickActionClickListener(addButtonActionListener);
         }
     }

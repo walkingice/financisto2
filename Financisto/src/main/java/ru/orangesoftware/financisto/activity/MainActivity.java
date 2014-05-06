@@ -95,8 +95,6 @@ public class MainActivity extends TabActivity implements TabHost.OnTabChangeList
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
 
-        initialLoad();
-
         final TabHost tabHost = getTabHost();
 
         setupAccountsTab(tabHost);
@@ -109,27 +107,6 @@ public class MainActivity extends TabActivity implements TabHost.OnTabChangeList
 
         tabHost.setOnTabChangedListener(this);
 
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        PinProtection.unlock(this);
-        if (PinProtection.isUnlocked()) {
-            WebViewDialog.checkVersionAndShowWhatsNewIfNeeded(this);
-        }
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        PinProtection.lock(this);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        PinProtection.immediateLock(this);
     }
 
     @Override
@@ -158,41 +135,6 @@ public class MainActivity extends TabActivity implements TabHost.OnTabChangeList
             scheduleNextAutoBackup(this);
             scheduleNextAutoSync(this);
         }
-    }
-
-    private void initialLoad() {
-        long t3, t2, t1, t0 = System.currentTimeMillis();
-        DatabaseAdapter db = new DatabaseAdapter(this);
-        SQLiteDatabase x = db.db();
-        x.beginTransaction();
-        t1 = System.currentTimeMillis();
-        try {
-            updateFieldInTable(x, DatabaseHelper.CATEGORY_TABLE, 0, "title", getString(R.string.no_category));
-            updateFieldInTable(x, DatabaseHelper.CATEGORY_TABLE, -1, "title", getString(R.string.split));
-            updateFieldInTable(x, DatabaseHelper.PROJECT_TABLE, 0, "title", getString(R.string.no_project));
-            updateFieldInTable(x, DatabaseHelper.LOCATIONS_TABLE, 0, "name", getString(R.string.current_location));
-            x.setTransactionSuccessful();
-        } finally {
-            x.endTransaction();
-        }
-        t2 = System.currentTimeMillis();
-        if (MyPreferences.shouldUpdateHomeCurrency(this)) {
-            db.setDefaultHomeCurrency();
-        }
-        CurrencyCache.initialize(db.em());
-        t3 = System.currentTimeMillis();
-        if (MyPreferences.shouldRebuildRunningBalance(this)) {
-            db.rebuildRunningBalances();
-        }
-        if (MyPreferences.shouldUpdateAccountsLastTransactionDate(this)) {
-            db.updateAccountsLastTransactionDate();
-        }
-        long t4 = System.currentTimeMillis();
-        Log.d("Financisto", "Load time = " + (t4 - t0) + "ms = " + (t2 - t1) + "ms+" + (t3 - t2) + "ms+" + (t4 - t3) + "ms");
-    }
-
-    private void updateFieldInTable(SQLiteDatabase db, String table, long id, String field, String value) {
-        db.execSQL("update " + table + " set " + field + "=? where _id=?", new Object[]{value, id});
     }
 
     @Override

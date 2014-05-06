@@ -26,18 +26,27 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import org.androidannotations.annotations.AfterInject;
 import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
 
 import ru.orangesoftware.financisto.R;
 import ru.orangesoftware.financisto.adapter.EntityEnumAdapter;
+import ru.orangesoftware.financisto.bus.GreenRobotBus;
+import ru.orangesoftware.financisto.bus.InitialLoad;
+import ru.orangesoftware.financisto.dialog.WebViewDialog;
 import ru.orangesoftware.financisto.fragment.AccountListFragment_;
 import ru.orangesoftware.financisto.fragment.BlotterFragment_;
 import ru.orangesoftware.financisto.utils.EntityEnum;
+import ru.orangesoftware.financisto.utils.PinProtection;
 
 @EActivity(R.layout.main2)
 public class MainActivity2 extends FragmentActivity {
+
+    @Bean
+    protected GreenRobotBus bus;
 
     @ViewById(R.id.pager)
     protected ViewPager pager;
@@ -52,6 +61,11 @@ public class MainActivity2 extends FragmentActivity {
     protected ListView drawer;
 
     protected ActionBarDrawerToggle drawerToggle;
+
+    @AfterInject
+    protected void afterInject() {
+        bus.post(new InitialLoad());
+    }
 
     @AfterViews
     protected void afterViews() {
@@ -97,6 +111,27 @@ public class MainActivity2 extends FragmentActivity {
         drawerLayout.closeDrawer(drawer);
         DrawerItem item = DrawerItem.values()[position];
         item.onClick(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        PinProtection.unlock(this);
+        if (PinProtection.isUnlocked()) {
+            WebViewDialog.checkVersionAndShowWhatsNewIfNeeded(this);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        PinProtection.lock(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        PinProtection.immediateLock(this);
     }
 
     @Override

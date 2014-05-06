@@ -26,6 +26,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import greendroid.widget.QuickAction;
 import greendroid.widget.QuickActionGrid;
 import greendroid.widget.QuickActionWidget;
 import ru.orangesoftware.financisto.R;
@@ -70,12 +71,12 @@ public class AccountListActivity extends AbstractListActivity {
     protected void prepareAccountActionGrid() {
         if (isGreenDroidSupported()) {
             accountActionGrid = new QuickActionGrid(this);
-            accountActionGrid.addQuickAction(new MyQuickAction(this, R.drawable.gd_action_bar_info, R.string.info));
-            accountActionGrid.addQuickAction(new MyQuickAction(this, R.drawable.gd_action_bar_list, R.string.blotter));
-            accountActionGrid.addQuickAction(new MyQuickAction(this, R.drawable.gd_action_bar_edit, R.string.edit));
-            accountActionGrid.addQuickAction(new MyQuickAction(this, R.drawable.ic_input_add, R.string.transaction));
-            accountActionGrid.addQuickAction(new MyQuickAction(this, R.drawable.ic_input_transfer, R.string.transfer));
-            accountActionGrid.addQuickAction(new MyQuickAction(this, R.drawable.ic_action_bar_mark, R.string.balance));
+            accountActionGrid.addQuickAction(new QuickAction(this, R.drawable.gd_action_bar_info, R.string.info));
+            accountActionGrid.addQuickAction(new QuickAction(this, R.drawable.gd_action_bar_list, R.string.blotter));
+            accountActionGrid.addQuickAction(new QuickAction(this, R.drawable.gd_action_bar_edit, R.string.edit));
+            accountActionGrid.addQuickAction(new QuickAction(this, R.drawable.ic_input_add, R.string.transaction));
+            accountActionGrid.addQuickAction(new QuickAction(this, R.drawable.ic_input_transfer, R.string.transfer));
+            accountActionGrid.addQuickAction(new QuickAction(this, R.drawable.ic_action_bar_mark, R.string.balance));
             accountActionGrid.setOnQuickActionClickListener(accountActionListener);
         }
     }
