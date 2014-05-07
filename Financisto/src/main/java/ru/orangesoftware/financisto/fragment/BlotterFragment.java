@@ -24,8 +24,8 @@ public class BlotterFragment extends AbstractListFragment {
 
     protected WhereFilter blotterFilter = WhereFilter.empty();
 
-    @AfterViews
-    public void afterViews() {
+    @Override
+    protected void reload() {
         bus.post(new GetTransactionList(blotterFilter));
     }
 

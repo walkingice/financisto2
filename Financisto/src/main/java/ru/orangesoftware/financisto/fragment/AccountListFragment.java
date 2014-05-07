@@ -39,8 +39,8 @@ public class AccountListFragment extends AbstractListFragment implements QuickAc
 
     private long selectedId = -1;
 
-    @AfterViews
-    public void afterViews() {
+    @Override
+    protected void reload() {
         bus.post(new GetAccountList());
         prepareAccountActionGrid();
     }

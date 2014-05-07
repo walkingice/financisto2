@@ -23,7 +23,10 @@ public abstract class AbstractListFragment extends ListFragment {
     public void onResume() {
         super.onResume();
         bus.register(this);
+        reload();
     }
+
+    protected abstract void reload();
 
     @Override
     public void onPause() {
