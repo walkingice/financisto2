@@ -64,54 +64,8 @@ public class AccountListActivity extends AbstractListActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		calculateTotals();
-        prepareAccountActionGrid();
         integrityCheck();
 	}
-
-    protected void prepareAccountActionGrid() {
-        if (isGreenDroidSupported()) {
-            accountActionGrid = new QuickActionGrid(this);
-            accountActionGrid.addQuickAction(new QuickAction(this, R.drawable.gd_action_bar_info, R.string.info));
-            accountActionGrid.addQuickAction(new QuickAction(this, R.drawable.gd_action_bar_list, R.string.blotter));
-            accountActionGrid.addQuickAction(new QuickAction(this, R.drawable.gd_action_bar_edit, R.string.edit));
-            accountActionGrid.addQuickAction(new QuickAction(this, R.drawable.ic_input_add, R.string.transaction));
-            accountActionGrid.addQuickAction(new QuickAction(this, R.drawable.ic_input_transfer, R.string.transfer));
-            accountActionGrid.addQuickAction(new QuickAction(this, R.drawable.ic_action_bar_mark, R.string.balance));
-            accountActionGrid.setOnQuickActionClickListener(accountActionListener);
-        }
-    }
-
-    private QuickActionWidget.OnQuickActionClickListener accountActionListener = new QuickActionWidget.OnQuickActionClickListener() {
-        public void onQuickActionClicked(QuickActionWidget widget, int position) {
-            switch (position) {
-                case 0:
-                    showAccountInfo(selectedId);
-                    break;
-                case 1:
-                    showAccountTransactions(selectedId);
-                    break;
-                case 2:
-                    editAccount(selectedId);
-                    break;
-                case 3:
-                    addTransaction(selectedId, TransactionActivity.class);
-                    break;
-                case 4:
-                    addTransaction(selectedId, TransferActivity.class);
-                    break;
-                case 5:
-                    updateAccountBalance(selectedId);
-                    break;
-            }
-        }
-
-    };
-
-    private void addTransaction(long accountId, Class<? extends AbstractTransactionActivity> clazz) {
-        Intent intent = new Intent(this, clazz);
-        intent.putExtra(TransactionActivity.ACCOUNT_ID_EXTRA, accountId);
-        startActivityForResult(intent, VIEW_ACCOUNT_REQUEST);
-    }
 
     @Override
     public void recreateCursor() {
@@ -193,10 +147,6 @@ public class AccountListActivity extends AbstractListActivity {
 		super.onContextItemSelected(item);
         AdapterView.AdapterContextMenuInfo mi = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
         switch (item.getItemId()) {
-			case MENU_UPDATE_BALANCE: {
-                updateAccountBalance(mi.id);
-                return true;
-            }
             case MENU_PURGE_ACCOUNT: {
                 Intent intent = new Intent(this, PurgeAccountActivity.class);
                 intent.putExtra(PurgeAccountActivity.ACCOUNT_ID, mi.id);
@@ -213,18 +163,6 @@ public class AccountListActivity extends AbstractListActivity {
 		}
 		return false;
 	}
-
-    private boolean updateAccountBalance(long id) {
-        Account a = em.getAccount(id);
-        if (a != null) {
-            Intent intent = new Intent(this, TransactionActivity.class);
-            intent.putExtra(TransactionActivity.ACCOUNT_ID_EXTRA, a.id);
-            intent.putExtra(TransactionActivity.CURRENT_BALANCE_EXTRA, a.totalAmount);
-            startActivityForResult(intent, 0);
-            return true;
-        }
-        return false;
-    }
 
     @Override
 	protected void addItem() {		

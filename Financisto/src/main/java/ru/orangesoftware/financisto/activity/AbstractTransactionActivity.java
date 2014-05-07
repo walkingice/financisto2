@@ -47,6 +47,7 @@ import android.widget.TimePicker;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.OptionsItem;
 import org.androidannotations.annotations.OptionsMenuItem;
 
@@ -89,7 +90,6 @@ import static ru.orangesoftware.financisto.utils.Utils.text;
 public abstract class AbstractTransactionActivity extends AbstractActivity implements CategorySelector.CategorySelectorListener {
 	
 	public static final String TRAN_ID_EXTRA = "tranId";
-	public static final String ACCOUNT_ID_EXTRA = "accountId";
 	public static final String DUPLICATE_EXTRA = "isDuplicate";
 	public static final String TEMPLATE_EXTRA = "isTemplate";
     public static final String DATETIME_EXTRA = "dateTimeExtra";
@@ -101,6 +101,9 @@ public abstract class AbstractTransactionActivity extends AbstractActivity imple
 	private static final int PICTURE_REQUEST = 4005;
 
 	private static final TransactionStatus[] statuses = TransactionStatus.values();
+
+    @Extra
+    protected long accountId = -1;
 
     @OptionsMenuItem(R.id.menu_save_and_new)
     protected MenuItem saveAndNewMenuItem;
@@ -209,12 +212,10 @@ public abstract class AbstractTransactionActivity extends AbstractActivity imple
 			locationAdapter = TransactionUtils.createLocationAdapter(this, locationCursor);
 		}
 
-		long accountId = -1;
 		long transactionId = -1;
         boolean isNewFromTemplate = false;
 		final Intent intent = getIntent();
 		if (intent != null) {
-			accountId = intent.getLongExtra(ACCOUNT_ID_EXTRA, -1);
 			transactionId = intent.getLongExtra(TRAN_ID_EXTRA, -1);
             transaction.dateTime = intent.getLongExtra(DATETIME_EXTRA, System.currentTimeMillis());
 			if (transactionId != -1) {

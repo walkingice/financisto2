@@ -346,7 +346,7 @@ public class BlotterActivity extends AbstractListActivity {
         Intent intent = new Intent(BlotterActivity.this, clazz);
         long accountId = blotterFilter.getAccountId();
         if (accountId != -1) {
-            intent.putExtra(TransactionActivity.ACCOUNT_ID_EXTRA, accountId);
+            //intent.putExtra(TransactionActivity.ACCOUNT_ID_EXTRA, accountId);
         }
         intent.putExtra(TransactionActivity.TEMPLATE_EXTRA, blotterFilter.getIsTemplate());
         startActivityForResult(intent, requestId);

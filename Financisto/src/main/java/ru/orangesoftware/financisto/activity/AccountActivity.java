@@ -380,10 +380,8 @@ public class AccountActivity extends AbstractActivity {
 	}
 
 	private void editAccount() {
-		selectAccountType(AccountType.valueOf(account.type));
-		if (account.cardIssuer != null) {
-			selectCardIssuer(CardIssuer.valueOf(account.cardIssuer));
-		}
+        AccountType type = AccountType.valueOf(account.type);
+        selectAccountType(type);
 		selectCurrency(account.currency);
 		accountTitle.setText(account.title);
 		issuerName.setText(account.issuer);

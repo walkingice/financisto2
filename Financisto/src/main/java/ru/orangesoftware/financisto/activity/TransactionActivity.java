@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.OptionsMenu;
 
 import java.io.ByteArrayInputStream;
@@ -63,9 +64,7 @@ import static ru.orangesoftware.financisto.utils.Utils.isNotEmpty;
 @OptionsMenu(R.menu.transaction_menu)
 public class TransactionActivity extends AbstractTransactionActivity {
 
-	public static final String CURRENT_BALANCE_EXTRA = "accountCurrentBalance";
-	public static final String AMOUNT_EXTRA = "accountAmount";
-    public static final String ACTIVITY_STATE = "ACTIVITY_STATE";
+	public static final String ACTIVITY_STATE = "ACTIVITY_STATE";
 
     private static final int SPLIT_REQUEST = 5001;
 
@@ -74,12 +73,15 @@ public class TransactionActivity extends AbstractTransactionActivity {
     @Bean
     protected Utils u;
 
+    @Extra
+    protected boolean isUpdateBalanceMode = false;
+    @Extra
+    protected long currentBalance = 0;
+
     private long idSequence = 0;
     private final IdentityHashMap<View, Transaction> viewToSplitMap = new IdentityHashMap<View, Transaction>();
 
 	private TextView differenceText;
-	private boolean isUpdateBalanceMode = false;
-	private long currentBalance;
 
     private LinearLayout splitsLayout;
     private TextView unsplitAmountText;
@@ -94,15 +96,6 @@ public class TransactionActivity extends AbstractTransactionActivity {
 
 	@Override
 	protected void internalOnCreate() {
-		Intent intent = getIntent();
-		if (intent != null) {
-			if (intent.hasExtra(CURRENT_BALANCE_EXTRA)) {
-				currentBalance = intent.getLongExtra(CURRENT_BALANCE_EXTRA, 0);
-				isUpdateBalanceMode = true;
-			} else if(intent.hasExtra(AMOUNT_EXTRA)) {
-				currentBalance = intent.getLongExtra(AMOUNT_EXTRA, 0);
-			}
-		}
 		if (transaction.isTemplateLike()) {
 			setTitle(transaction.isTemplate() ? R.string.transaction_template : R.string.transaction_schedule);
 			if (transaction.isTemplate()) {
