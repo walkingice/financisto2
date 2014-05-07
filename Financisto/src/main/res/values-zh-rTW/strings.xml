@@ -516,7 +516,7 @@
   <string name="enter_pin">輸入 PIN</string>
   <string name="mass_operations">大量編輯</string>
   <string name="card_issuer_unionpay">UnionPay</string>
-  <string name="account_type_paypal">PayPal</string>
+  <string name="electronic_type_paypal">PayPal</string>
   <string name="mass_operations_use_filter">以過濾條件搜尋交易</string>
   <string name="mass_operations_clear_all">全部清除</string>
   <string name="mass_operations_reconcile">全部結清</string>

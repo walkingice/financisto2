@@ -37,13 +37,16 @@ import ru.orangesoftware.financisto.model.Account;
 import ru.orangesoftware.financisto.model.AccountType;
 import ru.orangesoftware.financisto.model.CardIssuer;
 import ru.orangesoftware.financisto.model.Currency;
+import ru.orangesoftware.financisto.model.ElectronicPaymentType;
 import ru.orangesoftware.financisto.model.Transaction;
+import ru.orangesoftware.financisto.utils.EntityEnum;
 import ru.orangesoftware.financisto.utils.EnumUtils;
 import ru.orangesoftware.financisto.utils.TransactionUtils;
 import ru.orangesoftware.financisto.utils.Utils;
 import ru.orangesoftware.financisto.widget.AmountInput;
 import ru.orangesoftware.financisto.widget.AmountInput_;
 
+import static ru.orangesoftware.financisto.utils.EnumUtils.selectEnum;
 import static ru.orangesoftware.financisto.utils.Utils.text;
 
 @EActivity(R.layout.account)
@@ -64,6 +67,7 @@ public class AccountActivity extends AbstractActivity {
 	private TextView currencyText;
 	private View accountTypeNode;
 	private View cardIssuerNode;
+    private View electronicPaymentNode;
 	private View issuerNode;
 	private EditText numberText;
 	private View numberNode;
@@ -78,7 +82,8 @@ public class AccountActivity extends AbstractActivity {
 
 	private EntityEnumAdapter<AccountType> accountTypeAdapter;
 	private EntityEnumAdapter<CardIssuer> cardIssuerAdapter;
-	private ListAdapter currencyAdapter;	
+    private EntityEnumAdapter<ElectronicPaymentType> electronicPaymentAdapter;
+	private ListAdapter currencyAdapter;
 
 	private Account account = new Account();
 
@@ -123,7 +128,11 @@ public class AccountActivity extends AbstractActivity {
 		cardIssuerAdapter = EnumUtils.createEntityEnumAdapter(this, CardIssuer.values());
 		cardIssuerNode = x.addListNodeIcon(layout, R.id.card_issuer, R.string.card_issuer, R.string.card_issuer);
 		setVisibility(cardIssuerNode, View.GONE);
-		
+
+        electronicPaymentAdapter = EnumUtils.createEntityEnumAdapter(this, ElectronicPaymentType.values());
+        electronicPaymentNode = x.addListNodeIcon(layout, R.id.electronic_payment_type, R.string.electronic_payment_type, R.string.card_issuer);
+        setVisibility(electronicPaymentNode, View.GONE);
+
 		issuerNode = x.addEditNode(layout, R.string.issuer, issuerName);
 		setVisibility(issuerNode, View.GONE);
 		
@@ -257,9 +266,13 @@ public class AccountActivity extends AbstractActivity {
 				break;
 			case R.id.card_issuer:				
 				x.selectPosition(this, R.id.card_issuer, R.string.card_issuer, cardIssuerAdapter, 
-						account.cardIssuer != null ? CardIssuer.valueOf(account.cardIssuer).ordinal() : 0);
+						selectEnum(CardIssuer.class, account.cardIssuer, CardIssuer.VISA).ordinal());
 				break;
-			case R.id.currency:				
+            case R.id.electronic_payment_type:
+                x.selectPosition(this, R.id.electronic_payment_type, R.string.electronic_payment_type, electronicPaymentAdapter,
+                        selectEnum(ElectronicPaymentType.class, account.cardIssuer, ElectronicPaymentType.PAYPAL).ordinal());
+                break;
+			case R.id.currency:
 				x.select(this, R.id.currency, R.string.currency, currencyCursor, currencyAdapter, 
 						"_id", account.currency != null ? account.currency.id : -1);
 				break;
@@ -304,6 +317,10 @@ public class AccountActivity extends AbstractActivity {
 				CardIssuer issuer = CardIssuer.values()[selectedPos];
 				selectCardIssuer(issuer);
 				break;
+            case R.id.electronic_payment_type:
+                ElectronicPaymentType payementType = ElectronicPaymentType.values()[selectedPos];
+                selectElectronicType(payementType);
+                break;
 		}
 	}
 
@@ -314,25 +331,39 @@ public class AccountActivity extends AbstractActivity {
 		label.setText(type.titleId);
 
 		setVisibility(cardIssuerNode, type.isCard ? View.VISIBLE : View.GONE);
+        setVisibility(electronicPaymentNode, type.isElectronic ? View.VISIBLE : View.GONE);
 		setVisibility(issuerNode, type.hasIssuer ? View.VISIBLE : View.GONE);
 		setVisibility(numberNode, type.hasNumber ? View.VISIBLE : View.GONE);
 		setVisibility(closingDayNode, type.isCreditCard ? View.VISIBLE : View.GONE);
 		setVisibility(paymentDayNode, type.isCreditCard ? View.VISIBLE : View.GONE);
-
 		setVisibility(limitAmountView, type == AccountType.CREDIT_CARD ? View.VISIBLE : View.GONE);
+
 		account.type = type.name();
-		selectCardIssuer(account.cardIssuer != null 
-				? CardIssuer.valueOf(account.cardIssuer)
-				: CardIssuer.VISA);
+		if (type.isCard) {
+            selectCardIssuer(selectEnum(CardIssuer.class, account.cardIssuer, CardIssuer.VISA));
+        } else if (type.isElectronic) {
+            selectElectronicType(selectEnum(ElectronicPaymentType.class, account.cardIssuer, ElectronicPaymentType.PAYPAL));
+        } else {
+            account.cardIssuer = null;
+        }
 	}
 
 	private void selectCardIssuer(CardIssuer issuer) {
-		ImageView icon = (ImageView)cardIssuerNode.findViewById(R.id.icon);
-		icon.setImageResource(issuer.iconId);
-		TextView label = (TextView)cardIssuerNode.findViewById(R.id.label);
-		label.setText(issuer.titleId);
+        updateNode(cardIssuerNode, issuer);
 		account.cardIssuer = issuer.name();
 	}
+
+    private void selectElectronicType(ElectronicPaymentType paymentType) {
+        updateNode(electronicPaymentNode, paymentType);
+        account.cardIssuer = paymentType.name();
+    }
+
+    private void updateNode(View note, EntityEnum enumItem) {
+        ImageView icon = (ImageView) note.findViewById(R.id.icon);
+        icon.setImageResource(enumItem.getIconId());
+        TextView label = (TextView) note.findViewById(R.id.label);
+        label.setText(enumItem.getTitleId());
+    }
 
 	private void selectCurrency(long currencyId) {
         Currency c = em.get(Currency.class, currencyId);

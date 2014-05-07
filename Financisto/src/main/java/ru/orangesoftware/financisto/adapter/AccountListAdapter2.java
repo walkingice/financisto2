@@ -26,6 +26,7 @@ import ru.orangesoftware.financisto.datetime.DateUtils;
 import ru.orangesoftware.financisto.model.Account;
 import ru.orangesoftware.financisto.model.AccountType;
 import ru.orangesoftware.financisto.model.CardIssuer;
+import ru.orangesoftware.financisto.model.ElectronicPaymentType;
 import ru.orangesoftware.financisto.utils.MyPreferences;
 import ru.orangesoftware.financisto.utils.Utils;
 
@@ -87,6 +88,9 @@ public class AccountListAdapter2 extends BaseAdapter {
         if (type.isCard && a.cardIssuer != null) {
             CardIssuer cardIssuer = CardIssuer.valueOf(a.cardIssuer);
             v.iconView.setImageResource(cardIssuer.iconId);
+        } else if (type.isElectronic && a.cardIssuer != null) {
+            ElectronicPaymentType paymentType = ElectronicPaymentType.valueOf(a.cardIssuer);
+            v.iconView.setImageResource(paymentType.iconId);
         } else {
             v.iconView.setImageResource(type.iconId);
         }

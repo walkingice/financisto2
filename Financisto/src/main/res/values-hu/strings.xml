@@ -516,7 +516,7 @@
   <string name="enter_pin">Üsse be a PIN-kódot!</string>
   <string name="mass_operations">Tömeges műveletek</string>
   <string name="card_issuer_unionpay">UnionPay</string>
-  <string name="account_type_paypal">PayPal</string>
+  <string name="electronic_type_paypal">PayPal</string>
   <string name="mass_operations_use_filter">Szűrő használata tranzakciók kereséséhez</string>
   <string name="mass_operations_clear_all">Mindet kiegyenlít</string>
   <string name="mass_operations_reconcile">Mindet egyeztet</string>

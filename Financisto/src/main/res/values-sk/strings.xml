@@ -516,7 +516,7 @@
   <string name="enter_pin">Zadajte PIN</string>
   <string name="mass_operations">Hromadné operácie</string>
   <string name="card_issuer_unionpay">UnionPay</string>
-  <string name="account_type_paypal">PayPal</string>
+  <string name="electronic_type_paypal">PayPal</string>
   <string name="mass_operations_use_filter">Použiť filter na hľadanie transakcií</string>
   <string name="mass_operations_clear_all">Zúčtovať všetky</string>
   <string name="mass_operations_reconcile">Zosúladiť všetky</string>

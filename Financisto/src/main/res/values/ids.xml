@@ -75,4 +75,5 @@
     <item type="id" name="category_pick"/>
     <item type="id" name="original_currency"/>
     <item type="id" name="category_type"/>
+    <item type="id" name="electronic_payment_type"/>
 </resources>

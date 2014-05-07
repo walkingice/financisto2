@@ -515,7 +515,7 @@
   <string name="enter_pin">Indtast PIN</string>
   <string name="mass_operations">Masse Operationer</string>
   <string name="card_issuer_unionpay">UnionPay</string>
-  <string name="account_type_paypal">PayPal</string>
+  <string name="electronic_type_paypal">PayPal</string>
   <string name="mass_operations_use_filter">Brug filter til at søge efter transaktioner</string>
   <string name="mass_operations_clear_all">Nulstil alt</string>
   <string name="mass_operations_reconcile">Afstem alt</string>

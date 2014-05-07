@@ -516,7 +516,7 @@
   <string name="enter_pin">输入密码</string>
   <string name="mass_operations">批处理</string>
   <string name="card_issuer_unionpay">银联</string>
-  <string name="account_type_paypal">PayPal</string>
+  <string name="electronic_type_paypal">PayPal</string>
   <string name="mass_operations_use_filter">使用筛选条件来搜索交易</string>
   <string name="mass_operations_clear_all">全部清除</string>
   <string name="mass_operations_reconcile">结清/对帐所有</string>

@@ -516,7 +516,7 @@
   <string name="enter_pin">Introducir PIN</string>
   <string name="mass_operations">Operaciones masivas</string>
   <string name="card_issuer_unionpay">UnionPay</string>
-  <string name="account_type_paypal">PayPal</string>
+  <string name="electronic_type_paypal">PayPal</string>
   <string name="mass_operations_use_filter">No se encuentran transacciones para el filtrado actual. Cambie el criterio de búsqueda.</string>
   <string name="mass_operations_clear_all">Compensar todo</string>
   <string name="mass_operations_reconcile">Reconciliar todo</string>

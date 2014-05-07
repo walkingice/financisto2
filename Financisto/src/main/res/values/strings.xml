@@ -578,7 +578,7 @@
 	<string name="enter_pin">Enter PIN</string>
 	<string name="mass_operations">Mass operations</string>
 	<string name="card_issuer_unionpay">UnionPay</string>
-	<string name="account_type_paypal">PayPal</string>	
+	<string name="electronic_type_paypal">PayPal</string>
 	<string name="mass_operations_use_filter">Use filter to search for transactions</string>
 	<string name="mass_operations_clear_all">Clear all</string>			
 	<string name="mass_operations_reconcile">Reconcile all</string>		
@@ -901,5 +901,13 @@
     <string name="swap">Swap</string>
     <string name="collapse">Collapse</string>
     <string name="expand">Expand</string>
+    <string name="account_type_electronic">Electronic</string>
+    <string name="electronic_payment_type">Payment type</string>
+    <string name="electronic_type_bitcoin">Bitcoin</string>
+    <string name="electronic_type_amazon">Amazon</string>
+    <string name="electronic_type_ebay">Ebay</string>
+    <string name="electronic_type_google_wallet">Google Wallet</string>
+    <string name="electronic_type_web_money">Web Money</string>
+    <string name="electronic_type_yandex_money">Yandex Money</string>
 
 </resources>
