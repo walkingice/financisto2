@@ -909,5 +909,7 @@
     <string name="electronic_type_google_wallet">Google Wallet</string>
     <string name="electronic_type_web_money">Web Money</string>
     <string name="electronic_type_yandex_money">Yandex Money</string>
+    <string name="card_issuer_cirrus">Cirrus</string>
+    <string name="card_issuer_eps">EPS</string>
 
 </resources>

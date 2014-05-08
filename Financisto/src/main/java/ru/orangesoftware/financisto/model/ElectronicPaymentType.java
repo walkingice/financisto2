@@ -17,12 +17,12 @@ import ru.orangesoftware.financisto.utils.EntityEnum;
 public enum ElectronicPaymentType implements EntityEnum {
 
 	PAYPAL(R.string.electronic_type_paypal, R.drawable.electronic_type_paypal),
-    BITCOIN(R.string.electronic_type_bitcoin, R.drawable.electronic_type_paypal),
-    AMAZON(R.string.electronic_type_amazon, R.drawable.electronic_type_paypal),
-    EBAY(R.string.electronic_type_ebay, R.drawable.electronic_type_paypal),
-    GOOGLE_WALLET(R.string.electronic_type_google_wallet, R.drawable.electronic_type_paypal),
-    WEB_MONEY(R.string.electronic_type_web_money, R.drawable.electronic_type_paypal),
-    YANDEX_MONEY(R.string.electronic_type_yandex_money, R.drawable.electronic_type_paypal);
+    BITCOIN(R.string.electronic_type_bitcoin, R.drawable.electronic_type_bitcoin),
+    AMAZON(R.string.electronic_type_amazon, R.drawable.electronic_type_amazon),
+    EBAY(R.string.electronic_type_ebay, R.drawable.electronic_type_ebay),
+    GOOGLE_WALLET(R.string.electronic_type_google_wallet, R.drawable.electronic_type_google_wallet),
+    WEB_MONEY(R.string.electronic_type_web_money, R.drawable.electronic_type_web_money),
+    YANDEX_MONEY(R.string.electronic_type_yandex_money, R.drawable.electronic_type_yandex_money);
 
 	public final int titleId;
 	public final int iconId;
