@@ -20,6 +20,13 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.*;
+
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Click;
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.Extra;
+import org.androidannotations.annotations.ViewById;
+
 import ru.orangesoftware.financisto.R;
 import ru.orangesoftware.financisto.backup.DatabaseExport;
 import ru.orangesoftware.financisto.model.Account;
@@ -33,53 +40,37 @@ import java.util.Calendar;
  * User: denis.solonenko
  * Date: 6/12/12 11:14 PM
  */
+@EActivity(R.layout.purge_account)
 public class PurgeAccountActivity extends AbstractActivity {
 
-    public static final String ACCOUNT_ID = "ACCOUNT_ID";
+    @ViewById(R.id.layout)
+    protected LinearLayout layout;
 
-    private Account account;
-    private Calendar date;
-
-    private LinearLayout layout;
     private CheckBox databaseBackup;
     private TextView dateText;
     private DateFormat df;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.purge_account);
+    @Extra
+    protected long accountId = -1;
 
+    private Account account;
+    private Calendar date;
+
+    @AfterViews
+    protected void onCreate() {
         df = DateUtils.getLongDateFormat(this);
 
-        layout = (LinearLayout)findViewById(R.id.layout);
         date = Calendar.getInstance();
         date.add(Calendar.YEAR, -1);
         date.add(Calendar.DAY_OF_YEAR, -1);
-
-        Button bOk = (Button)findViewById(R.id.bOK);
-        bOk.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                deleteOldTransactions();
-            }
-        });
-
-        Button bCancel = (Button)findViewById(R.id.bCancel);
-        bCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                setResult(RESULT_CANCELED);
-                finish();
-            }
-        });
 
         loadAccount();
         createNodes();
         setDateText();
     }
 
-    private void deleteOldTransactions() {
+    @Click(R.id.bOK)
+    protected void deleteOldTransactions() {
         new AlertDialog.Builder(this)
             .setTitle(R.string.purge_account_confirm_title)
             .setMessage(getString(R.string.purge_account_confirm_message, new Object[]{account.title, getDateString()}))
@@ -93,15 +84,13 @@ public class PurgeAccountActivity extends AbstractActivity {
             .show();
     }
 
-    private void loadAccount() {
-        Intent intent = getIntent();
-        if (intent == null) {
-            Toast.makeText(this, "No account specified", Toast.LENGTH_SHORT).show();
-            finish();
-            return;
-        }
+    @Click(R.id.bCancel)
+    protected void cancel() {
+        setResult(RESULT_CANCELED);
+        finish();
+    }
 
-        long accountId = intent.getLongExtra(ACCOUNT_ID, -1);
+    private void loadAccount() {
         if (accountId <= 0) {
             Toast.makeText(this, "Invalid account specified", Toast.LENGTH_SHORT).show();
             finish();

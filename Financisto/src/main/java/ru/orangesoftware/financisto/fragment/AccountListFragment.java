@@ -1,6 +1,8 @@
 package ru.orangesoftware.financisto.fragment;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.View;
 import android.widget.ListView;
@@ -16,6 +18,8 @@ import greendroid.widget.QuickActionGrid;
 import greendroid.widget.QuickActionWidget;
 import ru.orangesoftware.financisto.R;
 import ru.orangesoftware.financisto.activity.AccountActivity_;
+import ru.orangesoftware.financisto.activity.PurgeAccountActivity;
+import ru.orangesoftware.financisto.activity.PurgeAccountActivity_;
 import ru.orangesoftware.financisto.activity.TransactionActivity;
 import ru.orangesoftware.financisto.activity.TransactionActivity_;
 import ru.orangesoftware.financisto.activity.TransferActivity_;
@@ -23,6 +27,7 @@ import ru.orangesoftware.financisto.adapter.AccountListAdapter2;
 import ru.orangesoftware.financisto.adapter.AccountListAdapter2_;
 import ru.orangesoftware.financisto.bus.AccountList;
 import ru.orangesoftware.financisto.bus.GetAccountList;
+import ru.orangesoftware.financisto.db.DatabaseAdapter;
 import ru.orangesoftware.financisto.db.MyEntityManager;
 import ru.orangesoftware.financisto.model.Account;
 
@@ -35,6 +40,9 @@ public class AccountListFragment extends AbstractListFragment implements QuickAc
     @Bean
     protected MyEntityManager em;
 
+    @Bean
+    protected DatabaseAdapter db;
+
     private QuickActionWidget accountActionGrid;
 
     private long selectedId = -1;
@@ -42,19 +50,6 @@ public class AccountListFragment extends AbstractListFragment implements QuickAc
     @Override
     protected void reload() {
         bus.post(new GetAccountList());
-        prepareAccountActionGrid();
-    }
-
-    private void prepareAccountActionGrid() {
-        Context context = getActivity();
-        accountActionGrid = new QuickActionGrid(context);
-        accountActionGrid.addQuickAction(new QuickAction(context, R.drawable.ic_action_info, R.string.info));
-        accountActionGrid.addQuickAction(new QuickAction(context, R.drawable.ic_action_list, R.string.blotter));
-        accountActionGrid.addQuickAction(new QuickAction(context, R.drawable.ic_action_edit, R.string.edit));
-        accountActionGrid.addQuickAction(new QuickAction(context, R.drawable.ic_action_add, R.string.transaction));
-        accountActionGrid.addQuickAction(new QuickAction(context, R.drawable.ic_action_transfer_thin, R.string.transfer));
-        accountActionGrid.addQuickAction(new QuickAction(context, R.drawable.ic_action_tick, R.string.balance));
-        accountActionGrid.setOnQuickActionClickListener(this);
     }
 
     public void onEventMainThread(AccountList event) {
@@ -72,10 +67,31 @@ public class AccountListFragment extends AbstractListFragment implements QuickAc
     public void onListItemClick(ListView l, View v, int position, long id) {
         if (isQuickMenuEnabledForAccount(getActivity())) {
             selectedId = id;
+            prepareAccountActionGrid();
             accountActionGrid.show(v);
         } else {
             showAccountTransactions(id);
         }
+    }
+
+    private void prepareAccountActionGrid() {
+        Context context = getActivity();
+        Account a = em.getAccount(selectedId);
+        accountActionGrid = new QuickActionGrid(context);
+        accountActionGrid.addQuickAction(new QuickAction(context, R.drawable.ic_action_info, R.string.info));
+        accountActionGrid.addQuickAction(new QuickAction(context, R.drawable.ic_action_list, R.string.blotter));
+        accountActionGrid.addQuickAction(new QuickAction(context, R.drawable.ic_action_edit, R.string.edit));
+        accountActionGrid.addQuickAction(new QuickAction(context, R.drawable.ic_action_add, R.string.transaction));
+        accountActionGrid.addQuickAction(new QuickAction(context, R.drawable.ic_action_transfer_thin, R.string.transfer));
+        accountActionGrid.addQuickAction(new QuickAction(context, R.drawable.ic_action_tick, R.string.balance));
+        accountActionGrid.addQuickAction(new QuickAction(context, R.drawable.ic_action_flash, R.string.delete_old_transactions));
+        if (a.isActive) {
+            accountActionGrid.addQuickAction(new QuickAction(context, R.drawable.ic_action_lock_closed, R.string.close_account));
+        } else {
+            accountActionGrid.addQuickAction(new QuickAction(context, R.drawable.ic_action_lock_open, R.string.reopen_account));
+        }
+        accountActionGrid.addQuickAction(new QuickAction(context, R.drawable.ic_action_trash, R.string.delete_account));
+        accountActionGrid.setOnQuickActionClickListener(this);
     }
 
     @Override
@@ -98,6 +114,15 @@ public class AccountListFragment extends AbstractListFragment implements QuickAc
                 break;
             case 5:
                 updateAccountBalance();
+                break;
+            case 6:
+                purgeAccount();
+                break;
+            case 7:
+                flipAccount();
+                break;
+            case 8:
+                deleteAccount();
                 break;
         }
     }
@@ -128,6 +153,31 @@ public class AccountListFragment extends AbstractListFragment implements QuickAc
             TransactionActivity_.intent(this).accountId(selectedId)
                     .currentBalance(a.totalAmount).isUpdateBalanceMode(true).start();
         }
+    }
+
+    private void purgeAccount() {
+        PurgeAccountActivity_.intent(this).accountId(selectedId).startForResult(0);
+    }
+
+    private void flipAccount() {
+        Account a = em.getAccount(selectedId);
+        a.isActive = !a.isActive;
+        em.saveAccount(a);
+        reload();
+    }
+
+    private void deleteAccount() {
+        new AlertDialog.Builder(getActivity())
+                .setMessage(R.string.delete_account_confirm)
+                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener(){
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        db.deleteAccount(selectedId);
+                        reload();
+                    }
+                })
+                .setNegativeButton(R.string.no, null)
+                .show();
     }
 
 }

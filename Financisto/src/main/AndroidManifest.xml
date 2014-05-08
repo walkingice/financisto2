@@ -401,7 +401,7 @@
             android:label="@string/totals"
             android:theme="@android:style/Theme.Holo.Light.Dialog" />
         <activity
-            android:name="ru.orangesoftware.financisto.activity.PurgeAccountActivity"
+            android:name="ru.orangesoftware.financisto.activity.PurgeAccountActivity_"
             android:label="@string/delete_old_transactions" />
         <activity
             android:name="ru.orangesoftware.financisto.activity.FlowzrSyncActivity"

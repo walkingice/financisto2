@@ -129,41 +129,6 @@ public class AccountListActivity extends AbstractListActivity {
 //        }
 	}
 
-	protected List<MenuItemInfo> createContextMenus(long id) {
-		List<MenuItemInfo> menus = super.createContextMenus(id);
-		Account a = em.getAccount(id);
-		if (a != null && a.isActive) {
-			menus.add(new MenuItemInfo(MENU_UPDATE_BALANCE, R.string.update_balance));
-            menus.add(new MenuItemInfo(MENU_PURGE_ACCOUNT, R.string.delete_old_transactions));
-            menus.add(new MenuItemInfo(MENU_CLOSE_OPEN_ACCOUNT, R.string.close_account));
-		} else {
-			menus.add(new MenuItemInfo(MENU_CLOSE_OPEN_ACCOUNT, R.string.reopen_account));
-		}
-		return menus;
-	}
-	
-	@Override
-	public boolean onContextItemSelected(MenuItem item) {
-		super.onContextItemSelected(item);
-        AdapterView.AdapterContextMenuInfo mi = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
-        switch (item.getItemId()) {
-            case MENU_PURGE_ACCOUNT: {
-                Intent intent = new Intent(this, PurgeAccountActivity.class);
-                intent.putExtra(PurgeAccountActivity.ACCOUNT_ID, mi.id);
-                startActivityForResult(intent, PURGE_ACCOUNT_REQUEST);
-                return true;
-            }
-			case MENU_CLOSE_OPEN_ACCOUNT: {
-				Account a = em.getAccount(mi.id);
-				a.isActive = !a.isActive;
-				em.saveAccount(a);
-				recreateCursor();
-				return true;
-			} 			
-		}
-		return false;
-	}
-
     @Override
 	protected void addItem() {		
 		Intent intent = new Intent(AccountListActivity.this, AccountActivity.class);
@@ -172,17 +137,6 @@ public class AccountListActivity extends AbstractListActivity {
 
 	@Override
 	protected void deleteItem(View v, int position, final long id) {
-		new AlertDialog.Builder(this)
-			.setMessage(R.string.delete_account_confirm)
-			.setPositiveButton(R.string.yes, new OnClickListener(){
-				@Override
-				public void onClick(DialogInterface arg0, int arg1) {
-					db.deleteAccount(id);
-					recreateCursor();
-				}
-			})
-			.setNegativeButton(R.string.no, null)
-			.show();
 	}
 
 	@Override

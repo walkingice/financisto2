@@ -22,6 +22,7 @@ import org.androidannotations.annotations.EActivity;
 
 import java.util.List;
 
+import ru.orangesoftware.financisto.bus.GreenRobotBus;
 import ru.orangesoftware.financisto.db.DatabaseAdapter;
 import ru.orangesoftware.financisto.db.MyEntityManager;
 import ru.orangesoftware.financisto.model.MultiChoiceItem;
@@ -36,7 +37,10 @@ public abstract class AbstractActivity extends Activity implements ActivityLayou
 
     @Bean
 	protected MyEntityManager em;
-	
+
+    @Bean
+    GreenRobotBus bus;
+
 	protected ActivityLayout x;
 	
 	@Override

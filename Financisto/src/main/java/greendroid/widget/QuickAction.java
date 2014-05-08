@@ -16,10 +16,13 @@
 package greendroid.widget;
 
 import android.content.Context;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 
 import java.lang.ref.WeakReference;
+
+import ru.orangesoftware.financisto.R;
 
 /**
  * A QuickAction implements an item in a {@link greendroid.widget.QuickActionWidget}. A
@@ -35,24 +38,15 @@ public class QuickAction {
 
     /* package */WeakReference<View> mView;
 
-    public QuickAction(Drawable d, CharSequence title) {
-        mDrawable = d;
-        mTitle = title;
-    }
-
-    public QuickAction(Context ctx, int drawableId, CharSequence title) {
-        mDrawable = ctx.getResources().getDrawable(drawableId);
-        mTitle = title;
-    }
-
-    public QuickAction(Context ctx, Drawable d, int titleId) {
-        mDrawable = d;
-        mTitle = ctx.getResources().getString(titleId);
-    }
-
     public QuickAction(Context ctx, int drawableId, int titleId) {
-        mDrawable = ctx.getResources().getDrawable(drawableId);
+        mDrawable = prepareDrawable(ctx, ctx.getResources().getDrawable(drawableId));
         mTitle = ctx.getResources().getString(titleId);
+    }
+
+    private Drawable prepareDrawable(Context ctx, Drawable drawable) {
+        int color = ctx.getResources().getColor(R.color.holo_blue_dark);
+        drawable.mutate().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+        return drawable;
     }
 
 }

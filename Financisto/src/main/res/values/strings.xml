@@ -911,5 +911,6 @@
     <string name="electronic_type_yandex_money">Yandex Money</string>
     <string name="card_issuer_cirrus">Cirrus</string>
     <string name="card_issuer_eps">EPS</string>
+    <string name="delete_account">Delete account</string>
 
 </resources>
