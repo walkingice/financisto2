@@ -213,7 +213,7 @@ public class TransactionInfoDialog {
             @Override
             public void onClick(View arg0) {
                 d.dismiss();
-                new BlotterOperations(blotterActivity, db, transactionId).editTransaction();
+                //new BlotterOperations(blotterActivity, db, transactionId, bus).editTransaction();
             }
         });
 

@@ -3,11 +3,9 @@ package ru.orangesoftware.financisto.fragment;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.view.View;
 import android.widget.ListView;
 
-import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.OptionsItem;
@@ -18,9 +16,7 @@ import greendroid.widget.QuickActionGrid;
 import greendroid.widget.QuickActionWidget;
 import ru.orangesoftware.financisto.R;
 import ru.orangesoftware.financisto.activity.AccountActivity_;
-import ru.orangesoftware.financisto.activity.PurgeAccountActivity;
 import ru.orangesoftware.financisto.activity.PurgeAccountActivity_;
-import ru.orangesoftware.financisto.activity.TransactionActivity;
 import ru.orangesoftware.financisto.activity.TransactionActivity_;
 import ru.orangesoftware.financisto.activity.TransferActivity_;
 import ru.orangesoftware.financisto.adapter.AccountListAdapter2;
@@ -43,7 +39,7 @@ public class AccountListFragment extends AbstractListFragment implements QuickAc
     @Bean
     protected DatabaseAdapter db;
 
-    private QuickActionWidget accountActionGrid;
+    private QuickActionWidget actionGrid;
 
     private long selectedId = -1;
 
@@ -68,7 +64,7 @@ public class AccountListFragment extends AbstractListFragment implements QuickAc
         if (isQuickMenuEnabledForAccount(getActivity())) {
             selectedId = id;
             prepareAccountActionGrid();
-            accountActionGrid.show(v);
+            actionGrid.show(v);
         } else {
             showAccountTransactions(id);
         }
@@ -77,21 +73,21 @@ public class AccountListFragment extends AbstractListFragment implements QuickAc
     private void prepareAccountActionGrid() {
         Context context = getActivity();
         Account a = em.getAccount(selectedId);
-        accountActionGrid = new QuickActionGrid(context);
-        accountActionGrid.addQuickAction(new QuickAction(context, R.drawable.ic_action_info, R.string.info));
-        accountActionGrid.addQuickAction(new QuickAction(context, R.drawable.ic_action_list, R.string.blotter));
-        accountActionGrid.addQuickAction(new QuickAction(context, R.drawable.ic_action_edit, R.string.edit));
-        accountActionGrid.addQuickAction(new QuickAction(context, R.drawable.ic_action_add, R.string.transaction));
-        accountActionGrid.addQuickAction(new QuickAction(context, R.drawable.ic_action_transfer_thin, R.string.transfer));
-        accountActionGrid.addQuickAction(new QuickAction(context, R.drawable.ic_action_tick, R.string.balance));
-        accountActionGrid.addQuickAction(new QuickAction(context, R.drawable.ic_action_flash, R.string.delete_old_transactions));
+        actionGrid = new QuickActionGrid(context);
+        actionGrid.addQuickAction(new QuickAction(context, R.drawable.ic_action_info, R.string.info));
+        actionGrid.addQuickAction(new QuickAction(context, R.drawable.ic_action_list, R.string.blotter));
+        actionGrid.addQuickAction(new QuickAction(context, R.drawable.ic_action_edit, R.string.edit));
+        actionGrid.addQuickAction(new QuickAction(context, R.drawable.ic_action_add, R.string.transaction));
+        actionGrid.addQuickAction(new QuickAction(context, R.drawable.ic_action_transfer_thin, R.string.transfer));
+        actionGrid.addQuickAction(new QuickAction(context, R.drawable.ic_action_tick, R.string.balance));
+        actionGrid.addQuickAction(new QuickAction(context, R.drawable.ic_action_flash, R.string.delete_old_transactions));
         if (a.isActive) {
-            accountActionGrid.addQuickAction(new QuickAction(context, R.drawable.ic_action_lock_closed, R.string.close_account));
+            actionGrid.addQuickAction(new QuickAction(context, R.drawable.ic_action_lock_closed, R.string.close_account));
         } else {
-            accountActionGrid.addQuickAction(new QuickAction(context, R.drawable.ic_action_lock_open, R.string.reopen_account));
+            actionGrid.addQuickAction(new QuickAction(context, R.drawable.ic_action_lock_open, R.string.reopen_account));
         }
-        accountActionGrid.addQuickAction(new QuickAction(context, R.drawable.ic_action_trash, R.string.delete_account));
-        accountActionGrid.setOnQuickActionClickListener(this);
+        actionGrid.addQuickAction(new QuickAction(context, R.drawable.ic_action_trash, R.string.delete_account));
+        actionGrid.setOnQuickActionClickListener(this);
     }
 
     @Override

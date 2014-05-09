@@ -27,6 +27,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.InputType;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -89,12 +90,6 @@ import static ru.orangesoftware.financisto.utils.Utils.text;
 @EActivity
 public abstract class AbstractTransactionActivity extends AbstractActivity implements CategorySelector.CategorySelectorListener {
 	
-	public static final String TRAN_ID_EXTRA = "tranId";
-	public static final String DUPLICATE_EXTRA = "isDuplicate";
-	public static final String TEMPLATE_EXTRA = "isTemplate";
-    public static final String DATETIME_EXTRA = "dateTimeExtra";
-    public static final String NEW_FROM_TEMPLATE_EXTRA = "newFromTemplateExtra";
-
 	private static final int NEW_LOCATION_REQUEST = 4002;
 	private static final int RECURRENCE_REQUEST = 4003;
 	private static final int NOTIFICATION_REQUEST = 4004;
@@ -104,6 +99,16 @@ public abstract class AbstractTransactionActivity extends AbstractActivity imple
 
     @Extra
     protected long accountId = -1;
+    @Extra
+    protected long transactionId = -1;
+    @Extra
+    protected long transactionDateTime = System.currentTimeMillis();
+    @Extra
+    protected boolean isDuplicate = false;
+    @Extra
+    boolean isNewFromTemplate = false;
+    @Extra
+    int template = 0;
 
     @OptionsMenuItem(R.id.menu_save_and_new)
     protected MenuItem saveAndNewMenuItem;
@@ -142,8 +147,7 @@ public abstract class AbstractTransactionActivity extends AbstractActivity imple
 	private LocationManager locationManager;
 	private Location lastFix;
 
-    protected boolean isDuplicate = false;
-	
+
 	private boolean setCurrentLocation;
 
     protected ProjectSelector projectSelector;
@@ -212,24 +216,18 @@ public abstract class AbstractTransactionActivity extends AbstractActivity imple
 			locationAdapter = TransactionUtils.createLocationAdapter(this, locationCursor);
 		}
 
-		long transactionId = -1;
-        boolean isNewFromTemplate = false;
-		final Intent intent = getIntent();
-		if (intent != null) {
-			transactionId = intent.getLongExtra(TRAN_ID_EXTRA, -1);
-            transaction.dateTime = intent.getLongExtra(DATETIME_EXTRA, System.currentTimeMillis());
-			if (transactionId != -1) {
-				transaction = db.getTransaction(transactionId);
-                transaction.categoryAttributes = db.getAllAttributesForTransaction(transactionId);
-				isDuplicate = intent.getBooleanExtra(DUPLICATE_EXTRA, false);
-                isNewFromTemplate = intent.getBooleanExtra(NEW_FROM_TEMPLATE_EXTRA, false);
-				if (isDuplicate) {
-					transaction.id = -1;
-					transaction.dateTime = System.currentTimeMillis();
-				}
-			}	
-			transaction.isTemplate = intent.getIntExtra(TEMPLATE_EXTRA, transaction.isTemplate);
-		}
+        transaction.dateTime = transactionDateTime;
+        if (transactionId != -1) {
+            transaction = db.getTransaction(transactionId);
+            transaction.categoryAttributes = db.getAllAttributesForTransaction(transactionId);
+            if (isDuplicate) {
+                transaction.id = -1;
+                transaction.dateTime = System.currentTimeMillis();
+            }
+        }
+        if (template > 0) {
+            transaction.isTemplate = template;
+        }
 
 		if (transaction.id == -1) {
 			accountCursor = em.getAllActiveAccounts();
@@ -309,10 +307,6 @@ public abstract class AbstractTransactionActivity extends AbstractActivity imple
 			deleteAfterExpired.inflateView(layout, value != null ? value : sa.defaultValue);
 		}
 
-        if (transaction.id > 0) {
-            saveAndNewMenuItem.setTitle(R.string.cancel);
-        }
-
 		if (transactionId != -1) {
             isOpenCalculatorForTemplates &= isNewFromTemplate;
 			editTransaction(transaction);
@@ -343,6 +337,15 @@ public abstract class AbstractTransactionActivity extends AbstractActivity imple
 	}
 
     protected void internalOnCreate() {
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        boolean result = super.onCreateOptionsMenu(menu);
+        if (transaction.id > 0) {
+            saveAndNewMenuItem.setTitle(R.string.cancel);
+        }
+        return result;
     }
 
     protected void createPayeeNode(LinearLayout layout) {

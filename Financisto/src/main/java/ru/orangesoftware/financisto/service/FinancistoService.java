@@ -189,8 +189,7 @@ public class FinancistoService extends WakefulIntentService {
 		notification.flags |= Notification.FLAG_AUTO_CANCEL;
 		applyNotificationOptions(notification, t.notificationOptions);
 		Context context = getApplicationContext();
-		Intent notificationIntent = new Intent(this, t.getActivity());
-		notificationIntent.putExtra(AbstractTransactionActivity.TRAN_ID_EXTRA, t.id);
+		Intent notificationIntent = t.getActivityIntent(this);
 		PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
 		notification.setLatestEventInfo(context, t.getNotificationContentTitle(this), t.getNotificationContentText(this), contentIntent);	
 		return notification;

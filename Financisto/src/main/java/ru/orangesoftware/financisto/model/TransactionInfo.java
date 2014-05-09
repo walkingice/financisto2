@@ -12,19 +12,24 @@ package ru.orangesoftware.financisto.model;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
-import ru.orangesoftware.financisto.R;
-import ru.orangesoftware.financisto.activity.TransactionActivity;
-import ru.orangesoftware.financisto.activity.TransferActivity;
-import ru.orangesoftware.financisto.db.DatabaseHelper;
-import ru.orangesoftware.financisto.utils.CurrencyCache;
-import ru.orangesoftware.financisto.utils.Utils;
+
+import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import java.util.Date;
+
+import ru.orangesoftware.financisto.R;
+import ru.orangesoftware.financisto.activity.TransactionActivity;
+import ru.orangesoftware.financisto.activity.TransactionActivity_;
+import ru.orangesoftware.financisto.activity.TransferActivity;
+import ru.orangesoftware.financisto.activity.TransferActivity_;
+import ru.orangesoftware.financisto.db.DatabaseHelper;
+import ru.orangesoftware.financisto.utils.CurrencyCache;
+import ru.orangesoftware.financisto.utils.Utils;
 
 @Entity
 @Table(name = "transactions")
@@ -58,14 +63,18 @@ public class TransactionInfo extends TransactionBase {
 		return toAccount != null;
 	}
 
-	public Class<? extends Activity> getActivity() {
-		return isTransfer() ? TransferActivity.class : TransactionActivity.class;
-	}
-	
+    public Intent getActivityIntent(Context context) {
+        if (isTransfer()) {
+            return TransferActivity_.intent(context).transactionId(id).get();
+        } else {
+            return TransactionActivity_.intent(context).transactionId(id).get();
+        }
+    }
+
 	public int getNotificationIcon() {
 		return isTransfer() ? R.drawable.notification_icon_transfer : R.drawable.notification_icon_transaction;
 	}
-	
+
 	public String getNotificationTickerText(Context context) {
 		return context.getString(isTransfer() ? R.string.new_scheduled_transfer_text : R.string.new_scheduled_transaction_text);
 	}
@@ -73,25 +82,25 @@ public class TransactionInfo extends TransactionBase {
 	public String getNotificationContentTitle(Context context) {
 		return context.getString(isTransfer() ? R.string.new_scheduled_transfer_title : R.string.new_scheduled_transaction_title);
 	}
-	
+
 	public String getNotificationContentText(Context context) {
 		if (toAccount != null) {
 			if (fromAccount.currency.id == toAccount.currency.id) {
-				return context.getString(R.string.new_scheduled_transfer_notification_same_currency, 
+				return context.getString(R.string.new_scheduled_transfer_notification_same_currency,
 						Utils.amountToString(fromAccount.currency, Math.abs(fromAmount)),
-						fromAccount.title, toAccount.title);				
+						fromAccount.title, toAccount.title);
 			} else {
-				return context.getString(R.string.new_scheduled_transfer_notification_differ_currency, 
+				return context.getString(R.string.new_scheduled_transfer_notification_differ_currency,
 						Utils.amountToString(fromAccount.currency, Math.abs(fromAmount)),
 						Utils.amountToString(toAccount.currency, Math.abs(toAmount)),
-						fromAccount.title, toAccount.title);								
+						fromAccount.title, toAccount.title);
 			}
 		} else {
-			return context.getString(R.string.new_scheduled_transaction_notification, 
+			return context.getString(R.string.new_scheduled_transaction_notification,
 					Utils.amountToString(fromAccount.currency, Math.abs(fromAmount)),
 					context.getString(fromAmount < 0 ? R.string.new_scheduled_transaction_debit : R.string.new_scheduled_transaction_credit),
 					fromAccount.title);
-		}		
+		}
 	}
 
     @Override
@@ -167,5 +176,4 @@ public class TransactionInfo extends TransactionBase {
 
         return t;
     }
-
 }

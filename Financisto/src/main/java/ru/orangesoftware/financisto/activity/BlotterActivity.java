@@ -40,6 +40,8 @@ import ru.orangesoftware.financisto.adapter.TransactionsListAdapter;
 import ru.orangesoftware.financisto.blotter.AccountTotalCalculationTask;
 import ru.orangesoftware.financisto.blotter.BlotterTotalCalculationTask;
 import ru.orangesoftware.financisto.blotter.TotalCalculationTask;
+import ru.orangesoftware.financisto.bus.GreenRobotBus;
+import ru.orangesoftware.financisto.bus.GreenRobotBus_;
 import ru.orangesoftware.financisto.dialog.TransactionInfoDialog;
 import ru.orangesoftware.financisto.filter.WhereFilter;
 import ru.orangesoftware.financisto.model.Account;
@@ -85,6 +87,8 @@ public class BlotterActivity extends AbstractListActivity {
     private boolean isAccountBlotter = false;
     private boolean showAllBlotterButtons = true;
 
+    protected GreenRobotBus bus;
+
     public BlotterActivity(int layoutId) {
 		super(layoutId);
 	}
@@ -122,6 +126,7 @@ public class BlotterActivity extends AbstractListActivity {
 		super.onCreate(savedInstanceState);
 		LayoutInflater layoutInflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		inflater = new NodeInflater(layoutInflater);
+        bus = GreenRobotBus_.getInstance_(this);
         integrityCheck();
     }
 
@@ -261,12 +266,12 @@ public class BlotterActivity extends AbstractListActivity {
     };
 
     private void clearTransaction(long selectedId) {
-        new BlotterOperations(this, db, selectedId).clearTransaction();
+        new BlotterOperations(this, db, selectedId, bus).clearTransaction();
         recreateCursor();
     }
 
     private void reconcileTransaction(long selectedId) {
-        new BlotterOperations(this, db, selectedId).reconcileTransaction();
+        new BlotterOperations(this, db, selectedId, bus).reconcileTransaction();
         recreateCursor();
     }
 
@@ -307,7 +312,7 @@ public class BlotterActivity extends AbstractListActivity {
 				duplicateTransaction(mi.id, 1);
 				return true;
 			case MENU_SAVE_AS_TEMPLATE:
-                new BlotterOperations(this, db, mi.id).duplicateAsTemplate();
+                new BlotterOperations(this, db, mi.id, bus).duplicateAsTemplate();
 				Toast.makeText(this, R.string.save_as_template_success, Toast.LENGTH_SHORT).show();
 				return true;
 			}
@@ -316,7 +321,7 @@ public class BlotterActivity extends AbstractListActivity {
 	}
 
 	private long duplicateTransaction(long id, int multiplier) {
-        long newId = new BlotterOperations(this, db, id).duplicateTransaction(multiplier);
+        long newId = new BlotterOperations(this, db, id, bus).duplicateTransaction(multiplier);
 		String toastText;
 		if (multiplier > 1) {
 			toastText = getString(R.string.duplicate_success_with_multiplier, multiplier);
@@ -348,7 +353,7 @@ public class BlotterActivity extends AbstractListActivity {
         if (accountId != -1) {
             //intent.putExtra(TransactionActivity.ACCOUNT_ID_EXTRA, accountId);
         }
-        intent.putExtra(TransactionActivity.TEMPLATE_EXTRA, blotterFilter.getIsTemplate());
+        //intent.putExtra(TransactionActivity.TEMPLATE_EXTRA, blotterFilter.getIsTemplate());
         startActivityForResult(intent, requestId);
     }
 
@@ -380,7 +385,7 @@ public class BlotterActivity extends AbstractListActivity {
 	}
 
     private void deleteTransaction(long id) {
-        new BlotterOperations(this, db, id).deleteTransaction();
+        new BlotterOperations(this, db, id, bus).deleteTransaction();
     }
 
     protected void afterDeletingTransaction(long id) {
@@ -394,7 +399,7 @@ public class BlotterActivity extends AbstractListActivity {
 	}
 
     private void editTransaction(long id) {
-        new BlotterOperations(this, db, id).editTransaction();
+        new BlotterOperations(this, db, id, bus).editTransaction();
     }
 
     @Override
@@ -426,7 +431,7 @@ public class BlotterActivity extends AbstractListActivity {
             long id = duplicateTransaction(templateId, multiplier);
             Transaction t = db.getTransaction(id);
             if (t.fromAmount == 0 || edit) {
-                new BlotterOperations(this, db, id).asNewFromTemplate().editTransaction();
+                new BlotterOperations(this, db, id, bus).asNewFromTemplate().editTransaction();
             }
         }
     }
