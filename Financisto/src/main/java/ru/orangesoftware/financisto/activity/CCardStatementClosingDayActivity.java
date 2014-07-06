@@ -166,7 +166,7 @@ public class CCardStatementClosingDayActivity extends Activity {
 		});
 		
 		// OK Button
-		final Button ok = (Button) findViewById(R.id.closing_day_ok);
+		final Button ok = (Button) findViewById(R.id.bOK);
 		ok.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				// Perform action on click OK
@@ -204,7 +204,7 @@ public class CCardStatementClosingDayActivity extends Activity {
 		});
 		
 		// Cancel Button
-		final Button cancel = (Button) findViewById(R.id.closing_day_cancel);
+		final Button cancel = (Button) findViewById(R.id.bCancel);
 		cancel.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				// Perform action on click

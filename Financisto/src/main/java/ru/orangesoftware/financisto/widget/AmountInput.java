@@ -200,11 +200,6 @@ public class AmountInput extends LinearLayout {
         secondary.setOnFocusChangeListener(selectAllOnFocusListener);
     }
 
-    @Click(R.id.amount_input)
-    protected void onClickAmountInput() {
-        startInputActivity(QuickAmountInput.class);
-    }
-
     @Click(R.id.calculator)
     protected void onClickCalculator() {
         startInputActivity(CalculatorInput.class);

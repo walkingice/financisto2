@@ -294,10 +294,6 @@
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/category" />
         <activity
-            android:name="ru.orangesoftware.financisto.widget.QuickAmountInput"
-            android:label="@string/amount"
-            android:theme="@android:style/Theme.Holo.Light.Dialog" />
-        <activity
             android:name="ru.orangesoftware.financisto.widget.CalculatorInput"
             android:label="@string/calculator"
             android:theme="@android:style/Theme.Holo.Light.Dialog" />
