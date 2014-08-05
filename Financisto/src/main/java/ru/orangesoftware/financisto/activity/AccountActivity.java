@@ -287,8 +287,7 @@ public class AccountActivity extends AbstractActivity {
             @Override
             public void onCreated(long currencyId) {
                 if (currencyId == 0) {
-                    Intent intent = new Intent(AccountActivity.this, CurrencyActivity.class);
-                    startActivityForResult(intent, NEW_CURRENCY_REQUEST);
+                    CurrencyActivity_.intent(AccountActivity.this).startForResult(NEW_CURRENCY_REQUEST);
                 } else {
                     currencyCursor.requery();
                     selectCurrency(currencyId);

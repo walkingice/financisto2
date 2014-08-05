@@ -54,7 +54,6 @@ public class CurrencySelector {
         String[] items = createItemsList(currencies);
         new AlertDialog.Builder(context)
                 .setTitle(R.string.currencies)
-                .setIcon(R.drawable.ic_dialog_currency)
                 .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
