@@ -31,7 +31,9 @@ import java.util.List;
 
 import ru.orangesoftware.financisto.R;
 import ru.orangesoftware.financisto.db.DatabaseAdapter;
+import ru.orangesoftware.financisto.db.DatabaseAdapter_;
 import ru.orangesoftware.financisto.db.MyEntityManager;
+import ru.orangesoftware.financisto.db.MyEntityManager_;
 import ru.orangesoftware.financisto.model.Account;
 import ru.orangesoftware.financisto.model.AccountType;
 import ru.orangesoftware.financisto.model.CardIssuer;
@@ -177,9 +179,9 @@ public class AccountWidget extends AppWidgetProvider {
     }
 
     private static RemoteViews buildUpdateForCurrentAccount(Context context, int widgetId, int layoutId, Class providerClass, long accountId) {
-        DatabaseAdapter db = new DatabaseAdapter(context);
+        DatabaseAdapter db = DatabaseAdapter_.getInstance_(context);
+        MyEntityManager em = MyEntityManager_.getInstance_(context);
         try {
-            MyEntityManager em = db.em();
             Account a = em.getAccount(accountId);
             if (a != null) {
                 Log.d("FinancistoWidget", "buildUpdateForCurrentAccount building update for "+widgetId+" -> "+accountId);
@@ -194,9 +196,9 @@ public class AccountWidget extends AppWidgetProvider {
     }
 
     private static RemoteViews buildUpdateForNextAccount(Context context, int widgetId, int layoutId, Class providerClass, long accountId) {
-        DatabaseAdapter db = new DatabaseAdapter(context);
+        DatabaseAdapter db = DatabaseAdapter_.getInstance_(context);
+        MyEntityManager em = MyEntityManager_.getInstance_(context);
         try {
-            MyEntityManager em = db.em();
             Cursor c = em.getAllActiveAccounts();
             try {
                 int count = c.getCount();

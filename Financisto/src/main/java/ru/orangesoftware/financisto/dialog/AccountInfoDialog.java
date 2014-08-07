@@ -43,11 +43,11 @@ public class AccountInfoDialog {
     private final Utils u;
 
     public AccountInfoDialog(AccountListActivity parentActivity, long accountId,
-                             DatabaseAdapter db, NodeInflater inflater) {
+                             DatabaseAdapter db, MyEntityManager em, NodeInflater inflater) {
         this.parentActivity = parentActivity;
         this.accountId = accountId;
         this.db = db;
-        this.em = db.em();
+        this.em = em;
         this.inflater = inflater;
         this.layoutInflater = (LayoutInflater) parentActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.u = new Utils(parentActivity);

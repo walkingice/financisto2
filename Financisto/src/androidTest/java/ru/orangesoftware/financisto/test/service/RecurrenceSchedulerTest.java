@@ -62,8 +62,10 @@ public class RecurrenceSchedulerTest extends AndroidTestCase {
 
 	private List<RestoredTransaction> assertRestoredSize(List<TransactionInfo> schedules, long now, int count) {
 		// given
-        DatabaseAdapter db = new FakeDatabaseAdapter(getContext(), new ArrayList<TransactionInfo>(schedules));
-        RecurrenceScheduler scheduler = new RecurrenceScheduler(db);
+        ArrayList<TransactionInfo> scheduled = new ArrayList<TransactionInfo>(schedules);
+        DatabaseAdapter db = new FakeDatabaseAdapter(getContext(), scheduled);
+        MyEntityManager em = new FakeEntityManager(getContext(), scheduled);
+        RecurrenceScheduler scheduler = new RecurrenceScheduler();
 		// when
 		List<RestoredTransaction> missed = scheduler.getMissedSchedules(now);
 		// then 
@@ -116,8 +118,8 @@ public class RecurrenceSchedulerTest extends AndroidTestCase {
 
 		private final ArrayList<TransactionInfo> scheduledTransactions;
 		
-		public FakeEntityManager(ArrayList<TransactionInfo> scheduledTransactions) {
-			super(null, null);
+		public FakeEntityManager(Context context, ArrayList<TransactionInfo> scheduledTransactions) {
+			super(context);
 			this.scheduledTransactions = scheduledTransactions;
 		}
 
@@ -130,17 +132,10 @@ public class RecurrenceSchedulerTest extends AndroidTestCase {
 
     static class FakeDatabaseAdapter extends DatabaseAdapter {
 
-        final MyEntityManager em;
-
         FakeDatabaseAdapter(Context context, ArrayList<TransactionInfo> scheduled) {
             super(context);
-            this.em = new FakeEntityManager(scheduled);
         }
 
-        @Override
-        public MyEntityManager em() {
-            return em;
-        }
     }
 
 }

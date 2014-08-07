@@ -72,8 +72,10 @@ import ru.orangesoftware.financisto.R;
 import ru.orangesoftware.financisto.activity.AccountWidget;
 import ru.orangesoftware.financisto.activity.FlowzrSyncActivity;
 import ru.orangesoftware.financisto.db.DatabaseAdapter;
+import ru.orangesoftware.financisto.db.DatabaseAdapter_;
 import ru.orangesoftware.financisto.db.DatabaseHelper;
 import ru.orangesoftware.financisto.db.MyEntityManager;
+import ru.orangesoftware.financisto.db.MyEntityManager_;
 import ru.orangesoftware.financisto.model.Account;
 import ru.orangesoftware.financisto.model.Attribute;
 import ru.orangesoftware.financisto.model.Budget;
@@ -149,9 +151,9 @@ public class FlowzrSyncEngine  {
     	this.context=a;
     	this.flowzrSyncActivity=a;
     	FlowzrSyncActivity.isRunning=true;
-        this.dba = new DatabaseAdapter(context);
-    	this.em=dba.em();
-        this.db = dba.db();	
+        this.dba = DatabaseAdapter_.getInstance_(context);
+        this.em = MyEntityManager_.getInstance_(context);
+        this.db = dba.db();
 		
         if (flowzrSyncActivity==null) {
         	Log.i(TAG,"No activity found, creating.");

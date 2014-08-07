@@ -26,6 +26,7 @@ import java.util.zip.GZIPInputStream;
 import ru.orangesoftware.financisto.db.Database;
 import ru.orangesoftware.financisto.db.DatabaseAdapter;
 import ru.orangesoftware.financisto.db.DatabaseSchemaEvolution;
+import ru.orangesoftware.financisto.db.MyEntityManager;
 import ru.orangesoftware.financisto.export.Export;
 import ru.orangesoftware.financisto.export.dropbox.Dropbox;
 
@@ -40,11 +41,11 @@ public class DatabaseImport extends FullDatabaseImport {
 	private final DatabaseSchemaEvolution schemaEvolution;
     private final InputStream backupStream;
 
-    public static DatabaseImport createFromFileBackup(Context context, DatabaseAdapter dbAdapter, String backupFile) throws FileNotFoundException {
+    public static DatabaseImport createFromFileBackup(Context context, DatabaseAdapter db, MyEntityManager em, String backupFile) throws FileNotFoundException {
         File backupPath = Export.getBackupFolder(context);
         File file = new File(backupPath, backupFile);
         FileInputStream inputStream = new FileInputStream(file);
-        return new DatabaseImport(context, dbAdapter, inputStream);
+        return new DatabaseImport(context, db, em, inputStream);
     }
 
     /*public static DatabaseImport createFromGoogleDriveBackup(Context context, DatabaseAdapter dbAdapter, Drive drive, com.google.api.services.drive.model.File file)
@@ -55,15 +56,15 @@ public class DatabaseImport extends FullDatabaseImport {
         return new DatabaseImport(context, dbAdapter, in);
     }*/
 
-    public static DatabaseImport createFromDropboxBackup(Context context, DatabaseAdapter dbAdapter, Dropbox dropbox, String backupFile)
+    public static DatabaseImport createFromDropboxBackup(Context context, DatabaseAdapter db, MyEntityManager em, Dropbox dropbox, String backupFile)
             throws Exception {
         InputStream inputStream = dropbox.getFileAsStream(backupFile);
         InputStream in = new GZIPInputStream(inputStream);
-        return new DatabaseImport(context, dbAdapter, in);
+        return new DatabaseImport(context, db, em, in);
     }
 
-    private DatabaseImport(Context context, DatabaseAdapter dbAdapter, InputStream backupStream) {
-        super(context, dbAdapter);
+    private DatabaseImport(Context context, DatabaseAdapter db, MyEntityManager em, InputStream backupStream) {
+        super(context, db, em);
         this.schemaEvolution = new DatabaseSchemaEvolution(context, Database.DATABASE_NAME, null, Database.DATABASE_VERSION);
         this.backupStream = backupStream;
 	}

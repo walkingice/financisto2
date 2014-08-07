@@ -42,6 +42,7 @@ public class CsvExport extends Export {
     }
 
 	private final DatabaseAdapter db;
+    private final MyEntityManager em;
     private final CsvExportOptions options;
 
     private Map<Long, Category> categoriesMap;
@@ -50,9 +51,10 @@ public class CsvExport extends Export {
     private Map<Long, Project> projectMap;
     private Map<Long, MyLocation> locationMap;
 
-    public CsvExport(Context context, DatabaseAdapter db, CsvExportOptions options) {
+    public CsvExport(Context context, DatabaseAdapter db, MyEntityManager em, CsvExportOptions options) {
         super(context, false);
 		this.db = db;
+        this.em = em;
 		this.options = options;
 	}
 	
@@ -83,7 +85,6 @@ public class CsvExport extends Export {
 	protected void writeBody(BufferedWriter bw) throws IOException {
 		Csv.Writer w = new Csv.Writer(bw).delimiter(options.fieldSeparator);
 		try {
-            MyEntityManager em = db.em();
             accountsMap = em.getAllAccountsMap();
             categoriesMap = db.getAllCategoriesMap();
             payeeMap = em.getAllPayeeByIdMap();
@@ -118,7 +119,7 @@ public class CsvExport extends Export {
             writeLine(w, dt, fromAccount.title, t.fromAmount, fromAccount.currency.id, t.originalFromAmount, t.originalCurrencyId,
                     category, payee, location, project, t.note);
             if (category != null && category.isSplit() && options.exportSplits) {
-                List<Transaction> splits = db.em().getSplitsForTransaction(t.id);
+                List<Transaction> splits = em.getSplitsForTransaction(t.id);
                 for (Transaction split : splits) {
                     split.dateTime = 0;
                     writeLine(w, split);
@@ -141,11 +142,11 @@ public class CsvExport extends Export {
 		w.value(account);
         String amountFormatted = options.amountFormat.format(new BigDecimal(amount).divide(Utils.HUNDRED));
         w.value(amountFormatted);
-		Currency c = CurrencyCache.getCurrency(db.em(), currencyId);
+		Currency c = CurrencyCache.getCurrency(em, currencyId);
 		w.value(c.name);
         if (originalCurrencyId > 0) {
             w.value(options.amountFormat.format(new BigDecimal(originalAmount).divide(Utils.HUNDRED)));
-            Currency originalCurrency = CurrencyCache.getCurrency(db.em(), originalCurrencyId);
+            Currency originalCurrency = CurrencyCache.getCurrency(em, originalCurrencyId);
             w.value(originalCurrency.name);
         } else {
             w.value("");

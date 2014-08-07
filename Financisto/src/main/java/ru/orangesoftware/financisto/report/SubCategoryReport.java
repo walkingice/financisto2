@@ -48,12 +48,11 @@ public class SubCategoryReport extends Report {
     }
 
     @Override
-	public ReportData getReport(DatabaseAdapter db, WhereFilter filter) {
+	public ReportData getReport(DatabaseAdapter db, final MyEntityManager em, WhereFilter filter) {
 		filterTransfers(filter);
 		Cursor c = db.db().query(V_REPORT_SUB_CATEGORY, DatabaseHelper.SubCategoryReportColumns.NORMAL_PROJECTION,
 				filter.getSelection(), filter.getSelectionArgs(), null, null,
                 DatabaseHelper.SubCategoryReportColumns.LEFT);
-        final MyEntityManager em = db.em();
         final ExchangeRateProvider rates = db.getHistoryRates();
         try {
             final int leftColumnIndex = c.getColumnIndex(DatabaseHelper.SubCategoryReportColumns.LEFT);
@@ -81,8 +80,8 @@ public class SubCategoryReport extends Report {
 	}
 
     @Override
-    public ReportData getReportForChart(DatabaseAdapter db, WhereFilter filter) {
-        ReportData data = super.getReportForChart(db, filter);
+    public ReportData getReportForChart(DatabaseAdapter db, MyEntityManager em, WhereFilter filter) {
+        ReportData data = super.getReportForChart(db, em, filter);
         if (data.units.size() > 1) {
             //remove first unit which is parent category
             data.units.remove(0);

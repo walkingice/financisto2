@@ -14,6 +14,7 @@ import android.content.Context;
 import ru.orangesoftware.financisto.activity.BlotterActivity;
 import ru.orangesoftware.financisto.activity.SplitsBlotterActivity;
 import ru.orangesoftware.financisto.blotter.BlotterFilter;
+import ru.orangesoftware.financisto.db.MyEntityManager;
 import ru.orangesoftware.financisto.filter.WhereFilter;
 import ru.orangesoftware.financisto.filter.Criteria;
 import ru.orangesoftware.financisto.db.DatabaseAdapter;
@@ -28,9 +29,9 @@ public class ProjectsReport extends Report {
 	}
 
 	@Override
-	public ReportData getReport(DatabaseAdapter db, WhereFilter filter) {
+	public ReportData getReport(DatabaseAdapter db, MyEntityManager em, WhereFilter filter) {
         cleanupFilter(filter);
-		return queryReport(db, V_REPORT_PROJECTS, filter);
+		return queryReport(db, em, V_REPORT_PROJECTS, filter);
 	}
 
 	@Override

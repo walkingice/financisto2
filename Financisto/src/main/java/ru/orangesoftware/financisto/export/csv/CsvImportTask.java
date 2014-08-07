@@ -15,6 +15,7 @@ import android.util.Log;
 import ru.orangesoftware.financisto.R;
 import ru.orangesoftware.financisto.activity.MainActivity;
 import ru.orangesoftware.financisto.db.DatabaseAdapter;
+import ru.orangesoftware.financisto.db.MyEntityManager;
 import ru.orangesoftware.financisto.export.ImportExportAsyncTask;
 import ru.orangesoftware.financisto.export.ImportExportAsyncTaskListener;
 import ru.orangesoftware.financisto.export.ProgressListener;
@@ -41,9 +42,9 @@ public class CsvImportTask extends ImportExportAsyncTask {
     }
 
     @Override
-    protected Object work(Context context, DatabaseAdapter db, String... params) throws Exception {
+    protected Object work(Context context, DatabaseAdapter db, MyEntityManager em, String... params) throws Exception {
         try {
-            CsvImport csvimport = new CsvImport(db, options);
+            CsvImport csvimport = new CsvImport(db, em, options);
             csvimport.setProgressListener(new ProgressListener() {
                 @Override
                 public void onProgress(int percentage) {

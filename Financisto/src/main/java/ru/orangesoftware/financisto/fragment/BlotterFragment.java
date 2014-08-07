@@ -27,6 +27,7 @@ import ru.orangesoftware.financisto.bus.GetTransactionList;
 import ru.orangesoftware.financisto.bus.TransactionDeleted;
 import ru.orangesoftware.financisto.bus.TransactionList;
 import ru.orangesoftware.financisto.db.DatabaseAdapter;
+import ru.orangesoftware.financisto.db.DatabaseAdapter_;
 import ru.orangesoftware.financisto.filter.WhereFilter;
 
 @EFragment(R.layout.blotter)
@@ -50,7 +51,7 @@ public class BlotterFragment extends AbstractListFragment implements QuickAction
 
     public void onEventMainThread(TransactionList event) {
         FragmentActivity context = getActivity();
-        DatabaseAdapter db = new DatabaseAdapter(context);
+        DatabaseAdapter db = DatabaseAdapter_.getInstance_(context);
         BlotterListAdapter adapter;
         if (event.accountId != -1) {
             adapter = new TransactionsListAdapter(context, db, event.cursor);

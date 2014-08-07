@@ -47,10 +47,10 @@ public class TransactionInfoDialog {
     private final int splitPadding;
     private final Utils u;
 
-    public TransactionInfoDialog(Context context, DatabaseAdapter db, NodeInflater inflater) {
+    public TransactionInfoDialog(Context context, DatabaseAdapter db, MyEntityManager em, NodeInflater inflater) {
         this.context = context;
         this.db = db;
-        this.em = db.em();
+        this.em = em;
         this.inflater = inflater;
         this.layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.splitPadding = context.getResources().getDimensionPixelSize(R.dimen.transaction_icon_padding);

@@ -22,6 +22,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import ru.orangesoftware.financisto.R;
 import ru.orangesoftware.financisto.activity.FlowzrSyncActivity;
 import ru.orangesoftware.financisto.db.DatabaseAdapter;
+import ru.orangesoftware.financisto.db.DatabaseAdapter_;
 
 public class FlowzrSyncTask extends AsyncTask<String, String, Object> {
 	protected final Context context;
@@ -109,7 +110,7 @@ public class FlowzrSyncTask extends AsyncTask<String, String, Object> {
     
     @Override
 	protected Object doInBackground(String... params) {
-    	DatabaseAdapter db = new DatabaseAdapter(context);
+    	DatabaseAdapter db = DatabaseAdapter_.getInstance_(context);
         return work(context, db, params);
 	}
 

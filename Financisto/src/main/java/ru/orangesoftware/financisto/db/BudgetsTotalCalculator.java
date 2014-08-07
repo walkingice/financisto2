@@ -32,9 +32,9 @@ public class BudgetsTotalCalculator {
     private final MyEntityManager em;
     private final List<Budget> budgets;
 
-    public BudgetsTotalCalculator(DatabaseAdapter db, List<Budget> budgets) {
+    public BudgetsTotalCalculator(DatabaseAdapter db, MyEntityManager em, List<Budget> budgets) {
         this.db = db;
-        this.em = db.em();
+        this.em = em;
         this.budgets = budgets;
     }
 

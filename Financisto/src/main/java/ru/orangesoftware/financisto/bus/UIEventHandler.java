@@ -59,7 +59,7 @@ public class UIEventHandler {
         if (MyPreferences.shouldUpdateHomeCurrency(context)) {
             db.setDefaultHomeCurrency();
         }
-        CurrencyCache.initialize(db.em());
+        CurrencyCache.initialize(em);
         t3 = System.currentTimeMillis();
         if (MyPreferences.shouldRebuildRunningBalance(context)) {
             db.rebuildRunningBalances();

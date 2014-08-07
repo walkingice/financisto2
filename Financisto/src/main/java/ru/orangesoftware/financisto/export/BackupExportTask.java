@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import ru.orangesoftware.financisto.backup.DatabaseExport;
 import ru.orangesoftware.financisto.db.DatabaseAdapter;
+import ru.orangesoftware.financisto.db.MyEntityManager;
 
 public class BackupExportTask extends ImportExportAsyncTask {
 
@@ -17,7 +18,7 @@ public class BackupExportTask extends ImportExportAsyncTask {
 	}
 	
 	@Override
-	protected Object work(Context context, DatabaseAdapter db, String...params) throws Exception {
+	protected Object work(Context context, DatabaseAdapter db, MyEntityManager em, String...params) throws Exception {
 		DatabaseExport export = new DatabaseExport(context, db.db(), true);
         backupFileName = export.export();
         if (uploadToDropbox) {

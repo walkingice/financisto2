@@ -19,7 +19,9 @@ import java.util.GregorianCalendar;
 
 import ru.orangesoftware.financisto.R;
 import ru.orangesoftware.financisto.db.DatabaseAdapter;
+import ru.orangesoftware.financisto.db.DatabaseAdapter_;
 import ru.orangesoftware.financisto.db.MyEntityManager;
+import ru.orangesoftware.financisto.db.MyEntityManager_;
 import ru.orangesoftware.financisto.graph.Report2DChart;
 import ru.orangesoftware.financisto.model.Currency;
 import ru.orangesoftware.financisto.model.ReportDataByPeriod;
@@ -90,11 +92,10 @@ public class Report2DChartActivity extends Activity {
      */
 	private void init() {
 		// database adapter to query data
-		dbAdapter = new DatabaseAdapter(this);
+		dbAdapter = DatabaseAdapter_.getInstance_(this);
+		em = MyEntityManager_.getInstance_(this);
 
-		em = dbAdapter.em();
-		
-		// get report preferences to display chart
+        // get report preferences to display chart
 		// Reference Currency
 		currency = getReferenceCurrency();
 		// Period of Reference

@@ -18,6 +18,7 @@ import java.util.GregorianCalendar;
 
 import ru.orangesoftware.financisto.R;
 import ru.orangesoftware.financisto.db.DatabaseAdapter;
+import ru.orangesoftware.financisto.db.DatabaseAdapter_;
 
 /**
  * @author Abdsandryk
@@ -81,7 +82,7 @@ public class CCardStatementClosingDayActivity extends Activity {
      * Initialize data and GUI elements.
      */
     private void initialize() {
-		dbAdapter = new DatabaseAdapter(this);
+		dbAdapter = DatabaseAdapter_.getInstance_(this);
 
     	customCD = (RadioButton)findViewById(R.id.custom_closing_day);
     	regularCD = (RadioButton)findViewById(R.id.regular_closing_day);

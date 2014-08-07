@@ -73,8 +73,7 @@ public class TransactionUtils {
 				new String[]{"e_name"}, new int[]{android.R.id.text1});
 	}
 
-    public static SimpleCursorAdapter createPayeeAdapter(Context context, DatabaseAdapter db) {
-        final MyEntityManager em = db.em();
+    public static SimpleCursorAdapter createPayeeAdapter(Context context, final MyEntityManager em) {
         return new SimpleCursorAdapter(context, android.R.layout.simple_dropdown_item_1line, null,
                 new String[]{"e_title"}, new int[]{android.R.id.text1}){
             @Override

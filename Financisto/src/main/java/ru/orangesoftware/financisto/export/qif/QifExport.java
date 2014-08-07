@@ -39,14 +39,14 @@ public class QifExport extends Export {
     private final Map<Long, Category> categoriesMap;
     private final Map<Long, Account> accountsMap;
 
-    public QifExport(Context context, DatabaseAdapter db, QifExportOptions options) {
+    public QifExport(Context context, DatabaseAdapter db, MyEntityManager em, QifExportOptions options) {
         super(context, false);
         this.db = db;
-        this.em = db.em();
+        this.em = em;
         this.options = options;
         this.categories = db.getCategoriesTree(false);
         this.categoriesMap = categories.asMap();
-        this.accountsMap = db.em().getAllAccountsMap();
+        this.accountsMap = em.getAllAccountsMap();
     }
 
     @Override
@@ -81,7 +81,7 @@ public class QifExport extends Export {
     }
 
     private void writeAccountsAndTransactions(QifBufferedWriter qifWriter) throws IOException {
-        List<Account> accounts = db.em().getAllAccountsList();
+        List<Account> accounts = em.getAllAccountsList();
         for (Account a : accounts) {
             if (isSelectedAccount(a)) {
                 QifAccount qifAccount = writeAccount(qifWriter, a);

@@ -38,7 +38,7 @@ public class SplitsBlotterActivity extends BlotterActivity {
 
     @Override
     protected TotalCalculationTask createTotalCalculationTask() {
-        return new BlotterTotalCalculationTask(this, db, blotterFilter, totalText);
+        return new BlotterTotalCalculationTask(this, db, em, blotterFilter, totalText);
     }
 
 }

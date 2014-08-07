@@ -31,12 +31,12 @@ public abstract class FullDatabaseImport {
     protected final MyEntityManager em;
 	protected final SQLiteDatabase db;
 
-	public FullDatabaseImport(Context context, DatabaseAdapter dbAdapter) {
+	public FullDatabaseImport(Context context, DatabaseAdapter dbAdapter, MyEntityManager em) {
 		this.context = context;
 		this.dbAdapter = dbAdapter;
-		this.db = dbAdapter.db();
-        this.em = dbAdapter.em();
-	}
+        this.em = em;
+        this.db = dbAdapter.db();
+    }
 
 	public void importDatabase() throws IOException {
         db.beginTransaction();

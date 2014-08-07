@@ -13,6 +13,7 @@ import android.content.Context;
 
 import ru.orangesoftware.financisto.activity.MainActivity;
 import ru.orangesoftware.financisto.db.DatabaseAdapter;
+import ru.orangesoftware.financisto.db.MyEntityManager;
 import ru.orangesoftware.financisto.export.ImportExportAsyncTask;
 
 //import com.google.api.services.drive.Drive;
@@ -29,7 +30,7 @@ public class DriveBackupTask extends ImportExportAsyncTask {
     }
 
     @Override
-    protected Object work(Context context, DatabaseAdapter db, String... params) throws Exception {
+    protected Object work(Context context, DatabaseAdapter db, MyEntityManager em, String... params) throws Exception {
         /*DatabaseExport export = new DatabaseExport(context, db.db(), true);
         try {
             String folder = MyPreferences.getBackupFolder(context);

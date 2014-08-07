@@ -16,6 +16,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v4.util.LongSparseArray;
 
+import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
 
 import java.util.ArrayList;
@@ -65,8 +66,7 @@ public class MyEntityManager extends EntityManager {
 
     public final Context context;
 
-    public MyEntityManager(Context context) {
-        super(DatabaseHelper_.getInstance_(context));
+    protected MyEntityManager(Context context) {
         this.context = context;
     }
 

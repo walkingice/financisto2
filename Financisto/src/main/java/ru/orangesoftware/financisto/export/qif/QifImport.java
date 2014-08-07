@@ -12,6 +12,7 @@ import android.content.Context;
 import android.util.Log;
 import ru.orangesoftware.financisto.backup.FullDatabaseImport;
 import ru.orangesoftware.financisto.db.DatabaseAdapter;
+import ru.orangesoftware.financisto.db.MyEntityManager;
 import ru.orangesoftware.financisto.export.CategoryCache;
 import ru.orangesoftware.financisto.model.*;
 
@@ -35,8 +36,8 @@ public class QifImport extends FullDatabaseImport {
     private final Map<String, Long> projectToId = new HashMap<String, Long>();
     private final CategoryCache categoryCache = new CategoryCache();
 
-    public QifImport(Context context, DatabaseAdapter db, QifImportOptions options) {
-        super(context, db);
+    public QifImport(Context context, DatabaseAdapter db, MyEntityManager em, QifImportOptions options) {
+        super(context, db, em);
         this.options = options;
     }
 

@@ -30,9 +30,9 @@ public abstract class AbstractPlanner {
     protected final WhereFilter filter;
     protected final Date now;
 
-    public AbstractPlanner(DatabaseAdapter db, WhereFilter filter, Date now) {
+    public AbstractPlanner(DatabaseAdapter db, MyEntityManager em, WhereFilter filter, Date now) {
         this.db = db;
-        this.em = db.em();
+        this.em = em;
         this.filter = filter;
         this.now = now;
     }

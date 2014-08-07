@@ -35,6 +35,7 @@ import java.io.File;
 import ru.orangesoftware.financisto.R;
 import ru.orangesoftware.financisto.backup.Backup;
 import ru.orangesoftware.financisto.db.DatabaseAdapter;
+import ru.orangesoftware.financisto.db.DatabaseAdapter_;
 import ru.orangesoftware.financisto.db.DatabaseHelper;
 import ru.orangesoftware.financisto.dialog.WebViewDialog;
 import ru.orangesoftware.financisto.export.BackupExportTask;
@@ -636,7 +637,7 @@ public class MainActivity extends TabActivity implements TabHost.OnTabChangeList
 
         @Override
         protected Void doInBackground(Void... objects) {
-            DatabaseAdapter db = new DatabaseAdapter(MainActivity.this);
+            DatabaseAdapter db = DatabaseAdapter_.getInstance_(MainActivity.this);
             new IntegrityFix(db).fix();
             return null;
         }

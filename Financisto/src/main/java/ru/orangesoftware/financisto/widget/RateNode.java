@@ -21,6 +21,7 @@ import android.widget.*;
 import ru.orangesoftware.financisto.R;
 import ru.orangesoftware.financisto.activity.ActivityLayout;
 import ru.orangesoftware.financisto.db.DatabaseAdapter;
+import ru.orangesoftware.financisto.db.DatabaseAdapter_;
 import ru.orangesoftware.financisto.model.Currency;
 import ru.orangesoftware.financisto.rates.ExchangeRate;
 import ru.orangesoftware.financisto.rates.ExchangeRateProvider;
@@ -58,7 +59,7 @@ public class RateNode {
         this.owner = owner;
         this.x = x;
         this.layout = layout;
-        this.db = new DatabaseAdapter(owner.getActivity());
+        this.db = DatabaseAdapter_.getInstance_(owner.getActivity());
         createUI();
     }
 

@@ -20,16 +20,18 @@ import java.util.*;
 public class CsvImport {
 
     private final DatabaseAdapter db;
+    private final MyEntityManager em;
     private final CsvImportOptions options;
     private final Account account;
     private char decimalSeparator;
     private char groupSeparator;
     private ProgressListener progressListener;
 
-    public CsvImport(DatabaseAdapter db, CsvImportOptions options) {
+    public CsvImport(DatabaseAdapter db, MyEntityManager em, CsvImportOptions options) {
         this.db = db;
+        this.em = em;
         this.options = options;
-        this.account = db.em().getAccount(options.selectedAccountId);
+        this.account = em.getAccount(options.selectedAccountId);
         this.decimalSeparator = options.currency.decimalSeparator.charAt(1);
         this.groupSeparator = options.currency.groupSeparator.charAt(1);
     }
@@ -59,7 +61,6 @@ public class CsvImport {
     }
 
     public Map<String, Project> collectAndInsertProjects(List<CsvTransaction> transactions) {
-        MyEntityManager em = db.em();
         Map<String, Project> map = em.getAllProjectsByTitleMap(false);
         for (CsvTransaction transaction : transactions) {
             String project = transaction.project;
@@ -79,7 +80,6 @@ public class CsvImport {
     }
 
     public Map<String, Payee> collectAndInsertPayees(List<CsvTransaction> transactions) {
-        MyEntityManager em = db.em();
         Map<String, Payee> map = em.getAllPayeeByTitleMap();
         for (CsvTransaction transaction : transactions) {
             String payee = transaction.payee;
@@ -106,7 +106,6 @@ public class CsvImport {
     }
 
     private Map<String, Currency> collectAndInsertCurrencies(List<CsvTransaction> transactions) {
-        MyEntityManager em = db.em();
         Map<String, Currency> map = em.getAllCurrenciesByTtitleMap();
         for (CsvTransaction transaction : transactions) {
             String currency = transaction.originalCurrency;

@@ -61,17 +61,17 @@ public abstract class Report {
 		return name;
 	}
 
-    public abstract ReportData getReport(DatabaseAdapter db, WhereFilter filter);
+    public abstract ReportData getReport(DatabaseAdapter db, MyEntityManager em, WhereFilter filter);
 
-    public ReportData getReportForChart(DatabaseAdapter db, WhereFilter filter) {
-        return getReport(db, filter);
+    public ReportData getReportForChart(DatabaseAdapter db, MyEntityManager em, WhereFilter filter) {
+        return getReport(db, em, filter);
     }
 
-	protected ReportData queryReport(DatabaseAdapter db, String table, WhereFilter filter) {
+	protected ReportData queryReport(DatabaseAdapter db, MyEntityManager em, String table, WhereFilter filter) {
 		filterTransfers(filter);
 		Cursor c = db.db().query(table, DatabaseHelper.ReportColumns.NORMAL_PROJECTION,
                 filter.getSelection(), filter.getSelectionArgs(), null, null, "_id");
-		ArrayList<GraphUnit> units = getUnitsFromCursor(db, c);
+		ArrayList<GraphUnit> units = getUnitsFromCursor(db, em, c);
         Total total = calculateTotal(units);
         return new ReportData(units, total);
 	}
@@ -82,9 +82,8 @@ public abstract class Report {
 		}
 	}
 
-	protected ArrayList<GraphUnit> getUnitsFromCursor(DatabaseAdapter db, Cursor c) {
+	protected ArrayList<GraphUnit> getUnitsFromCursor(DatabaseAdapter db, MyEntityManager em, Cursor c) {
 		try {
-            MyEntityManager em = db.em();
             ExchangeRateProvider rates = db.getHistoryRates();
             ArrayList<GraphUnit> units = new ArrayList<GraphUnit>();
             GraphUnit u = null;

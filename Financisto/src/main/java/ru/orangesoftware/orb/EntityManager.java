@@ -35,18 +35,19 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import org.androidannotations.annotations.Bean;
+import org.androidannotations.annotations.EBean;
+
+@EBean(scope = EBean.Scope.Singleton)
 public abstract class EntityManager {
 	
 	private static final ConcurrentMap<Class<?>, EntityDefinition> definitions = new ConcurrentHashMap<Class<?>, EntityDefinition>();
-	
-	protected final SQLiteOpenHelper databaseHelper;
-	
-	public EntityManager(SQLiteOpenHelper databaseHelper) {
-		this.databaseHelper = databaseHelper;
-	}
+
+    @Bean
+	public DatabaseHelper dbHelper;
 	
 	public SQLiteDatabase db() {
-		return databaseHelper.getWritableDatabase();
+		return dbHelper.getWritableDatabase();
 	}
 
 	private static EntityDefinition parseDefinition(Class<?> clazz) {

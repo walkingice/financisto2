@@ -23,6 +23,9 @@ import java.util.List;
 import ru.orangesoftware.financisto.R;
 import ru.orangesoftware.financisto.adapter.MyEntityAdapter;
 import ru.orangesoftware.financisto.db.DatabaseAdapter;
+import ru.orangesoftware.financisto.db.DatabaseAdapter_;
+import ru.orangesoftware.financisto.db.MyEntityManager;
+import ru.orangesoftware.financisto.db.MyEntityManager_;
 import ru.orangesoftware.financisto.model.Account;
 import ru.orangesoftware.financisto.utils.CurrencyExportPreferences;
 
@@ -38,6 +41,7 @@ public class CsvImportActivity extends AbstractImportActivity {
     private final CurrencyExportPreferences currencyPreferences = new CurrencyExportPreferences("csv");
 
     private DatabaseAdapter db;
+    private MyEntityManager em;
     private List<Account> accounts;
     private Spinner accountSpinner;
     private CheckBox useHeaderFromFile;
@@ -48,9 +52,10 @@ public class CsvImportActivity extends AbstractImportActivity {
 
     @Override
     protected void internalOnCreate() {
-        db = new DatabaseAdapter(this);
+        db = DatabaseAdapter_.getInstance_(this);
+        em = MyEntityManager_.getInstance_(this);
 
-        accounts = db.em().getAllAccountsList();
+        accounts = em.getAllAccountsList();
         ArrayAdapter<Account> accountsAdapter = new MyEntityAdapter<Account>(this, android.R.layout.simple_spinner_item, android.R.id.text1, accounts);
         accountsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         accountSpinner = (Spinner) findViewById(R.id.spinnerAccount);

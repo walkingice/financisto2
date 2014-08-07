@@ -349,7 +349,7 @@ public abstract class AbstractTransactionActivity extends AbstractActivity imple
     }
 
     protected void createPayeeNode(LinearLayout layout) {
-        payeeAdapter = TransactionUtils.createPayeeAdapter(this, db);
+        payeeAdapter = TransactionUtils.createPayeeAdapter(this, em);
         payeeText = new AutoCompleteTextView(this);
         payeeText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS |
                 InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS |
@@ -907,7 +907,7 @@ public abstract class AbstractTransactionActivity extends AbstractActivity imple
 
     protected void selectPayee(long payeeId) {
         if (isShowPayee) {
-            Payee p = db.em().get(Payee.class, payeeId);
+            Payee p = em.get(Payee.class, payeeId);
             selectPayee(p);
         }
     }

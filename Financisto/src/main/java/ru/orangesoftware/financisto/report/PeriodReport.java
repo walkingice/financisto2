@@ -12,6 +12,8 @@ package ru.orangesoftware.financisto.report;
 
 import android.content.Context;
 import android.database.Cursor;
+
+import ru.orangesoftware.financisto.db.MyEntityManager;
 import ru.orangesoftware.financisto.filter.WhereFilter;
 import ru.orangesoftware.financisto.datetime.Period;
 import ru.orangesoftware.financisto.datetime.PeriodType;
@@ -43,7 +45,7 @@ public class PeriodReport extends Report {
     }
 
 	@Override
-	public ReportData getReport(DatabaseAdapter db, WhereFilter filter) {
+	public ReportData getReport(DatabaseAdapter db, MyEntityManager em, WhereFilter filter) {
 		WhereFilter newFilter = WhereFilter.empty();
 		Criteria criteria = filter.get(ReportColumns.FROM_ACCOUNT_CURRENCY_ID);
 		if (criteria != null) {
@@ -56,7 +58,7 @@ public class PeriodReport extends Report {
             newFilter.put(Criteria.btw(ReportColumns.DATETIME, String.valueOf(p.start), String.valueOf(p.end)));
             Cursor c = db.db().query(V_REPORT_PERIOD, ReportColumns.NORMAL_PROJECTION,
                     newFilter.getSelection(), newFilter.getSelectionArgs(), null, null, null);
-            ArrayList<GraphUnit> u = getUnitsFromCursor(db, c);
+            ArrayList<GraphUnit> u = getUnitsFromCursor(db, em, c);
             if (u.size() > 0 && u.get(0).size() > 0) {
                 units.add(u.get(0));
             }

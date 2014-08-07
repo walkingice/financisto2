@@ -109,9 +109,9 @@ public class BlotterActivity extends AbstractListActivity {
     protected TotalCalculationTask createTotalCalculationTask() {
         WhereFilter filter = WhereFilter.copyOf(blotterFilter);
         if (filter.getAccountId() > 0) {
-            return new AccountTotalCalculationTask(this, db, filter, totalText);
+            return new AccountTotalCalculationTask(this, db, em, filter, totalText);
         } else {
-            return new BlotterTotalCalculationTask(this, db, filter, totalText);
+            return new BlotterTotalCalculationTask(this, db, em, filter, totalText);
         }
     }
 
@@ -480,7 +480,7 @@ public class BlotterActivity extends AbstractListActivity {
 	}
 
     private void showTransactionInfo(long id) {
-        TransactionInfoDialog transactionInfoView = new TransactionInfoDialog(this, db, inflater);
+        TransactionInfoDialog transactionInfoView = new TransactionInfoDialog(this, db, em, inflater);
         transactionInfoView.show(this, id);
     }
 

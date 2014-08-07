@@ -32,9 +32,10 @@ public abstract class AbstractDbTest extends AndroidTestCase {
     public void setUp() throws Exception {
         Context context = new RenamingDelegatingContext(getContext(), "test-");
         dbHelper = new DatabaseHelper(context);
-        db = new DatabaseAdapter(context, dbHelper);
-        db.open();
-        em = db.em();
+        db = new DatabaseAdapter(context);
+        em = new MyEntityManager(context);
+        em.dbHelper = db.dbHelper = dbHelper;
+        db.em = em;
     }
 
     @Override

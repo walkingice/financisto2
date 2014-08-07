@@ -13,6 +13,9 @@ import android.os.AsyncTask;
 import android.view.View;
 import ru.orangesoftware.financisto.R;
 import ru.orangesoftware.financisto.db.DatabaseAdapter;
+import ru.orangesoftware.financisto.db.DatabaseAdapter_;
+import ru.orangesoftware.financisto.db.MyEntityManager;
+import ru.orangesoftware.financisto.db.MyEntityManager_;
 import ru.orangesoftware.financisto.utils.IntegrityCheck;
 
 /**
@@ -32,8 +35,9 @@ public class IntegrityCheckTask extends AsyncTask<Void, Void, Boolean> {
     protected Boolean doInBackground(Void... objects) {
         View textView = getResultView();
         if (textView != null) {
-            DatabaseAdapter db = new DatabaseAdapter(activity);
-            IntegrityCheck check = new IntegrityCheck(db);
+            DatabaseAdapter db = DatabaseAdapter_.getInstance_(activity);
+            MyEntityManager em = MyEntityManager_.getInstance_(activity);
+            IntegrityCheck check = new IntegrityCheck(db, em);
             return check.isBroken();
         }
         return false;

@@ -9,6 +9,7 @@
 package ru.orangesoftware.financisto.utils;
 
 import ru.orangesoftware.financisto.db.DatabaseAdapter;
+import ru.orangesoftware.financisto.db.MyEntityManager;
 import ru.orangesoftware.financisto.model.Account;
 
 import java.util.List;
@@ -21,9 +22,11 @@ import java.util.List;
 public class IntegrityCheck {
 
     private final DatabaseAdapter db;
+    private final MyEntityManager em;
 
-    public IntegrityCheck(DatabaseAdapter db) {
+    public IntegrityCheck(DatabaseAdapter db, MyEntityManager em) {
         this.db = db;
+        this.em = em;
     }
 
     public boolean isBroken() {
@@ -31,7 +34,7 @@ public class IntegrityCheck {
     }
 
     private boolean isRunningBalanceBroken() {
-        List<Account> accounts = db.em().getAllAccountsList();
+        List<Account> accounts = em.getAllAccountsList();
         for (Account account : accounts) {
             long totalFromAccount = account.totalAmount;
             long totalFromRunningBalance = db.getLastRunningBalanceForAccount(account);

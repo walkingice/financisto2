@@ -101,16 +101,12 @@ public class DatabaseAdapter {
 
     private boolean updateAccountBalance = true;
 
-    public DatabaseAdapter(Context context) {
+    protected DatabaseAdapter(Context context) {
         this.context = context;
     }
 
     public SQLiteDatabase db() {
         return dbHelper.getWritableDatabase();
-    }
-
-    public MyEntityManager em() {
-        return em;
     }
 
     // ===================================================================
@@ -538,7 +534,7 @@ public class DatabaseAdapter {
     }
 
     private void deleteSplitsForParentTransaction(long parentId) {
-        List<Transaction> splits = em().getSplitsForTransaction(parentId);
+        List<Transaction> splits = em.getSplitsForTransaction(parentId);
         SQLiteDatabase db = db();
         for (Transaction split : splits) {
             if (split.isTransfer()) {
@@ -1721,7 +1717,7 @@ public class DatabaseAdapter {
         newTransaction.fromAccountId = account.id;
         newTransaction.dateTime = DateUtils.atDayEnd(nearestTransaction.dateTime);
         newTransaction.fromAmount = balance;
-        Payee payee = em().insertPayee(context.getString(R.string.purge_account_payee));
+        Payee payee = em.insertPayee(context.getString(R.string.purge_account_payee));
         newTransaction.payeeId = payee != null ? payee.id : 0;
         newTransaction.status = TransactionStatus.CL;
         return newTransaction;
