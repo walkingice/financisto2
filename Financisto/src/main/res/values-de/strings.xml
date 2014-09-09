@@ -223,7 +223,7 @@
   <string name="restore_database">Datenbank wiederherstellen</string>
   <string name="restore_database_inprogress">Stelle Datenbank wieder her...</string>
   <string name="restore_database_gdocs">Wiederherstellen von Google Drive</string>
-  <string name="restore_database_inprogress_gdocs">Stelle Datenbank wieder her...</string>
+  <string name="google_drive_restore_in_progress">Stelle Datenbank wieder her...</string>
   <string name="restore_database_success">Datenbank wurde vollständig wiederhergestellt...</string>
   <string name="gdocs_connection_failed">Keine Google Drive Verbindung möglich.</string>
   <string name="gdocs_folder_not_found">Der Sicherungsordner auf Google Drive konnte nicht gefunden werden.</string>

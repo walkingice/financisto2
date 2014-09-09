@@ -223,7 +223,7 @@
   <string name="restore_database">Restaurar Dades</string>
   <string name="restore_database_inprogress">Restaurant còpia de seguretat de la base de dades...</string>
   <string name="restore_database_gdocs">Restaurar de Google Drive</string>
-  <string name="restore_database_inprogress_gdocs">Restaurant còpia de seguretat de la base de dades...</string>
+  <string name="google_drive_restore_in_progress">Restaurant còpia de seguretat de la base de dades...</string>
   <string name="restore_database_success">La base de dades ha estat restaurada amb èxit.</string>
   <string name="gdocs_connection_failed">No es pot connectar a Google Drive.</string>
   <string name="gdocs_folder_not_found">La carpeta de còpia de seguretat de Google Drive no s\'ha trobat.</string>

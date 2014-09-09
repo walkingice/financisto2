@@ -3,13 +3,13 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.12.+'
-        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.+'
+        classpath 'com.android.tools.build:gradle:0.12.2'
+        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.4'
     }
 }
 
 apply plugin: 'com.android.application'
-apply plugin: 'android-apt'
+apply plugin: 'com.neenbedankt.android-apt'
 
 repositories {
     maven { url "http://repo.commonsware.com.s3.amazonaws.com" }
@@ -44,8 +44,8 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:support-v4:+'
-    compile 'com.google.android.gms:play-services:+'
+    compile 'com.android.support:support-v4:20.0.0'
+    compile 'com.google.android.gms:play-services:4.4.52'
     compile 'com.google.code.gson:gson:2.2.4'
 
     apt "org.androidannotations:androidannotations:3.0.1"
@@ -63,5 +63,61 @@ apt {
     arguments {
         androidManifestFile variant.processResources.manifestFile
         resourcePackageName 'ru.orangesoftware.financisto'
+    }
+}
+
+def toCamelCase(String string) {
+    String result = ""
+    string.findAll("[^\\W]+") { String word ->
+        result += word.capitalize()
+    }
+    return result
+}
+
+afterEvaluate { project ->
+    Configuration runtimeConfiguration = project.configurations.getByName('compile')
+    ResolutionResult resolution = runtimeConfiguration.incoming.resolutionResult
+    // Forces resolve of configuration
+    ModuleVersionIdentifier module = resolution.getAllComponents().find { it.moduleVersion.name.equals("play-services") }.moduleVersion
+
+    String prepareTaskName = "prepare${toCamelCase("${module.group} ${module.name} ${module.version}")}Library"
+    File playServiceRootFolder = project.tasks.find { it.name.equals(prepareTaskName) }.explodedDir
+
+    Task stripPlayServices = project.tasks.create(name: 'stripPlayServices', group: "Strip") {
+        inputs.files new File(playServiceRootFolder, "classes.jar")
+        outputs.dir playServiceRootFolder
+        description 'Strip useless packages from Google Play Services library to avoid reaching dex limit'
+
+        doLast {
+            copy {
+                from(file(new File(playServiceRootFolder, "classes.jar")))
+                into(file(playServiceRootFolder))
+                rename { fileName ->
+                    fileName = "classes_orig.jar"
+                }
+            }
+            tasks.create(name: "stripPlayServices" + module.version, type: Jar) {
+                destinationDir = playServiceRootFolder
+                archiveName = "classes.jar"
+                from(zipTree(new File(playServiceRootFolder, "classes_orig.jar"))) {
+                    exclude "com/google/ads/**"
+                    exclude "com/google/android/gms/analytics/**"
+                    exclude "com/google/android/gms/games/**"
+                    //exclude "com/google/android/gms/maps/**"
+                    exclude "com/google/android/gms/panorama/**"
+                    exclude "com/google/android/gms/plus/**"
+                    //exclude "com/google/android/gms/drive/**"
+                    exclude "com/google/android/gms/ads/**"
+                    exclude "com/google/android/gms/wallet/**"
+                    exclude "com/google/android/gms/wearable/**"                }
+            }.execute()
+            delete {
+                delete (file(new File(playServiceRootFolder, "classes_orig.jar")))
+            }
+        }
+    }
+
+    project.tasks.findAll { it.name.startsWith('prepare') && it.name.endsWith('Dependencies') }.each { Task task ->
+        task.dependsOn stripPlayServices
     }
 }

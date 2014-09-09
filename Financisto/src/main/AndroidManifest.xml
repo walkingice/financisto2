@@ -302,7 +302,7 @@
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/budgets" />
         <activity
-            android:name="ru.orangesoftware.financisto.activity.PreferencesActivity"
+            android:name="ru.orangesoftware.financisto.activity.PreferencesActivity_"
             android:label="@string/preferences" />
         <activity
             android:name="ru.orangesoftware.financisto.activity.BudgetListActivity"
@@ -408,6 +408,10 @@
         <activity
             android:name="ru.orangesoftware.financisto.activity.EntityListActivity_"
             android:label="@string/entities"
+            android:parentActivityName=".activity.MainActivity2_" />
+        <activity
+            android:name="ru.orangesoftware.financisto.activity.BackupRestoreListActivity_"
+            android:label="@string/backup_restore"
             android:parentActivityName=".activity.MainActivity2_" />
 
         <activity

@@ -223,7 +223,7 @@
   <string name="restore_database">Восстановить базу</string>
   <string name="restore_database_inprogress">Восстановление базы...</string>
   <string name="restore_database_gdocs">Восстановить из Google Drive</string>
-  <string name="restore_database_inprogress_gdocs">Восстановление базы...</string>
+  <string name="google_drive_restore_in_progress">Восстановление базы...</string>
   <string name="restore_database_success">База была успешно восстановлена..</string>
   <string name="gdocs_connection_failed">Нет связи с Google Drive.</string>
   <string name="gdocs_folder_not_found">Папка резервной копии на Google Drive не найдена.</string>

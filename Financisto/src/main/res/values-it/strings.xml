@@ -223,7 +223,7 @@
   <string name="restore_database">Ripristino Database</string>
   <string name="restore_database_inprogress">Ripristino database...</string>
   <string name="restore_database_gdocs">Ripristina da Google Drive</string>
-  <string name="restore_database_inprogress_gdocs">Ripristino database...</string>
+  <string name="google_drive_restore_in_progress">Ripristino database...</string>
   <string name="restore_database_success">Database ripristinato con successo.</string>
   <string name="gdocs_connection_failed">Connessione a Google Drive non riuscita.</string>
   <string name="gdocs_folder_not_found">Cartella di backup su Google Drive non trovata.</string>

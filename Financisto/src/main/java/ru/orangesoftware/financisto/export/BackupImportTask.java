@@ -23,14 +23,8 @@ import ru.orangesoftware.financisto.db.MyEntityManager;
  */
 public class BackupImportTask extends ImportExportAsyncTask {
 
-    public BackupImportTask(final MainActivity mainActivity, ProgressDialog dialog) {
-        super(mainActivity, dialog);
-        setListener(new ImportExportAsyncTaskListener() {
-            @Override
-            public void onCompleted() {
-                mainActivity.onTabChanged(mainActivity.getTabHost().getCurrentTabTag());
-            }
-        });
+    public BackupImportTask(Context context, ProgressDialog dialog) {
+        super(context, dialog);
     }
 
     @Override

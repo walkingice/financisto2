@@ -222,7 +222,7 @@
   <string name="restore_database">Przywróć bazę danych</string>
   <string name="restore_database_inprogress">Przywracanie bazy danych...</string>
   <string name="restore_database_gdocs">Przywracanie z dokumentów Google</string>
-  <string name="restore_database_inprogress_gdocs">Przywracanie bazy danych...</string>
+  <string name="google_drive_restore_in_progress">Przywracanie bazy danych...</string>
   <string name="restore_database_success">Baza danych została pomyślnie przywrócona.</string>
   <string name="gdocs_connection_failed">Nie można się połączyć z dokumentami Google.</string>
   <string name="gdocs_folder_not_found">Nie można odnaleźć katalogu kopii zapasowych w dokumentach Google.</string>

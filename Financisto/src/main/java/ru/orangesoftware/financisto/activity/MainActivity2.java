@@ -200,7 +200,20 @@ public class MainActivity2 extends FragmentActivity {
             public void onClick(final Context context) {
                 EntityListActivity_.intent(context).start();
             }
-        };
+        },
+        BACKUP_RESTORE(R.string.backup_restore, R.drawable.drawer_action_reload){
+            @Override
+            public void onClick(final Context context) {
+                BackupRestoreListActivity_.intent(context).start();
+            }
+        },
+        PREFERENCES(R.string.preferences, R.drawable.drawer_action_preferences){
+            @Override
+            public void onClick(final Context context) {
+                PreferencesActivity_.intent(context).start();
+            }
+        },
+        ;
 
         private final int titleId;
         private final int iconId;

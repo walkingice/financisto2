@@ -223,7 +223,7 @@
   <string name="restore_database">Obnovit databázi</string>
   <string name="restore_database_inprogress">Databáze se obnovuje...</string>
   <string name="restore_database_gdocs">Obnovit z Google Drive</string>
-  <string name="restore_database_inprogress_gdocs">Databáze se obnovuje...</string>
+  <string name="google_drive_restore_in_progress">Databáze se obnovuje...</string>
   <string name="restore_database_success">Databáze byla úspěšně obnovena.</string>
   <string name="gdocs_connection_failed">Nelze se připojit ke Google Drive.</string>
   <string name="gdocs_folder_not_found">Složka pro zálohu nebyl na Google Drive nalezen.</string>

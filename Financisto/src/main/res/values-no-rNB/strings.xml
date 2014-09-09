@@ -222,7 +222,7 @@
   <string name="restore_database">Gjennopprett database</string>
   <string name="restore_database_inprogress">Gjennoppretter database...</string>
   <string name="restore_database_gdocs">Gjennoppretter fra Google Docs</string>
-  <string name="restore_database_inprogress_gdocs">Gjennoppretter database...</string>
+  <string name="google_drive_restore_in_progress">Gjennoppretter database...</string>
   <string name="restore_database_success">Databasen har blitt vellykket gjennopprettet.</string>
   <string name="gdocs_connection_failed">Klarer ikke å koble til Google Docs.</string>
   <string name="gdocs_folder_not_found">Kunne ikke finne backup katalogen på Google Docs..</string>

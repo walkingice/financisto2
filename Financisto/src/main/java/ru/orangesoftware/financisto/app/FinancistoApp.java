@@ -8,6 +8,7 @@ import org.androidannotations.annotations.EApplication;
 
 import ru.orangesoftware.financisto.bus.GreenRobotBus;
 import ru.orangesoftware.financisto.bus.UIEventHandler;
+import ru.orangesoftware.financisto.export.drive.GoogleDriveClient;
 
 @EApplication
 public class FinancistoApp extends Application {
@@ -18,9 +19,13 @@ public class FinancistoApp extends Application {
     @Bean
     public UIEventHandler handler;
 
+    @Bean
+    public GoogleDriveClient driveClient;
+
     @AfterInject
     public void init() {
         bus.register(handler);
+        bus.register(driveClient);
     }
 
 }

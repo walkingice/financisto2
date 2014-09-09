@@ -223,7 +223,7 @@
   <string name="restore_database">匯回資料庫</string>
   <string name="restore_database_inprogress">正在匯回資料庫…</string>
   <string name="restore_database_gdocs">從 Google Drive 復原</string>
-  <string name="restore_database_inprogress_gdocs">正在從 Google Docs 匯回資料庫…</string>
+  <string name="google_drive_restore_in_progress">正在從 Google Docs 匯回資料庫…</string>
   <string name="restore_database_success">資料庫已成功匯回</string>
   <string name="gdocs_connection_failed">無法連到 Google Drive。</string>
   <string name="gdocs_folder_not_found">在 Google Drive 找不到備份目錄。</string>

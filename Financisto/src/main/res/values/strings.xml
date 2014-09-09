@@ -263,7 +263,7 @@
 	<string name="restore_database">Restore Database</string>
 	<string name="restore_database_inprogress">Restoring database...</string>
 	<string name="restore_database_gdocs">Restore from Google Drive</string>
-	<string name="restore_database_inprogress_gdocs">Restoring database...</string>
+	<string name="google_drive_restore_in_progress">Restoring database...</string>
     <string name="restore_database_inprogress_dropbox">Restoring database...</string>
 	<string name="restore_database_success">Database has been successfully restored.</string>
 	<string name="gdocs_connection_failed">Can not connect to Google Drive.</string>
@@ -912,5 +912,9 @@
     <string name="card_issuer_cirrus">Cirrus</string>
     <string name="card_issuer_eps">EPS</string>
     <string name="delete_account">Delete account</string>
+    <string name="backup_restore">Backup/Restore</string>
+    <string name="google_drive_connection_resolved">Connection resolved. Please try the last operation again...</string>
+    <string name="google_drive_connection_failed">Unable to connect to Google Drive:\n%s</string>
+    <string name="google_drive_backup_success">Backup success on Google Drive: %s</string>
 
 </resources>

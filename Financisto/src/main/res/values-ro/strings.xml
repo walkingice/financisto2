@@ -223,7 +223,7 @@
   <string name="restore_database">Restaurează baza de date</string>
   <string name="restore_database_inprogress">Se restaurează baza de date...</string>
   <string name="restore_database_gdocs">Restaurare din Google Drive</string>
-  <string name="restore_database_inprogress_gdocs">Se restaurează baza de date...</string>
+  <string name="google_drive_restore_in_progress">Se restaurează baza de date...</string>
   <string name="restore_database_success">Baza de date a fost restaurată cu succes.</string>
   <string name="gdocs_connection_failed">Can not connect to Google Drive.</string>
   <string name="gdocs_folder_not_found">The backup folder on Google Drive was not found.</string>

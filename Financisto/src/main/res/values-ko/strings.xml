@@ -222,7 +222,7 @@
   <string name="restore_database">데이터베이스 복원</string>
   <string name="restore_database_inprogress">데이터베이스 복원 중...</string>
   <string name="restore_database_gdocs">구글 문서에서 복원</string>
-  <string name="restore_database_inprogress_gdocs">데이터베이스 복원 중...</string>
+  <string name="google_drive_restore_in_progress">데이터베이스 복원 중...</string>
   <string name="restore_database_success">데이터베이스 복원에 성공했습니다.</string>
   <string name="gdocs_connection_failed">구글 문서에 연결할 수 없습니다.</string>
   <string name="gdocs_folder_not_found">구글문서에서 백업 폴더를 찾을 수 없습니다.</string>

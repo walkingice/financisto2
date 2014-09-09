@@ -223,7 +223,7 @@
   <string name="restore_database">Restaurar Datos</string>
   <string name="restore_database_inprogress">Restaurando respaldo de la base de datos...</string>
   <string name="restore_database_gdocs">Restore from Google Drive</string>
-  <string name="restore_database_inprogress_gdocs">Restaurando respaldo de la base de datos...</string>
+  <string name="google_drive_restore_in_progress">Restaurando respaldo de la base de datos...</string>
   <string name="restore_database_success">La base de datos ha sido restaurada con éxito.</string>
   <string name="gdocs_connection_failed">Can not connect to Google Drive.</string>
   <string name="gdocs_folder_not_found">The backup folder on Google Drive was not found.</string>

@@ -28,6 +28,8 @@ import android.widget.Toast;
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.common.AccountPicker;
 
+import org.androidannotations.annotations.EActivity;
+
 import ru.orangesoftware.financisto.R;
 import ru.orangesoftware.financisto.dialog.FolderBrowser;
 import ru.orangesoftware.financisto.export.Export;
@@ -38,6 +40,7 @@ import ru.orangesoftware.financisto.utils.PinProtection;
 
 //import com.google.api.client.googleapis.extensions.android.accounts.GoogleAccountManager;
 
+@EActivity
 public class PreferencesActivity extends PreferenceActivity {
 
     private static final String[] ACCOUNT_TYPE = new String[] {GoogleAuthUtil.GOOGLE_ACCOUNT_TYPE};

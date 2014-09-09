@@ -16,7 +16,6 @@ import android.app.TabActivity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -30,24 +29,13 @@ import android.widget.ListAdapter;
 import android.widget.TabHost;
 import android.widget.Toast;
 
-import java.io.File;
-
 import ru.orangesoftware.financisto.R;
-import ru.orangesoftware.financisto.backup.Backup;
 import ru.orangesoftware.financisto.db.DatabaseAdapter;
 import ru.orangesoftware.financisto.db.DatabaseAdapter_;
-import ru.orangesoftware.financisto.db.DatabaseHelper;
-import ru.orangesoftware.financisto.dialog.WebViewDialog;
-import ru.orangesoftware.financisto.export.BackupExportTask;
-import ru.orangesoftware.financisto.export.BackupImportTask;
-import ru.orangesoftware.financisto.export.Export;
-import ru.orangesoftware.financisto.export.ImportExportAsyncTaskListener;
 import ru.orangesoftware.financisto.export.csv.CsvExportOptions;
 import ru.orangesoftware.financisto.export.csv.CsvExportTask;
 import ru.orangesoftware.financisto.export.csv.CsvImportOptions;
 import ru.orangesoftware.financisto.export.csv.CsvImportTask;
-import ru.orangesoftware.financisto.export.docs.DriveBackupTask;
-import ru.orangesoftware.financisto.export.docs.DriveListFilesTask;
 import ru.orangesoftware.financisto.export.dropbox.DropboxBackupTask;
 import ru.orangesoftware.financisto.export.dropbox.DropboxListFilesTask;
 import ru.orangesoftware.financisto.export.dropbox.DropboxRestoreTask;
@@ -55,13 +43,11 @@ import ru.orangesoftware.financisto.export.qif.QifExportOptions;
 import ru.orangesoftware.financisto.export.qif.QifExportTask;
 import ru.orangesoftware.financisto.export.qif.QifImportOptions;
 import ru.orangesoftware.financisto.export.qif.QifImportTask;
-import ru.orangesoftware.financisto.utils.CurrencyCache;
 import ru.orangesoftware.financisto.utils.EntityEnum;
 import ru.orangesoftware.financisto.utils.EnumUtils;
 import ru.orangesoftware.financisto.utils.ExecutableEntityEnum;
 import ru.orangesoftware.financisto.utils.IntegrityFix;
 import ru.orangesoftware.financisto.utils.MyPreferences;
-import ru.orangesoftware.financisto.utils.PinProtection;
 
 import static ru.orangesoftware.financisto.service.DailyAutoBackupScheduler.scheduleNextAutoBackup;
 import static ru.orangesoftware.financisto.service.FlowzrAutoSyncScheduler.scheduleNextAutoSync;
@@ -250,31 +236,14 @@ public class MainActivity extends TabActivity implements TabHost.OnTabChangeList
             case MENU_IMPORT_EXPORT:
                 showPickOneDialog(this, R.string.import_export, ImportExportEntities.values(), this);
                 break;
-            case MENU_BACKUP:
-                doBackup();
-                break;
-            case MENU_BACKUP_TO:
-                doBackupTo();
-                break;
-            case MENU_RESTORE:
-                doImport();
-                break;
             case MENU_BACKUP_RESTORE_ONLINE:
                 showPickOneDialog(this, R.string.backup_restore_database_online, BackupRestoreEntities.values(), this);
                 break;
             case MENU_INTEGRITY_FIX:
                 doIntegrityFix();
                 break;
-            case MENU_CLOUD_SYNC:
-                doFlowzrSync();
-                break;
         }
         return false;
-    }
-
-    private void doFlowzrSync() {
-        Intent intent = new Intent(this, FlowzrSyncActivity.class);
-        startActivityForResult(intent, ACTIVITY_FLOWZR_SYNC);
     }
 
     private void doIntegrityFix() {
@@ -311,34 +280,8 @@ public class MainActivity extends TabActivity implements TabHost.OnTabChangeList
                 .setTitle(R.string.error)
                 .setPositiveButton(R.string.ok, null)
                 .setCancelable(true)
-                .create().show();
-    }
-
-    private void doBackup() {
-        ProgressDialog d = ProgressDialog.show(this, null, getString(R.string.backup_database_inprogress), true);
-        new BackupExportTask(this, d, true).execute();
-    }
-
-    private void doBackupTo() {
-        ProgressDialog d = ProgressDialog.show(this, null, getString(R.string.backup_database_inprogress), true);
-        final BackupExportTask t = new BackupExportTask(this, d, false);
-        t.setShowResultDialog(false);
-        t.setListener(new ImportExportAsyncTaskListener() {
-            @Override
-            public void onCompleted() {
-                String backupFileName = t.backupFileName;
-                startBackupToChooser(backupFileName);
-            }
-        });
-        t.execute((String[]) null);
-    }
-
-    private void startBackupToChooser(String backupFileName) {
-        File file = Export.getBackupFile(this, backupFileName);
-        Intent intent = new Intent(Intent.ACTION_SEND);
-        intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
-        intent.setType("text/plain");
-        startActivity(Intent.createChooser(intent, getString(R.string.backup_database_to_title)));
+                .create()
+                .show();
     }
 
     private void doCsvExport(CsvExportOptions options) {
@@ -380,78 +323,6 @@ public class MainActivity extends TabActivity implements TabHost.OnTabChangeList
         Intent intent = new Intent(this, QifImportActivity.class);
         startActivityForResult(intent, ACTIVITY_QIF_IMPORT);
     }
-
-    private String selectedBackupFile;
-    //private com.google.api.services.drive.model.File selectedDriveFile;
-
-    private void doImport() {
-        final String[] backupFiles = Backup.listBackups(this);
-        new AlertDialog.Builder(this)
-                .setTitle(R.string.restore_database)
-                .setPositiveButton(R.string.restore, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (selectedBackupFile != null) {
-                            ProgressDialog d = ProgressDialog.show(MainActivity.this, null, getString(R.string.restore_database_inprogress), true);
-                            new BackupImportTask(MainActivity.this, d).execute(selectedBackupFile);
-                        }
-                    }
-                })
-                .setSingleChoiceItems(backupFiles, -1, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (backupFiles != null && which >= 0 && which < backupFiles.length) {
-                            selectedBackupFile = backupFiles[which];
-                        }
-                    }
-                })
-                .show();
-    }
-
-    private void doBackupOnGoogleDrive() {
-        ProgressDialog d = ProgressDialog.show(this, null, getString(R.string.backup_database_gdocs_inprogress), true);
-        new DriveBackupTask(this, d).execute();
-    }
-
-    private void doRestoreFromGoogleDrive() {
-        ProgressDialog d = ProgressDialog.show(MainActivity.this, null, getString(R.string.google_drive_loading_files), true);
-        new DriveListFilesTask(this, d).execute();
-    }
-
-    /*public void doImportFromGoogleDrive(final com.google.api.services.drive.model.File[] backupFiles) {
-        if (backupFiles != null) {
-            String[] backupFilesNames = getBackupFilesTitles(backupFiles);
-            new AlertDialog.Builder(MainActivity.this)
-                    .setTitle(R.string.restore_database)
-                    .setPositiveButton(R.string.restore, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            if (selectedDriveFile != null) {
-                                ProgressDialog d = ProgressDialog.show(MainActivity.this, null, getString(R.string.restore_database_inprogress_gdocs), true);
-                                new DriveRestoreTask(MainActivity.this, d, selectedDriveFile).execute();
-                            }
-                        }
-                    })
-                    .setSingleChoiceItems(backupFilesNames, -1, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            if (which >= 0 && which < backupFiles.length) {
-                                selectedDriveFile = backupFiles[which];
-                            }
-                        }
-                    })
-                    .show();
-        }
-    }
-
-    private String[] getBackupFilesTitles(com.google.api.services.drive.model.File[] backupFiles) {
-        int count = backupFiles.length;
-        String[] titles = new String[count];
-        for (int i = 0; i < count; i++) {
-            titles[i] = backupFiles[i].getTitle();
-        }
-        return titles;
-    }*/
 
     private void doBackupOnDropbox() {
         ProgressDialog d = ProgressDialog.show(this, null, getString(R.string.backup_database_dropbox_inprogress), true);
@@ -574,18 +445,6 @@ public class MainActivity extends TabActivity implements TabHost.OnTabChangeList
 
     private enum BackupRestoreEntities implements ExecutableEntityEnum<MainActivity> {
 
-        GOOGLE_DRIVE_BACKUP(R.string.backup_database_online_google_drive, R.drawable.ic_menu_back) {
-            @Override
-            public void execute(MainActivity mainActivity) {
-                mainActivity.doBackupOnGoogleDrive();
-            }
-        },
-        GOOGLE_DRIVE_RESTORE(R.string.restore_database_online_google_drive, R.drawable.ic_menu_forward) {
-            @Override
-            public void execute(MainActivity mainActivity) {
-                mainActivity.doRestoreFromGoogleDrive();
-            }
-        },
         DROPBOX_BACKUP(R.string.backup_database_online_dropbox, R.drawable.ic_menu_back) {
             @Override
             public void execute(MainActivity mainActivity) {

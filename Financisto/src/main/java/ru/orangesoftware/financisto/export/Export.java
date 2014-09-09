@@ -14,7 +14,9 @@ import android.content.Context;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Environment;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -24,12 +26,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.zip.GZIPOutputStream;
 
+import ru.orangesoftware.financisto.R;
+import ru.orangesoftware.financisto.export.drive.GoogleDriveClient;
 import ru.orangesoftware.financisto.export.dropbox.Dropbox;
 import ru.orangesoftware.financisto.utils.MyPreferences;
-
-/*import com.google.api.client.http.InputStreamContent;
-import com.google.api.services.drive.Drive;
-import com.google.api.services.drive.model.*;*/
 
 public abstract class Export {
 	
@@ -66,48 +66,18 @@ public abstract class Export {
         generateBackup(outputStream);
     }
 	
-	/**
-	 * Backup database to google docs
-	 * 
-	 * @param drive Google docs connection
-	 * @param targetFolder Google docs folder name
-	 * */
-	/*public String exportOnline(Drive drive, String targetFolder) throws Exception {
-		// get folder first
-        String folderId = GoogleDriveClient.getOrCreateDriveFolder(drive, targetFolder);
-		if (folderId == null) {
-            throw new ImportExportException(R.string.gdocs_folder_not_found);
-		}
-
-		// generation backup file
-		String fileName = generateFilename();
-		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        OutputStream out = new BufferedOutputStream(new GZIPOutputStream(outputStream));
-		generateBackup(out);
-
-		// transforming streams
-		InputStream backup = new ByteArrayInputStream(outputStream.toByteArray());
-
-        InputStreamContent mediaContent = new InputStreamContent(BACKUP_MIME_TYPE, new  BufferedInputStream(backup));
-        mediaContent.setLength(outputStream.size());
-        // File's metadata.
-        com.google.api.services.drive.model.File body = new com.google.api.services.drive.model.File();
-        body.setTitle(fileName);
-        body.setMimeType(BACKUP_MIME_TYPE);
-        body.setFileSize((long)outputStream.size());
-        List<ParentReference> parentReference = new ArrayList<ParentReference>();
-        parentReference.add(new ParentReference().setId(folderId)) ;
-        body.setParents(parentReference);
-        com.google.api.services.drive.model.File file = drive.files().insert(body, mediaContent).execute();
-
-		return fileName;
-	}*/
-	
-	private String generateFilename() {
+    public String generateFilename() {
 		SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd'_'HHmmss'_'SSS");
 		return df.format(new Date())+getExtension();
 	}
-	
+
+    public byte[] generateBackupBytes() throws Exception {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        OutputStream out = new BufferedOutputStream(new GZIPOutputStream(outputStream));
+        generateBackup(out);
+        return outputStream.toByteArray();
+    }
+
 	private void generateBackup(OutputStream outputStream) throws Exception {
 		OutputStreamWriter osw = new OutputStreamWriter(outputStream, "UTF-8");
 		BufferedWriter bw = new BufferedWriter(osw, 65536);
@@ -117,7 +87,7 @@ public abstract class Export {
 			writeFooter(bw);
 		} finally {
 			bw.close();
-		}	
+		}
 	}
 
 	protected abstract void writeHeader(BufferedWriter bw) throws IOException, NameNotFoundException;

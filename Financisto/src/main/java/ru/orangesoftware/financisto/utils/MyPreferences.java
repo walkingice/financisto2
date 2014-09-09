@@ -240,7 +240,7 @@ public class MyPreferences {
 	 * */
 	public static String getBackupFolder(Context context) {
 		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-		return sharedPreferences.getString("backup_folder", null);
+		return sharedPreferences.getString("backup_folder", "financisto");
 	}
 	
 	/**
