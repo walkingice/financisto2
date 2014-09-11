@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
+import org.androidannotations.annotations.EActivity;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -55,7 +56,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-
+@EActivity
 public class FlowzrSyncActivity extends Activity  {
 	
 	public static final String PROPERTY_REG_ID = "registration_id";	

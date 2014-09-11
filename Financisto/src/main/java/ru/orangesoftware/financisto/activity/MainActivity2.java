@@ -195,16 +195,16 @@ public class MainActivity2 extends FragmentActivity {
     }
 
     private static enum DrawerItem implements EntityEnum {
-        ENTITIES(R.string.entities, R.drawable.drawer_action_list){
-            @Override
-            public void onClick(final Context context) {
-                EntityListActivity_.intent(context).start();
-            }
-        },
         BACKUP_RESTORE(R.string.backup_restore, R.drawable.drawer_action_reload){
             @Override
             public void onClick(final Context context) {
                 BackupRestoreListActivity_.intent(context).start();
+            }
+        },
+        ENTITIES(R.string.entities, R.drawable.drawer_action_entities){
+            @Override
+            public void onClick(final Context context) {
+                EntityListActivity_.intent(context).start();
             }
         },
         PREFERENCES(R.string.preferences, R.drawable.drawer_action_preferences){

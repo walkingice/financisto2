@@ -22,6 +22,7 @@ import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceScreen;
+import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -29,6 +30,7 @@ import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.common.AccountPicker;
 
 import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.OptionsItem;
 
 import ru.orangesoftware.financisto.R;
 import ru.orangesoftware.financisto.dialog.FolderBrowser;
@@ -37,8 +39,6 @@ import ru.orangesoftware.financisto.export.dropbox.Dropbox;
 import ru.orangesoftware.financisto.rates.ExchangeRateProviderFactory;
 import ru.orangesoftware.financisto.utils.MyPreferences;
 import ru.orangesoftware.financisto.utils.PinProtection;
-
-//import com.google.api.client.googleapis.extensions.android.accounts.GoogleAccountManager;
 
 @EActivity
 public class PreferencesActivity extends PreferenceActivity {
@@ -49,14 +49,13 @@ public class PreferencesActivity extends PreferenceActivity {
     private static final int CHOOSE_ACCOUNT = 101;
 
     Preference pOpenExchangeRatesAppId;
-    //GoogleAccountManager googleAccountManager;
 
     @Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);   
 		addPreferencesFromResource(R.xml.preferences);
 
-        //googleAccountManager = new GoogleAccountManager(this);
+        getActionBar().setHomeButtonEnabled(true);
 
         PreferenceScreen preferenceScreen = getPreferenceScreen();
         Preference pLocale = preferenceScreen.findPreference("ui_language");
@@ -136,6 +135,11 @@ public class PreferencesActivity extends PreferenceActivity {
         selectAccount();
 	}
 
+    @OptionsItem(android.R.id.home)
+    public void onHome() {
+        NavUtils.navigateUpFromSameTask(this);
+    }
+
     private void chooseAccount() {
         try {
             Account selectedAccount = getSelectedAccount();
@@ -200,9 +204,8 @@ public class PreferencesActivity extends PreferenceActivity {
                         String accountName = b.getString(AccountManager.KEY_ACCOUNT_NAME);
                         Log.d("Preferences", "Selected account: " + accountName);
                         if (accountName != null && accountName.length() > 0) {
-                            /*Account account = googleAccountManager.getAccountByName(accountName);
-                            MyPreferences.setGoogleDriveAccount(this, account.name);
-                            selectAccount();*/
+                            MyPreferences.setGoogleDriveAccount(this, accountName);
+                            selectAccount();
                         }
                     }
                     break;

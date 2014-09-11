@@ -303,7 +303,8 @@
             android:label="@string/budgets" />
         <activity
             android:name="ru.orangesoftware.financisto.activity.PreferencesActivity_"
-            android:label="@string/preferences" />
+            android:label="@string/preferences"
+            android:parentActivityName=".activity.MainActivity2_"/>
         <activity
             android:name="ru.orangesoftware.financisto.activity.BudgetListActivity"
             android:label="@string/budgets" />
@@ -400,7 +401,7 @@
             android:name="ru.orangesoftware.financisto.activity.PurgeAccountActivity_"
             android:label="@string/delete_old_transactions" />
         <activity
-            android:name="ru.orangesoftware.financisto.activity.FlowzrSyncActivity"
+            android:name="ru.orangesoftware.financisto.activity.FlowzrSyncActivity_"
             android:configChanges="keyboardHidden|orientation|screenLayout"
             android:label="@string/flowzr_sync"
             android:launchMode="singleTop" />
@@ -413,7 +414,6 @@
             android:name="ru.orangesoftware.financisto.activity.BackupRestoreListActivity_"
             android:label="@string/backup_restore"
             android:parentActivityName=".activity.MainActivity2_" />
-
         <activity
             android:name="com.dropbox.client2.android.AuthActivity"
             android:configChanges="orientation|keyboard"

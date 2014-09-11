@@ -248,73 +248,73 @@ public class BackupRestoreListActivity extends ListActivity {
 
     private enum Entity implements EntityEnum {
 
-        BACKUP(R.string.backup_database, R.drawable.ic_action_upload){
+        BACKUP(R.string.backup_database, R.drawable.backup_file){
             @Override
             public void startActivity(BackupRestoreListActivity context) {
                 context.doBackupDatabase();
             }
         },
-        RESTORE(R.string.restore_database, R.drawable.ic_action_download){
+        RESTORE(R.string.restore_database, R.drawable.backup_file){
             @Override
             public void startActivity(BackupRestoreListActivity context) {
                 context.doRestoreDatabase();
             }
         },
-        FLOWZR_SYNC(R.string.flowzr_sync, R.drawable.ic_action_download){
+        FLOWZR_SYNC(R.string.flowzr_sync, R.drawable.backup_flowzr){
             @Override
             public void startActivity(BackupRestoreListActivity context) {
                 FlowzrSyncActivity_.intent(context).start();
             }
         },
-        GOOGLE_DRIVE_BACKUP(R.string.backup_database_online_google_drive, R.drawable.ic_action_download){
+        GOOGLE_DRIVE_BACKUP(R.string.backup_database_online_google_drive, R.drawable.backup_google_drive){
             @Override
             public void startActivity(BackupRestoreListActivity context) {
                 context.doBackupOnGoogleDrive();
             }
         },
-        GOOGLE_DRIVE_RESTORE(R.string.restore_database_online_google_drive, R.drawable.ic_action_download){
+        GOOGLE_DRIVE_RESTORE(R.string.restore_database_online_google_drive, R.drawable.backup_google_drive){
             @Override
             public void startActivity(BackupRestoreListActivity context) {
                 context.doRestoreFromGoogleDrive();
             }
         },
-        DROPBOX_BACKUP(R.string.backup_database_online_dropbox, R.drawable.ic_action_download){
+        DROPBOX_BACKUP(R.string.backup_database_online_dropbox, R.drawable.backup_dropbox){
             @Override
             public void startActivity(BackupRestoreListActivity context) {
                 ExchangeRatesListActivity_.intent(context).start();
             }
         },
-        DROPBOX_RESTORE(R.string.restore_database_online_dropbox, R.drawable.ic_action_download){
+        DROPBOX_RESTORE(R.string.restore_database_online_dropbox, R.drawable.backup_dropbox){
             @Override
             public void startActivity(BackupRestoreListActivity context) {
                 ExchangeRatesListActivity_.intent(context).start();
             }
         },
-        SEND_BACKUP_TO(R.string.backup_database_to, R.drawable.ic_action_download){
+        SEND_BACKUP_TO(R.string.backup_database_to, R.drawable.backup_share_2){
             @Override
             public void startActivity(BackupRestoreListActivity context) {
                 context.doSendBackupTo();
             }
         },
-        CSV_EXPORT(R.string.csv_export, R.drawable.ic_action_download){
+        CSV_EXPORT(R.string.csv_export, R.drawable.backup_csv){
             @Override
             public void startActivity(BackupRestoreListActivity context) {
                 ExchangeRatesListActivity_.intent(context).start();
             }
         },
-        CSV_IMPORT(R.string.csv_import, R.drawable.ic_action_download){
+        CSV_IMPORT(R.string.csv_import, R.drawable.backup_csv){
             @Override
             public void startActivity(BackupRestoreListActivity context) {
                 ExchangeRatesListActivity_.intent(context).start();
             }
         },
-        QIF_EXPORT(R.string.qif_export, R.drawable.ic_action_download){
+        QIF_EXPORT(R.string.qif_export, R.drawable.backup_qif){
             @Override
             public void startActivity(BackupRestoreListActivity context) {
                 ExchangeRatesListActivity_.intent(context).start();
             }
         },
-        QIF_IMPORT(R.string.qif_import, R.drawable.ic_action_download){
+        QIF_IMPORT(R.string.qif_import, R.drawable.backup_qif){
             @Override
             public void startActivity(BackupRestoreListActivity context) {
                 ExchangeRatesListActivity_.intent(context).start();
