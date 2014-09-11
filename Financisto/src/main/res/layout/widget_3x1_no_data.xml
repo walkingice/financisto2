@@ -5,49 +5,67 @@
   ~ which accompanies this distribution, and is available at
   ~ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
   -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout"
     android:layout_width="fill_parent"
-    android:layout_height="?android:attr/listPreferredItemHeight"
+    android:layout_height="wrap_content"
+    android:background="@drawable/appwidget_bg"
+    android:minHeight="56dp"
     android:orientation="horizontal">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/layout"
+    <ImageView
+        android:id="@+id/account_icon"
         android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
-        android:layout_weight="1"
-        android:background="@drawable/widget_background_gray">
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:maxHeight="32dp"
+        android:maxWidth="32dp"
+        android:minHeight="32dp"
+        android:minWidth="32dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/icon" />
 
-        <ImageView
-            android:id="@+id/account_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:layout_marginRight="3dp"
-            android:src="@drawable/wallet_open" />
+    <TextView
+        android:id="@+id/line1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="false"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_toLeftOf="@+id/add_transaction"
+        android:layout_toRightOf="@+id/account_icon"
+        android:ellipsize="end"
+        android:gravity="right"
+        android:singleLine="true"
+        android:text="@string/no_data"
+        android:textColor="@android:color/primary_text_light"
+        style="@android:style/TextAppearance.Holo.Small"
+        android:layout_centerVertical="true" />
 
-        <TextView
-            android:id="@+id/line1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:layout_toRightOf="@id/account_icon"
-            android:ellipsize="end"
-            android:gravity="center_vertical|center_horizontal"
-            android:singleLine="true"
-            android:text="@string/no_data"
-            android:textColor="#ffffff"
-            android:textSize="12sp"
-            android:textStyle="bold" />
-
-    </RelativeLayout>
+    <ImageView
+        android:id="@+id/d1"
+        android:layout_width="1px"
+        android:layout_height="wrap_content"
+        android:drawable="@drawable/vertical_divider"
+        android:layout_centerVertical="true"
+        android:minHeight="48dp"
+        android:background="@drawable/vertical_divider"
+        android:layout_toLeftOf="@+id/add_transaction" />
 
     <ImageView
         android:id="@+id/add_transaction"
         android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
-        android:layout_marginRight="3dp"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
         android:layout_toLeftOf="@+id/add_transfer"
-        android:src="@drawable/icon_transaction" />
+        android:background="@drawable/appwidget_button_center"
+        android:src="@drawable/ic_action_add"
+        android:layout_alignParentRight="true" />
 
-</LinearLayout>
+</RelativeLayout>

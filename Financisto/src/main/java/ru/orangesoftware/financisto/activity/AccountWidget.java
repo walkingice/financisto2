@@ -39,6 +39,7 @@ import ru.orangesoftware.financisto.model.AccountType;
 import ru.orangesoftware.financisto.model.CardIssuer;
 import ru.orangesoftware.financisto.utils.MyPreferences;
 import ru.orangesoftware.financisto.utils.Utils;
+import ru.orangesoftware.financisto.utils.Utils_;
 import ru.orangesoftware.orb.EntityManager;
 
 import static android.appwidget.AppWidgetManager.INVALID_APPWIDGET_ID;
@@ -129,7 +130,7 @@ public class AccountWidget extends AppWidgetProvider {
     private static void saveAccountForWidget(Context context, int widgetId, long accountId) {
         SharedPreferences.Editor prefs = context.getSharedPreferences(PREFS_NAME, 0).edit();
         prefs.putLong(PREF_PREFIX_KEY + widgetId, accountId);
-        prefs.commit();
+        prefs.apply();
     }
 
     private static RemoteViews updateWidgetFromAccount(Context context, int widgetId, int layoutId, Class providerClass, Account a) {
@@ -144,7 +145,7 @@ public class AccountWidget extends AppWidgetProvider {
         }
         long amount = a.totalAmount;
         updateViews.setTextViewText(R.id.note, Utils.amountToString(a.currency, amount));
-        Utils u = new Utils(context);
+        Utils u = Utils_.getInstance_(context);
         int amountColor = u.getAmountColor(amount);
         updateViews.setTextColor(R.id.note, amountColor);
         addScrollOnClick(context, updateViews, widgetId, providerClass);
@@ -164,16 +165,16 @@ public class AccountWidget extends AppWidgetProvider {
     }
 
     private static void addTapOnClick(Context context, RemoteViews updateViews) {
-        Intent intent = new Intent(context, MainActivity.class);
+        Intent intent = MainActivity2_.intent(context).get();
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
         updateViews.setOnClickPendingIntent(R.id.layout, pendingIntent);
     }
 
     private static void addButtonsClick(Context context, RemoteViews updateViews) {
-        Intent intent = new Intent(context, TransactionActivity.class);
+        Intent intent = TransactionActivity_.intent(context).get();
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
         updateViews.setOnClickPendingIntent(R.id.add_transaction, pendingIntent);
-        intent = new Intent(context, TransferActivity.class);
+        intent = TransferActivity_.intent(context).get();
         pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
         updateViews.setOnClickPendingIntent(R.id.add_transfer, pendingIntent);
     }
