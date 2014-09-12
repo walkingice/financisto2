@@ -37,12 +37,14 @@ import ru.orangesoftware.financisto.db.MyEntityManager_;
 import ru.orangesoftware.financisto.model.Account;
 import ru.orangesoftware.financisto.model.AccountType;
 import ru.orangesoftware.financisto.model.CardIssuer;
+import ru.orangesoftware.financisto.model.ElectronicPaymentType;
 import ru.orangesoftware.financisto.utils.MyPreferences;
 import ru.orangesoftware.financisto.utils.Utils;
 import ru.orangesoftware.financisto.utils.Utils_;
 import ru.orangesoftware.orb.EntityManager;
 
 import static android.appwidget.AppWidgetManager.INVALID_APPWIDGET_ID;
+import static ru.orangesoftware.financisto.utils.EnumUtils.selectEnum;
 
 public class AccountWidget extends AppWidgetProvider {
 
@@ -137,9 +139,13 @@ public class AccountWidget extends AppWidgetProvider {
         RemoteViews updateViews = new RemoteViews(context.getPackageName(), layoutId);
         updateViews.setTextViewText(R.id.line1, a.title);
         AccountType type = AccountType.valueOf(a.type);
+
         if (type.isCard && a.cardIssuer != null) {
-            CardIssuer cardIssuer = CardIssuer.valueOf(a.cardIssuer);
+            CardIssuer cardIssuer = selectEnum(CardIssuer.class, a.cardIssuer, CardIssuer.VISA);
             updateViews.setImageViewResource(R.id.account_icon, cardIssuer.iconId);
+        } else if (type.isElectronic && a.cardIssuer != null) {
+            ElectronicPaymentType paymentType = selectEnum(ElectronicPaymentType.class, a.cardIssuer, ElectronicPaymentType.PAYPAL);
+            updateViews.setImageViewResource(R.id.account_icon, paymentType.iconId);
         } else {
             updateViews.setImageViewResource(R.id.account_icon, type.iconId);
         }
