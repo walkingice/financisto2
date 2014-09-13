@@ -167,7 +167,6 @@
         <activity
             android:name="ru.orangesoftware.financisto.activity.TransactionActivity_"
             android:configChanges="orientation|keyboardHidden"
-            android:icon="@drawable/icon_transaction"
             android:label="@string/transaction"
             android:taskAffinity=".TransactionActivity"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize">
@@ -181,7 +180,6 @@
         <activity
             android:name="ru.orangesoftware.financisto.activity.TransferActivity_"
             android:configChanges="orientation|keyboardHidden"
-            android:icon="@drawable/icon_transfer"
             android:label="@string/transfer"
             android:taskAffinity=".TransferActivity"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize">
@@ -214,7 +212,6 @@
         <activity
             android:name="ru.orangesoftware.financisto.activity.RecurActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:icon="@drawable/icon_transfer"
             android:label="@string/recur"
             android:theme="@android:style/Theme.Holo.Light.Dialog" />
         <activity
