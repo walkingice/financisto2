@@ -3,7 +3,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.12.2'
+        classpath 'com.android.tools.build:gradle:0.13.0'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.4'
     }
 }
@@ -19,7 +19,7 @@ repositories {
 
 android {
     compileSdkVersion 19
-    buildToolsVersion '19.1.0'
+    buildToolsVersion '20.0.0'
 
     defaultConfig {
         minSdkVersion 14
@@ -112,7 +112,7 @@ afterEvaluate { project ->
                     exclude "com/google/android/gms/wearable/**"                }
             }.execute()
             delete {
-                delete (file(new File(playServiceRootFolder, "classes_orig.jar")))
+                file(new File(playServiceRootFolder, "classes_orig.jar"))
             }
         }
     }
