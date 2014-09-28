@@ -47,7 +47,7 @@
 			android:clickable="true"
 			android:text="@string/no_period"  />
 		
-	<ru.orangesoftware.financisto.view.Report2DChartView
+	<ru.orangesoftware.financisto2.view.Report2DChartView
 		android:id="@+id/report_2d_chart" 
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content" 
