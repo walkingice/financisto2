@@ -22,7 +22,7 @@ import android.view.View;
 
 import java.lang.ref.WeakReference;
 
-import ru.orangesoftware.financisto.R;
+import ru.orangesoftware.financisto2.R;
 
 /**
  * A QuickAction implements an item in a {@link greendroid.widget.QuickActionWidget}. A

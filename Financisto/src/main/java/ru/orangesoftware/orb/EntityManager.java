@@ -27,7 +27,7 @@ import javax.persistence.PersistenceException;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import ru.orangesoftware.financisto.db.DatabaseHelper;
+import ru.orangesoftware.financisto2.db.DatabaseHelper;
 
 import android.content.ContentValues;
 import android.database.Cursor;

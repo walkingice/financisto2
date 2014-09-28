@@ -62,7 +62,7 @@ dependencies {
 apt {
     arguments {
         androidManifestFile variant.processResources.manifestFile
-        resourcePackageName 'ru.orangesoftware.financisto'
+        resourcePackageName 'ru.orangesoftware.financisto2'
     }
 }
 

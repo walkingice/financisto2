@@ -21,7 +21,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.view.*;
 import android.widget.PopupWindow;
-import ru.orangesoftware.financisto.R;
+import ru.orangesoftware.financisto2.R;
 
 import java.util.ArrayList;
 import java.util.List;
