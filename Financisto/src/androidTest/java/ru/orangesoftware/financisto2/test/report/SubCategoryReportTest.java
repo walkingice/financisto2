@@ -1,15 +1,15 @@
-package ru.orangesoftware.financisto.test.report;
+package ru.orangesoftware.financisto2.test.report;
 
 import java.util.List;
 
-import ru.orangesoftware.financisto.filter.WhereFilter;
-import ru.orangesoftware.financisto.graph.GraphUnit;
-import ru.orangesoftware.financisto.report.CategoryReport;
-import ru.orangesoftware.financisto.report.Report;
-import ru.orangesoftware.financisto.report.SubCategoryReport;
-import ru.orangesoftware.financisto.test.builders.DateTime;
-import ru.orangesoftware.financisto.test.builders.RateBuilder;
-import ru.orangesoftware.financisto.test.builders.TransactionBuilder;
+import ru.orangesoftware.financisto2.filter.WhereFilter;
+import ru.orangesoftware.financisto2.graph.GraphUnit;
+import ru.orangesoftware.financisto2.report.CategoryReport;
+import ru.orangesoftware.financisto2.report.Report;
+import ru.orangesoftware.financisto2.report.SubCategoryReport;
+import ru.orangesoftware.financisto2.test.builders.DateTime;
+import ru.orangesoftware.financisto2.test.builders.RateBuilder;
+import ru.orangesoftware.financisto2.test.builders.TransactionBuilder;
 
 /**
  * Created by IntelliJ IDEA.

@@ -6,12 +6,12 @@
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  */
 
-package ru.orangesoftware.financisto.test.http;
+package ru.orangesoftware.financisto2.test.http;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import ru.orangesoftware.financisto.http.HttpClientWrapper;
+import ru.orangesoftware.financisto2.http.HttpClientWrapper;
 
 /**
  * Created with IntelliJ IDEA.

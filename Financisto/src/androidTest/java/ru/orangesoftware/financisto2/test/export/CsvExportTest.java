@@ -6,22 +6,22 @@
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  */
 
-package ru.orangesoftware.financisto.test.export;
+package ru.orangesoftware.financisto2.test.export;
 
 import java.util.Map;
 
-import ru.orangesoftware.financisto.export.csv.CsvExport;
-import ru.orangesoftware.financisto.export.csv.CsvExportOptions;
-import ru.orangesoftware.financisto.filter.WhereFilter;
-import ru.orangesoftware.financisto.model.Account;
-import ru.orangesoftware.financisto.model.Category;
-import ru.orangesoftware.financisto.model.Currency;
-import ru.orangesoftware.financisto.test.builders.CategoryBuilder;
-import ru.orangesoftware.financisto.test.builders.CurrencyBuilder;
-import ru.orangesoftware.financisto.test.builders.DateTime;
-import ru.orangesoftware.financisto.test.builders.TransactionBuilder;
-import ru.orangesoftware.financisto.test.builders.TransferBuilder;
-import ru.orangesoftware.financisto.utils.CurrencyCache;
+import ru.orangesoftware.financisto2.export.csv.CsvExport;
+import ru.orangesoftware.financisto2.export.csv.CsvExportOptions;
+import ru.orangesoftware.financisto2.filter.WhereFilter;
+import ru.orangesoftware.financisto2.model.Account;
+import ru.orangesoftware.financisto2.model.Category;
+import ru.orangesoftware.financisto2.model.Currency;
+import ru.orangesoftware.financisto2.test.builders.CategoryBuilder;
+import ru.orangesoftware.financisto2.test.builders.CurrencyBuilder;
+import ru.orangesoftware.financisto2.test.builders.DateTime;
+import ru.orangesoftware.financisto2.test.builders.TransactionBuilder;
+import ru.orangesoftware.financisto2.test.builders.TransferBuilder;
+import ru.orangesoftware.financisto2.utils.CurrencyCache;
 
 /**
  * Created by IntelliJ IDEA.

@@ -6,28 +6,28 @@
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  */
 
-package ru.orangesoftware.financisto.test.db;
+package ru.orangesoftware.financisto2.test.db;
 
 import android.database.Cursor;
 
 import java.util.Map;
 
-import ru.orangesoftware.financisto.blotter.BlotterFilter;
-import ru.orangesoftware.financisto.db.DatabaseHelper;
-import ru.orangesoftware.financisto.db.TransactionsTotalCalculator;
-import ru.orangesoftware.financisto.filter.Criteria;
-import ru.orangesoftware.financisto.filter.WhereFilter;
-import ru.orangesoftware.financisto.model.Account;
-import ru.orangesoftware.financisto.model.Category;
-import ru.orangesoftware.financisto.model.Total;
-import ru.orangesoftware.financisto.test.builders.AccountBuilder;
-import ru.orangesoftware.financisto.test.builders.CategoryBuilder;
-import ru.orangesoftware.financisto.test.builders.DateTime;
-import ru.orangesoftware.financisto.test.builders.TransactionBuilder;
-import ru.orangesoftware.financisto.test.builders.TransferBuilder;
+import ru.orangesoftware.financisto2.blotter.BlotterFilter;
+import ru.orangesoftware.financisto2.db.DatabaseHelper;
+import ru.orangesoftware.financisto2.db.TransactionsTotalCalculator;
+import ru.orangesoftware.financisto2.filter.Criteria;
+import ru.orangesoftware.financisto2.filter.WhereFilter;
+import ru.orangesoftware.financisto2.model.Account;
+import ru.orangesoftware.financisto2.model.Category;
+import ru.orangesoftware.financisto2.model.Total;
+import ru.orangesoftware.financisto2.test.builders.AccountBuilder;
+import ru.orangesoftware.financisto2.test.builders.CategoryBuilder;
+import ru.orangesoftware.financisto2.test.builders.DateTime;
+import ru.orangesoftware.financisto2.test.builders.TransactionBuilder;
+import ru.orangesoftware.financisto2.test.builders.TransferBuilder;
 
-import static ru.orangesoftware.financisto.db.DatabaseAdapter.enhanceFilterForAccountBlotter;
-import static ru.orangesoftware.financisto.test.builders.DateTime.date;
+import static ru.orangesoftware.financisto2.db.DatabaseAdapter.enhanceFilterForAccountBlotter;
+import static ru.orangesoftware.financisto2.test.builders.DateTime.date;
 
 public class AccountBlotterTest extends AbstractDbTest {
 

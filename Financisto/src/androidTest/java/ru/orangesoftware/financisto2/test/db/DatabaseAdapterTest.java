@@ -1,4 +1,4 @@
-package ru.orangesoftware.financisto.test.db;
+package ru.orangesoftware.financisto2.test.db;
 
 import android.database.Cursor;
 
@@ -6,18 +6,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import ru.orangesoftware.financisto.model.Account;
-import ru.orangesoftware.financisto.model.Category;
-import ru.orangesoftware.financisto.model.Currency;
-import ru.orangesoftware.financisto.model.Payee;
-import ru.orangesoftware.financisto.model.RestoredTransaction;
-import ru.orangesoftware.financisto.model.Transaction;
-import ru.orangesoftware.financisto.test.builders.AccountBuilder;
-import ru.orangesoftware.financisto.test.builders.CategoryBuilder;
-import ru.orangesoftware.financisto.test.builders.CurrencyBuilder;
-import ru.orangesoftware.financisto.test.builders.DateTime;
-import ru.orangesoftware.financisto.test.builders.TransactionBuilder;
-import ru.orangesoftware.financisto.test.builders.TransferBuilder;
+import ru.orangesoftware.financisto2.model.Account;
+import ru.orangesoftware.financisto2.model.Category;
+import ru.orangesoftware.financisto2.model.Currency;
+import ru.orangesoftware.financisto2.model.Payee;
+import ru.orangesoftware.financisto2.model.RestoredTransaction;
+import ru.orangesoftware.financisto2.model.Transaction;
+import ru.orangesoftware.financisto2.test.builders.AccountBuilder;
+import ru.orangesoftware.financisto2.test.builders.CategoryBuilder;
+import ru.orangesoftware.financisto2.test.builders.CurrencyBuilder;
+import ru.orangesoftware.financisto2.test.builders.DateTime;
+import ru.orangesoftware.financisto2.test.builders.TransactionBuilder;
+import ru.orangesoftware.financisto2.test.builders.TransferBuilder;
 import ru.orangesoftware.orb.EntityManager;
 
 public class DatabaseAdapterTest extends AbstractDbTest {

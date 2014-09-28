@@ -6,13 +6,13 @@
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  */
 
-package ru.orangesoftware.financisto.test.export;
+package ru.orangesoftware.financisto2.test.export;
 
 import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
 
-import ru.orangesoftware.financisto.export.Export;
+import ru.orangesoftware.financisto2.export.Export;
 
 /**
  * Created by IntelliJ IDEA.

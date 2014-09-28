@@ -1,4 +1,4 @@
-package ru.orangesoftware.financisto.test.service;
+package ru.orangesoftware.financisto2.test.service;
 
 import android.content.Context;
 import android.test.AndroidTestCase;
@@ -8,12 +8,12 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
-import ru.orangesoftware.financisto.db.DatabaseAdapter;
-import ru.orangesoftware.financisto.db.MyEntityManager;
-import ru.orangesoftware.financisto.model.RestoredTransaction;
-import ru.orangesoftware.financisto.model.TransactionInfo;
-import ru.orangesoftware.financisto.service.RecurrenceScheduler;
-import ru.orangesoftware.financisto.test.builders.DateTime;
+import ru.orangesoftware.financisto2.db.DatabaseAdapter;
+import ru.orangesoftware.financisto2.db.MyEntityManager;
+import ru.orangesoftware.financisto2.model.RestoredTransaction;
+import ru.orangesoftware.financisto2.model.TransactionInfo;
+import ru.orangesoftware.financisto2.service.RecurrenceScheduler;
+import ru.orangesoftware.financisto2.test.builders.DateTime;
 
 public class RecurrenceSchedulerTest extends AndroidTestCase {
 	

@@ -1,4 +1,4 @@
-package ru.orangesoftware.financisto.test.recur;
+package ru.orangesoftware.financisto2.test.recur;
 
 import android.test.AndroidTestCase;
 
@@ -7,11 +7,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import ru.orangesoftware.financisto.recur.DateRecurrenceIterator;
-import ru.orangesoftware.financisto.recur.Recurrence;
-import ru.orangesoftware.financisto.test.builders.DateTime;
+import ru.orangesoftware.financisto2.recur.DateRecurrenceIterator;
+import ru.orangesoftware.financisto2.recur.Recurrence;
+import ru.orangesoftware.financisto2.test.builders.DateTime;
 
-import static ru.orangesoftware.financisto.test.builders.DateTime.date;
+import static ru.orangesoftware.financisto2.test.builders.DateTime.date;
 
 /**
  * Created by IntelliJ IDEA.

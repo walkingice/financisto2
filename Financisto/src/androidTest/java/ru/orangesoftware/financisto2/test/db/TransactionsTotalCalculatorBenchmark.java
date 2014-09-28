@@ -6,21 +6,21 @@
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  */
 
-package ru.orangesoftware.financisto.test.db;
+package ru.orangesoftware.financisto2.test.db;
 
 import android.util.Log;
 
 import java.util.Calendar;
 
-import ru.orangesoftware.financisto.db.TransactionsTotalCalculator;
-import ru.orangesoftware.financisto.filter.WhereFilter;
-import ru.orangesoftware.financisto.model.Account;
-import ru.orangesoftware.financisto.model.Currency;
-import ru.orangesoftware.financisto.test.builders.AccountBuilder;
-import ru.orangesoftware.financisto.test.builders.CurrencyBuilder;
-import ru.orangesoftware.financisto.test.builders.DateTime;
-import ru.orangesoftware.financisto.test.builders.RateBuilder;
-import ru.orangesoftware.financisto.test.builders.TransactionBuilder;
+import ru.orangesoftware.financisto2.db.TransactionsTotalCalculator;
+import ru.orangesoftware.financisto2.filter.WhereFilter;
+import ru.orangesoftware.financisto2.model.Account;
+import ru.orangesoftware.financisto2.model.Currency;
+import ru.orangesoftware.financisto2.test.builders.AccountBuilder;
+import ru.orangesoftware.financisto2.test.builders.CurrencyBuilder;
+import ru.orangesoftware.financisto2.test.builders.DateTime;
+import ru.orangesoftware.financisto2.test.builders.RateBuilder;
+import ru.orangesoftware.financisto2.test.builders.TransactionBuilder;
 
 /**
  * Created by IntelliJ IDEA.

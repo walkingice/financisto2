@@ -6,13 +6,13 @@
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  */
 
-package ru.orangesoftware.financisto.test.rates;
+package ru.orangesoftware.financisto2.test.rates;
 
 import java.util.List;
 
-import ru.orangesoftware.financisto.rates.ExchangeRate;
-import ru.orangesoftware.financisto.rates.ExchangeRateProvider;
-import ru.orangesoftware.financisto.rates.WebserviceXConversionRateDownloader;
+import ru.orangesoftware.financisto2.rates.ExchangeRate;
+import ru.orangesoftware.financisto2.rates.ExchangeRateProvider;
+import ru.orangesoftware.financisto2.rates.WebserviceXConversionRateDownloader;
 
 /**
  * Created with IntelliJ IDEA.

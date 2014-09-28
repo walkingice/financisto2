@@ -6,7 +6,7 @@
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  */
 
-package ru.orangesoftware.financisto.test.recur;
+package ru.orangesoftware.financisto2.test.recur;
 
 import android.test.AndroidTestCase;
 import android.util.Log;
@@ -14,10 +14,10 @@ import android.util.Log;
 import java.util.Date;
 import java.util.List;
 
-import ru.orangesoftware.financisto.recur.Recurrence;
-import ru.orangesoftware.financisto.test.builders.DateTime;
+import ru.orangesoftware.financisto2.recur.Recurrence;
+import ru.orangesoftware.financisto2.test.builders.DateTime;
 
-import static ru.orangesoftware.financisto.test.builders.DateTime.date;
+import static ru.orangesoftware.financisto2.test.builders.DateTime.date;
 
 /**
  * Created by IntelliJ IDEA.

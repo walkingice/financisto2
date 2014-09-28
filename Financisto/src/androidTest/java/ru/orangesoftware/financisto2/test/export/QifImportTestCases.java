@@ -6,7 +6,7 @@
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  */
 
-package ru.orangesoftware.financisto.test.export;
+package ru.orangesoftware.financisto2.test.export;
 
 import android.util.Log;
 
@@ -17,16 +17,16 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import ru.orangesoftware.financisto.export.qif.QifImport;
-import ru.orangesoftware.financisto.export.qif.QifImportOptions;
-import ru.orangesoftware.financisto.model.Account;
-import ru.orangesoftware.financisto.model.AccountType;
-import ru.orangesoftware.financisto.model.Currency;
-import ru.orangesoftware.financisto.model.TransactionInfo;
-import ru.orangesoftware.financisto.test.builders.DateTime;
-import ru.orangesoftware.financisto.test.db.AbstractDbTest;
+import ru.orangesoftware.financisto2.export.qif.QifImport;
+import ru.orangesoftware.financisto2.export.qif.QifImportOptions;
+import ru.orangesoftware.financisto2.model.Account;
+import ru.orangesoftware.financisto2.model.AccountType;
+import ru.orangesoftware.financisto2.model.Currency;
+import ru.orangesoftware.financisto2.model.TransactionInfo;
+import ru.orangesoftware.financisto2.test.builders.DateTime;
+import ru.orangesoftware.financisto2.test.db.AbstractDbTest;
 
-import static ru.orangesoftware.financisto.export.qif.QifDateFormat.EU_FORMAT;
+import static ru.orangesoftware.financisto2.export.qif.QifDateFormat.EU_FORMAT;
 
 /**
  * Created by IntelliJ IDEA.

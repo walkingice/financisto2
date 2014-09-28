@@ -6,11 +6,11 @@
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  */
 
-package ru.orangesoftware.financisto.test.model.rates;
+package ru.orangesoftware.financisto2.test.model.rates;
 
-import ru.orangesoftware.financisto.test.db.AbstractDbTest;
-import ru.orangesoftware.financisto.rates.ExchangeRate;
-import ru.orangesoftware.financisto.test.builders.DateTime;
+import ru.orangesoftware.financisto2.test.db.AbstractDbTest;
+import ru.orangesoftware.financisto2.rates.ExchangeRate;
+import ru.orangesoftware.financisto2.test.builders.DateTime;
 
 /**
  * Created by IntelliJ IDEA.

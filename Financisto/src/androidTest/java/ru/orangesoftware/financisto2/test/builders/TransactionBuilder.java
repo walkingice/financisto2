@@ -1,4 +1,4 @@
-package ru.orangesoftware.financisto.test.builders;
+package ru.orangesoftware.financisto2.test.builders;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -6,15 +6,15 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import ru.orangesoftware.financisto.db.DatabaseAdapter;
-import ru.orangesoftware.financisto.model.Account;
-import ru.orangesoftware.financisto.model.Category;
-import ru.orangesoftware.financisto.model.Currency;
-import ru.orangesoftware.financisto.model.MyLocation;
-import ru.orangesoftware.financisto.model.Project;
-import ru.orangesoftware.financisto.model.Transaction;
-import ru.orangesoftware.financisto.model.TransactionAttribute;
-import ru.orangesoftware.financisto.model.TransactionStatus;
+import ru.orangesoftware.financisto2.db.DatabaseAdapter;
+import ru.orangesoftware.financisto2.model.Account;
+import ru.orangesoftware.financisto2.model.Category;
+import ru.orangesoftware.financisto2.model.Currency;
+import ru.orangesoftware.financisto2.model.MyLocation;
+import ru.orangesoftware.financisto2.model.Project;
+import ru.orangesoftware.financisto2.model.Transaction;
+import ru.orangesoftware.financisto2.model.TransactionAttribute;
+import ru.orangesoftware.financisto2.model.TransactionStatus;
 
 /**
  * Created by IntelliJ IDEA.

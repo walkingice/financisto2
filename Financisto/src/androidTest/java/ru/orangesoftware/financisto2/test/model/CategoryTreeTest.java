@@ -1,9 +1,9 @@
-package ru.orangesoftware.financisto.test.model;
+package ru.orangesoftware.financisto2.test.model;
 
 import android.test.AndroidTestCase;
 
-import ru.orangesoftware.financisto.model.Category;
-import ru.orangesoftware.financisto.model.CategoryTree;
+import ru.orangesoftware.financisto2.model.Category;
+import ru.orangesoftware.financisto2.model.CategoryTree;
 
 public class CategoryTreeTest extends AndroidTestCase {
 

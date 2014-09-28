@@ -6,11 +6,11 @@
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  */
 
-package ru.orangesoftware.financisto.test.activity;
+package ru.orangesoftware.financisto2.test.activity;
 
-import ru.orangesoftware.financisto.activity.CurrencySelector;
-import ru.orangesoftware.financisto.model.Currency;
-import ru.orangesoftware.financisto.test.db.AbstractDbTest;
+import ru.orangesoftware.financisto2.activity.CurrencySelector;
+import ru.orangesoftware.financisto2.model.Currency;
+import ru.orangesoftware.financisto2.test.db.AbstractDbTest;
 
 /**
  * Created with IntelliJ IDEA.

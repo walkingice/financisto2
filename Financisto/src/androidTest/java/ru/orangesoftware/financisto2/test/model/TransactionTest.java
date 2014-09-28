@@ -1,4 +1,4 @@
-package ru.orangesoftware.financisto.test.model;
+package ru.orangesoftware.financisto2.test.model;
 
 import android.content.Intent;
 
@@ -7,20 +7,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import ru.orangesoftware.financisto.model.Account;
-import ru.orangesoftware.financisto.model.Attribute;
-import ru.orangesoftware.financisto.model.Category;
-import ru.orangesoftware.financisto.model.Currency;
-import ru.orangesoftware.financisto.model.Transaction;
-import ru.orangesoftware.financisto.model.TransactionAttribute;
-import ru.orangesoftware.financisto.model.TransactionStatus;
-import ru.orangesoftware.financisto.test.builders.AccountBuilder;
-import ru.orangesoftware.financisto.test.builders.CategoryBuilder;
-import ru.orangesoftware.financisto.test.builders.CurrencyBuilder;
-import ru.orangesoftware.financisto.test.builders.TransactionBuilder;
-import ru.orangesoftware.financisto.test.db.AbstractDbTest;
+import ru.orangesoftware.financisto2.model.Account;
+import ru.orangesoftware.financisto2.model.Attribute;
+import ru.orangesoftware.financisto2.model.Category;
+import ru.orangesoftware.financisto2.model.Currency;
+import ru.orangesoftware.financisto2.model.Transaction;
+import ru.orangesoftware.financisto2.model.TransactionAttribute;
+import ru.orangesoftware.financisto2.model.TransactionStatus;
+import ru.orangesoftware.financisto2.test.builders.AccountBuilder;
+import ru.orangesoftware.financisto2.test.builders.CategoryBuilder;
+import ru.orangesoftware.financisto2.test.builders.CurrencyBuilder;
+import ru.orangesoftware.financisto2.test.builders.TransactionBuilder;
+import ru.orangesoftware.financisto2.test.db.AbstractDbTest;
 
-import static ru.orangesoftware.financisto.test.builders.AttributeBuilder.attributeValue;
+import static ru.orangesoftware.financisto2.test.builders.AttributeBuilder.attributeValue;
 
 /**
  * Created by IntelliJ IDEA.

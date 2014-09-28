@@ -1,7 +1,7 @@
-package ru.orangesoftware.financisto.test.builders;
+package ru.orangesoftware.financisto2.test.builders;
 
-import ru.orangesoftware.financisto.db.DatabaseAdapter;
-import ru.orangesoftware.financisto.model.Currency;
+import ru.orangesoftware.financisto2.db.DatabaseAdapter;
+import ru.orangesoftware.financisto2.model.Currency;
 
 /**
  * Created by IntelliJ IDEA.

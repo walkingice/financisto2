@@ -1,17 +1,17 @@
-package ru.orangesoftware.financisto.test.report;
+package ru.orangesoftware.financisto2.test.report;
 
 import android.preference.PreferenceManager;
 
 import java.util.List;
 
-import ru.orangesoftware.financisto.graph.GraphUnit;
-import ru.orangesoftware.financisto.report.IncomeExpense;
-import ru.orangesoftware.financisto.report.PeriodReport;
-import ru.orangesoftware.financisto.report.Report;
-import ru.orangesoftware.financisto.test.builders.DateTime;
-import ru.orangesoftware.financisto.test.builders.RateBuilder;
-import ru.orangesoftware.financisto.test.builders.TransactionBuilder;
-import ru.orangesoftware.financisto.test.builders.TransferBuilder;
+import ru.orangesoftware.financisto2.graph.GraphUnit;
+import ru.orangesoftware.financisto2.report.IncomeExpense;
+import ru.orangesoftware.financisto2.report.PeriodReport;
+import ru.orangesoftware.financisto2.report.Report;
+import ru.orangesoftware.financisto2.test.builders.DateTime;
+import ru.orangesoftware.financisto2.test.builders.RateBuilder;
+import ru.orangesoftware.financisto2.test.builders.TransactionBuilder;
+import ru.orangesoftware.financisto2.test.builders.TransferBuilder;
 
 /**
  * Created by IntelliJ IDEA.

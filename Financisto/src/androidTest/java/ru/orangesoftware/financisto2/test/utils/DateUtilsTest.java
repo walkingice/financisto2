@@ -6,15 +6,15 @@
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  */
 
-package ru.orangesoftware.financisto.test.utils;
+package ru.orangesoftware.financisto2.test.utils;
 
 import android.test.AndroidTestCase;
-import ru.orangesoftware.financisto.datetime.Period;
-import ru.orangesoftware.financisto.datetime.PeriodType;
-import ru.orangesoftware.financisto.test.builders.DateTime;
+import ru.orangesoftware.financisto2.datetime.Period;
+import ru.orangesoftware.financisto2.datetime.PeriodType;
+import ru.orangesoftware.financisto2.test.builders.DateTime;
 
-import static ru.orangesoftware.financisto.test.builders.DateTime.date;
-import static ru.orangesoftware.financisto.datetime.PeriodType.*;
+import static ru.orangesoftware.financisto2.test.builders.DateTime.date;
+import static ru.orangesoftware.financisto2.datetime.PeriodType.*;
 
 /**
  * Created by IntelliJ IDEA.

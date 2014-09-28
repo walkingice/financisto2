@@ -1,8 +1,8 @@
-package ru.orangesoftware.financisto.test.builders;
+package ru.orangesoftware.financisto2.test.builders;
 
-import ru.orangesoftware.financisto.db.DatabaseAdapter;
-import ru.orangesoftware.financisto.model.Attribute;
-import ru.orangesoftware.financisto.model.Category;
+import ru.orangesoftware.financisto2.db.DatabaseAdapter;
+import ru.orangesoftware.financisto2.model.Attribute;
+import ru.orangesoftware.financisto2.model.Category;
 
 import java.util.*;
 

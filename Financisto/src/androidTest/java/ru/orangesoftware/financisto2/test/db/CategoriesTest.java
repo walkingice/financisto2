@@ -6,15 +6,15 @@
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  */
 
-package ru.orangesoftware.financisto.test.db;
+package ru.orangesoftware.financisto2.test.db;
 
 import java.util.Collections;
 import java.util.Map;
 
-import ru.orangesoftware.financisto.model.Attribute;
-import ru.orangesoftware.financisto.model.Category;
-import ru.orangesoftware.financisto.model.CategoryTree;
-import ru.orangesoftware.financisto.test.builders.CategoryBuilder;
+import ru.orangesoftware.financisto2.model.Attribute;
+import ru.orangesoftware.financisto2.model.Category;
+import ru.orangesoftware.financisto2.model.CategoryTree;
+import ru.orangesoftware.financisto2.test.builders.CategoryBuilder;
 
 /**
  * Created by IntelliJ IDEA.

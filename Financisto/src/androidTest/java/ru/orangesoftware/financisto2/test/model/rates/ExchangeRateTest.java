@@ -6,15 +6,15 @@
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  */
 
-package ru.orangesoftware.financisto.test.model.rates;
+package ru.orangesoftware.financisto2.test.model.rates;
 
-import ru.orangesoftware.financisto.test.db.AbstractDbTest;
-import ru.orangesoftware.financisto.model.Currency;
-import ru.orangesoftware.financisto.rates.ExchangeRate;
-import ru.orangesoftware.financisto.rates.ExchangeRateProvider;
-import ru.orangesoftware.financisto.test.builders.CurrencyBuilder;
-import ru.orangesoftware.financisto.test.builders.DateTime;
-import ru.orangesoftware.financisto.test.builders.RateBuilder;
+import ru.orangesoftware.financisto2.test.db.AbstractDbTest;
+import ru.orangesoftware.financisto2.model.Currency;
+import ru.orangesoftware.financisto2.rates.ExchangeRate;
+import ru.orangesoftware.financisto2.rates.ExchangeRateProvider;
+import ru.orangesoftware.financisto2.test.builders.CurrencyBuilder;
+import ru.orangesoftware.financisto2.test.builders.DateTime;
+import ru.orangesoftware.financisto2.test.builders.RateBuilder;
 
 import java.util.Arrays;
 import java.util.List;

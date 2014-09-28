@@ -1,8 +1,8 @@
-package ru.orangesoftware.financisto.test.activity;
+package ru.orangesoftware.financisto2.test.activity;
 
 import android.test.ActivityInstrumentationTestCase2;
 
-import ru.orangesoftware.financisto.activity.MainActivity;
+import ru.orangesoftware.financisto2.activity.MainActivity;
 
 /**
  * This is a simple framework for a test of an Application.  See
@@ -11,8 +11,8 @@ import ru.orangesoftware.financisto.activity.MainActivity;
  * <p/>
  * To run this test, you can type:
  * adb shell am instrument -w \
- * -e class ru.orangesoftware.financisto.test.activity.MainActivityTest \
- * ru.orangesoftware.financisto.test.tests/android.test.InstrumentationTestRunner
+ * -e class ru.orangesoftware.financisto2.test.activity.MainActivityTest \
+ * ru.orangesoftware.financisto2.test.tests/android.test.InstrumentationTestRunner
  */
 public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActivity> {
 

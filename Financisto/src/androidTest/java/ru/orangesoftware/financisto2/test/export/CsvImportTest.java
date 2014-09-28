@@ -6,7 +6,7 @@
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  */
 
-package ru.orangesoftware.financisto.test.export;
+package ru.orangesoftware.financisto2.test.export;
 
 import android.util.Log;
 
@@ -18,20 +18,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import ru.orangesoftware.financisto.export.CategoryInfo;
-import ru.orangesoftware.financisto.export.csv.CsvImport;
-import ru.orangesoftware.financisto.export.csv.CsvImportOptions;
-import ru.orangesoftware.financisto.export.csv.CsvTransaction;
-import ru.orangesoftware.financisto.filter.WhereFilter;
-import ru.orangesoftware.financisto.model.Account;
-import ru.orangesoftware.financisto.model.Category;
-import ru.orangesoftware.financisto.model.CategoryTree;
-import ru.orangesoftware.financisto.model.Currency;
-import ru.orangesoftware.financisto.model.Payee;
-import ru.orangesoftware.financisto.model.Project;
-import ru.orangesoftware.financisto.model.TransactionInfo;
-import ru.orangesoftware.financisto.test.builders.CategoryBuilder;
-import ru.orangesoftware.financisto.test.builders.DateTime;
+import ru.orangesoftware.financisto2.export.CategoryInfo;
+import ru.orangesoftware.financisto2.export.csv.CsvImport;
+import ru.orangesoftware.financisto2.export.csv.CsvImportOptions;
+import ru.orangesoftware.financisto2.export.csv.CsvTransaction;
+import ru.orangesoftware.financisto2.filter.WhereFilter;
+import ru.orangesoftware.financisto2.model.Account;
+import ru.orangesoftware.financisto2.model.Category;
+import ru.orangesoftware.financisto2.model.CategoryTree;
+import ru.orangesoftware.financisto2.model.Currency;
+import ru.orangesoftware.financisto2.model.Payee;
+import ru.orangesoftware.financisto2.model.Project;
+import ru.orangesoftware.financisto2.model.TransactionInfo;
+import ru.orangesoftware.financisto2.test.builders.CategoryBuilder;
+import ru.orangesoftware.financisto2.test.builders.DateTime;
 
 /**
  * Created by IntelliJ IDEA.

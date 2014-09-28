@@ -6,11 +6,11 @@
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  */
 
-package ru.orangesoftware.financisto.test.export;
+package ru.orangesoftware.financisto2.test.export;
 
 import android.test.AndroidTestCase;
-import ru.orangesoftware.financisto.export.qif.*;
-import ru.orangesoftware.financisto.test.builders.DateTime;
+import ru.orangesoftware.financisto2.export.qif.*;
+import ru.orangesoftware.financisto2.test.builders.DateTime;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -18,8 +18,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
 
-import static ru.orangesoftware.financisto.export.qif.QifDateFormat.EU_FORMAT;
-import static ru.orangesoftware.financisto.export.qif.QifDateFormat.US_FORMAT;
+import static ru.orangesoftware.financisto2.export.qif.QifDateFormat.EU_FORMAT;
+import static ru.orangesoftware.financisto2.export.qif.QifDateFormat.US_FORMAT;
 
 /**
  * Created by IntelliJ IDEA.

@@ -6,29 +6,29 @@
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  */
 
-package ru.orangesoftware.financisto.test.db;
+package ru.orangesoftware.financisto2.test.db;
 
 import android.database.Cursor;
 
 import java.util.Arrays;
 import java.util.Map;
 
-import ru.orangesoftware.financisto.R;
-import ru.orangesoftware.financisto.blotter.BlotterFilter;
-import ru.orangesoftware.financisto.db.DatabaseUtils;
-import ru.orangesoftware.financisto.filter.WhereFilter;
-import ru.orangesoftware.financisto.model.Account;
-import ru.orangesoftware.financisto.model.Category;
-import ru.orangesoftware.financisto.model.Payee;
-import ru.orangesoftware.financisto.model.Transaction;
-import ru.orangesoftware.financisto.model.TransactionStatus;
-import ru.orangesoftware.financisto.test.builders.AccountBuilder;
-import ru.orangesoftware.financisto.test.builders.CategoryBuilder;
-import ru.orangesoftware.financisto.test.builders.DateTime;
-import ru.orangesoftware.financisto.test.builders.TransactionBuilder;
-import ru.orangesoftware.financisto.test.builders.TransferBuilder;
+import ru.orangesoftware.financisto2.R;
+import ru.orangesoftware.financisto2.blotter.BlotterFilter;
+import ru.orangesoftware.financisto2.db.DatabaseUtils;
+import ru.orangesoftware.financisto2.filter.WhereFilter;
+import ru.orangesoftware.financisto2.model.Account;
+import ru.orangesoftware.financisto2.model.Category;
+import ru.orangesoftware.financisto2.model.Payee;
+import ru.orangesoftware.financisto2.model.Transaction;
+import ru.orangesoftware.financisto2.model.TransactionStatus;
+import ru.orangesoftware.financisto2.test.builders.AccountBuilder;
+import ru.orangesoftware.financisto2.test.builders.CategoryBuilder;
+import ru.orangesoftware.financisto2.test.builders.DateTime;
+import ru.orangesoftware.financisto2.test.builders.TransactionBuilder;
+import ru.orangesoftware.financisto2.test.builders.TransferBuilder;
 
-import static ru.orangesoftware.financisto.test.builders.DateTime.date;
+import static ru.orangesoftware.financisto2.test.builders.DateTime.date;
 
 /**
  * Created by IntelliJ IDEA.

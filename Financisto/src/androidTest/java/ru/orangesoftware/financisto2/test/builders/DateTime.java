@@ -1,4 +1,4 @@
-package ru.orangesoftware.financisto.test.builders;
+package ru.orangesoftware.financisto2.test.builders;
 
 import java.util.Calendar;
 import java.util.Date;

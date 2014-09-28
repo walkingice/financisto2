@@ -1,22 +1,22 @@
-package ru.orangesoftware.financisto.test.export;
+package ru.orangesoftware.financisto2.test.export;
 
 import java.util.ArrayList;
 import java.util.Map;
 
-import ru.orangesoftware.financisto.blotter.BlotterFilter;
-import ru.orangesoftware.financisto.export.qif.QifExport;
-import ru.orangesoftware.financisto.export.qif.QifExportOptions;
-import ru.orangesoftware.financisto.filter.WhereFilter;
-import ru.orangesoftware.financisto.model.Account;
-import ru.orangesoftware.financisto.model.Attribute;
-import ru.orangesoftware.financisto.model.Category;
-import ru.orangesoftware.financisto.model.Currency;
-import ru.orangesoftware.financisto.test.builders.CategoryBuilder;
-import ru.orangesoftware.financisto.test.builders.DateTime;
-import ru.orangesoftware.financisto.test.builders.TransactionBuilder;
-import ru.orangesoftware.financisto.test.builders.TransferBuilder;
+import ru.orangesoftware.financisto2.blotter.BlotterFilter;
+import ru.orangesoftware.financisto2.export.qif.QifExport;
+import ru.orangesoftware.financisto2.export.qif.QifExportOptions;
+import ru.orangesoftware.financisto2.filter.WhereFilter;
+import ru.orangesoftware.financisto2.model.Account;
+import ru.orangesoftware.financisto2.model.Attribute;
+import ru.orangesoftware.financisto2.model.Category;
+import ru.orangesoftware.financisto2.model.Currency;
+import ru.orangesoftware.financisto2.test.builders.CategoryBuilder;
+import ru.orangesoftware.financisto2.test.builders.DateTime;
+import ru.orangesoftware.financisto2.test.builders.TransactionBuilder;
+import ru.orangesoftware.financisto2.test.builders.TransferBuilder;
 
-import static ru.orangesoftware.financisto.test.builders.DateTime.date;
+import static ru.orangesoftware.financisto2.test.builders.DateTime.date;
 
 /**
  * Created by IntelliJ IDEA.

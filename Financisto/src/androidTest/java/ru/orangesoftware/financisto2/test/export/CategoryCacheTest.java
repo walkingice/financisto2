@@ -6,19 +6,19 @@
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  */
 
-package ru.orangesoftware.financisto.test.export;
+package ru.orangesoftware.financisto2.test.export;
 
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import ru.orangesoftware.financisto.export.CategoryCache;
-import ru.orangesoftware.financisto.export.CategoryInfo;
-import ru.orangesoftware.financisto.model.Category;
-import ru.orangesoftware.financisto.model.CategoryTree;
-import ru.orangesoftware.financisto.test.builders.CategoryBuilder;
+import ru.orangesoftware.financisto2.export.CategoryCache;
+import ru.orangesoftware.financisto2.export.CategoryInfo;
+import ru.orangesoftware.financisto2.model.Category;
+import ru.orangesoftware.financisto2.model.CategoryTree;
+import ru.orangesoftware.financisto2.test.builders.CategoryBuilder;
 
-import static ru.orangesoftware.financisto.export.CategoryCache.extractCategoryName;
+import static ru.orangesoftware.financisto2.export.CategoryCache.extractCategoryName;
 
 /**
  * Created by IntelliJ IDEA.

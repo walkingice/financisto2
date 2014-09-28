@@ -6,7 +6,7 @@
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  */
 
-package ru.orangesoftware.financisto.test.backup;
+package ru.orangesoftware.financisto2.test.backup;
 
 import android.content.Context;
 import android.content.pm.PackageInfo;
@@ -20,12 +20,12 @@ import java.io.InputStreamReader;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 
-import ru.orangesoftware.financisto.backup.DatabaseExport;
-import ru.orangesoftware.financisto.backup.DatabaseImport;
-import ru.orangesoftware.financisto.export.Export;
-import ru.orangesoftware.financisto.model.Account;
-import ru.orangesoftware.financisto.test.export.AbstractImportExportTest;
-import ru.orangesoftware.financisto.utils.Utils;
+import ru.orangesoftware.financisto2.backup.DatabaseExport;
+import ru.orangesoftware.financisto2.backup.DatabaseImport;
+import ru.orangesoftware.financisto2.export.Export;
+import ru.orangesoftware.financisto2.model.Account;
+import ru.orangesoftware.financisto2.test.export.AbstractImportExportTest;
+import ru.orangesoftware.financisto2.utils.Utils;
 
 /**
  * Created by IntelliJ IDEA.

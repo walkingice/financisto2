@@ -1,11 +1,11 @@
-package ru.orangesoftware.financisto.test.model;
+package ru.orangesoftware.financisto2.test.model;
 
-import ru.orangesoftware.financisto.model.Currency;
-import ru.orangesoftware.financisto.model.SymbolFormat;
-import ru.orangesoftware.financisto.test.builders.AccountBuilder;
-import ru.orangesoftware.financisto.test.builders.CurrencyBuilder;
-import ru.orangesoftware.financisto.test.db.AbstractDbTest;
-import ru.orangesoftware.financisto.utils.Utils;
+import ru.orangesoftware.financisto2.model.Currency;
+import ru.orangesoftware.financisto2.model.SymbolFormat;
+import ru.orangesoftware.financisto2.test.builders.AccountBuilder;
+import ru.orangesoftware.financisto2.test.builders.CurrencyBuilder;
+import ru.orangesoftware.financisto2.test.db.AbstractDbTest;
+import ru.orangesoftware.financisto2.utils.Utils;
 
 /**
  * Created by IntelliJ IDEA.

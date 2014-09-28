@@ -6,13 +6,13 @@
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  */
 
-package ru.orangesoftware.financisto.test.export;
+package ru.orangesoftware.financisto2.test.export;
 
 import android.test.AndroidTestCase;
-import ru.orangesoftware.financisto.test.builders.DateTime;
+import ru.orangesoftware.financisto2.test.builders.DateTime;
 
-import static ru.orangesoftware.financisto.export.qif.QifUtils.*;
-import static ru.orangesoftware.financisto.export.qif.QifDateFormat.*;
+import static ru.orangesoftware.financisto2.export.qif.QifUtils.*;
+import static ru.orangesoftware.financisto2.export.qif.QifDateFormat.*;
 
 
 /**

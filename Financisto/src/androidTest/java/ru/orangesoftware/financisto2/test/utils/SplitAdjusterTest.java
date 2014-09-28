@@ -1,12 +1,12 @@
-package ru.orangesoftware.financisto.test.utils;
+package ru.orangesoftware.financisto2.test.utils;
 
 import android.test.AndroidTestCase;
 
 import java.util.Arrays;
 import java.util.List;
 
-import ru.orangesoftware.financisto.model.Transaction;
-import ru.orangesoftware.financisto.utils.SplitAdjuster;
+import ru.orangesoftware.financisto2.model.Transaction;
+import ru.orangesoftware.financisto2.utils.SplitAdjuster;
 
 /**
  * Created by IntelliJ IDEA.

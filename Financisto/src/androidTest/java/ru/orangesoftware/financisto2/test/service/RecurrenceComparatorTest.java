@@ -1,4 +1,4 @@
-package ru.orangesoftware.financisto.test.service;
+package ru.orangesoftware.financisto2.test.service;
 
 import android.test.AndroidTestCase;
 
@@ -6,8 +6,8 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 
-import ru.orangesoftware.financisto.model.TransactionInfo;
-import ru.orangesoftware.financisto.service.RecurrenceScheduler;
+import ru.orangesoftware.financisto2.model.TransactionInfo;
+import ru.orangesoftware.financisto2.service.RecurrenceScheduler;
 
 public class RecurrenceComparatorTest extends AndroidTestCase {
 

@@ -6,7 +6,7 @@
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  */
 
-package ru.orangesoftware.financisto.test.export;
+package ru.orangesoftware.financisto2.test.export;
 
 import android.test.AndroidTestCase;
 
@@ -15,7 +15,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import ru.orangesoftware.financisto.export.qif.QifBufferedReader;
+import ru.orangesoftware.financisto2.export.qif.QifBufferedReader;
 
 /**
  * Created by IntelliJ IDEA.

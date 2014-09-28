@@ -6,15 +6,15 @@
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  */
 
-package ru.orangesoftware.financisto.test.blotter;
+package ru.orangesoftware.financisto2.test.blotter;
 
 import android.content.Intent;
 import android.test.AndroidTestCase;
 
 import java.util.Arrays;
 
-import ru.orangesoftware.financisto.filter.Criteria;
-import ru.orangesoftware.financisto.filter.WhereFilter;
+import ru.orangesoftware.financisto2.filter.Criteria;
+import ru.orangesoftware.financisto2.filter.WhereFilter;
 
 /**
  * Created by IntelliJ IDEA.

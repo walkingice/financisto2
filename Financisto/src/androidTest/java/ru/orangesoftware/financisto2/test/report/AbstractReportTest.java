@@ -1,21 +1,21 @@
-package ru.orangesoftware.financisto.test.report;
+package ru.orangesoftware.financisto2.test.report;
 
 import java.util.List;
 import java.util.Map;
 
-import ru.orangesoftware.financisto.filter.WhereFilter;
-import ru.orangesoftware.financisto.graph.GraphUnit;
-import ru.orangesoftware.financisto.model.Account;
-import ru.orangesoftware.financisto.model.Category;
-import ru.orangesoftware.financisto.model.Currency;
-import ru.orangesoftware.financisto.report.IncomeExpense;
-import ru.orangesoftware.financisto.report.Report;
-import ru.orangesoftware.financisto.report.ReportData;
-import ru.orangesoftware.financisto.test.builders.AccountBuilder;
-import ru.orangesoftware.financisto.test.builders.CategoryBuilder;
-import ru.orangesoftware.financisto.test.builders.CurrencyBuilder;
-import ru.orangesoftware.financisto.test.db.AbstractDbTest;
-import ru.orangesoftware.financisto.utils.CurrencyCache;
+import ru.orangesoftware.financisto2.filter.WhereFilter;
+import ru.orangesoftware.financisto2.graph.GraphUnit;
+import ru.orangesoftware.financisto2.model.Account;
+import ru.orangesoftware.financisto2.model.Category;
+import ru.orangesoftware.financisto2.model.Currency;
+import ru.orangesoftware.financisto2.report.IncomeExpense;
+import ru.orangesoftware.financisto2.report.Report;
+import ru.orangesoftware.financisto2.report.ReportData;
+import ru.orangesoftware.financisto2.test.builders.AccountBuilder;
+import ru.orangesoftware.financisto2.test.builders.CategoryBuilder;
+import ru.orangesoftware.financisto2.test.builders.CurrencyBuilder;
+import ru.orangesoftware.financisto2.test.db.AbstractDbTest;
+import ru.orangesoftware.financisto2.utils.CurrencyCache;
 
 /**
  * Created by IntelliJ IDEA.

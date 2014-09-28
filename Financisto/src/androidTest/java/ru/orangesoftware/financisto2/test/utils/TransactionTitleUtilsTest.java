@@ -1,9 +1,9 @@
-package ru.orangesoftware.financisto.test.utils;
+package ru.orangesoftware.financisto2.test.utils;
 
 import android.test.AndroidTestCase;
-import ru.orangesoftware.financisto.model.Category;
+import ru.orangesoftware.financisto2.model.Category;
 
-import static ru.orangesoftware.financisto.utils.TransactionTitleUtils.*;
+import static ru.orangesoftware.financisto2.utils.TransactionTitleUtils.*;
 
 /**
  * Created by IntelliJ IDEA.

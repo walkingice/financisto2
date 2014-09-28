@@ -1,4 +1,4 @@
-package ru.orangesoftware.financisto.test.db;
+package ru.orangesoftware.financisto2.test.db;
 
 import android.content.Context;
 import android.test.AndroidTestCase;
@@ -8,14 +8,14 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import ru.orangesoftware.financisto.db.DatabaseAdapter;
-import ru.orangesoftware.financisto.db.DatabaseHelper;
-import ru.orangesoftware.financisto.db.DatabaseUtils;
-import ru.orangesoftware.financisto.db.MyEntityManager;
-import ru.orangesoftware.financisto.model.Account;
-import ru.orangesoftware.financisto.model.Category;
-import ru.orangesoftware.financisto.model.Transaction;
-import ru.orangesoftware.financisto.test.builders.DateTime;
+import ru.orangesoftware.financisto2.db.DatabaseAdapter;
+import ru.orangesoftware.financisto2.db.DatabaseHelper;
+import ru.orangesoftware.financisto2.db.DatabaseUtils;
+import ru.orangesoftware.financisto2.db.MyEntityManager;
+import ru.orangesoftware.financisto2.model.Account;
+import ru.orangesoftware.financisto2.model.Category;
+import ru.orangesoftware.financisto2.model.Transaction;
+import ru.orangesoftware.financisto2.test.builders.DateTime;
 
 /**
  * Created by IntelliJ IDEA.

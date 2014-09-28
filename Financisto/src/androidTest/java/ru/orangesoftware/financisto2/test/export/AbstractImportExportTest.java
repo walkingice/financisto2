@@ -6,13 +6,13 @@
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  */
 
-package ru.orangesoftware.financisto.test.export;
+package ru.orangesoftware.financisto2.test.export;
 
-import ru.orangesoftware.financisto.test.db.AbstractDbTest;
-import ru.orangesoftware.financisto.model.Account;
-import ru.orangesoftware.financisto.model.AccountType;
-import ru.orangesoftware.financisto.model.Currency;
-import ru.orangesoftware.financisto.test.builders.CurrencyBuilder;
+import ru.orangesoftware.financisto2.test.db.AbstractDbTest;
+import ru.orangesoftware.financisto2.model.Account;
+import ru.orangesoftware.financisto2.model.AccountType;
+import ru.orangesoftware.financisto2.model.Currency;
+import ru.orangesoftware.financisto2.test.builders.CurrencyBuilder;
 
 /**
  * Created by IntelliJ IDEA.

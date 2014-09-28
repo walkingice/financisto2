@@ -1,18 +1,18 @@
-package ru.orangesoftware.financisto.test.model;
+package ru.orangesoftware.financisto2.test.model;
 
 import java.util.Map;
 
-import ru.orangesoftware.financisto.model.Account;
-import ru.orangesoftware.financisto.model.Budget;
-import ru.orangesoftware.financisto.model.Category;
-import ru.orangesoftware.financisto.model.MyEntity;
-import ru.orangesoftware.financisto.model.Project;
-import ru.orangesoftware.financisto.model.Transaction;
-import ru.orangesoftware.financisto.test.builders.AccountBuilder;
-import ru.orangesoftware.financisto.test.builders.CategoryBuilder;
-import ru.orangesoftware.financisto.test.builders.DateTime;
-import ru.orangesoftware.financisto.test.builders.TransactionBuilder;
-import ru.orangesoftware.financisto.test.db.AbstractDbTest;
+import ru.orangesoftware.financisto2.model.Account;
+import ru.orangesoftware.financisto2.model.Budget;
+import ru.orangesoftware.financisto2.model.Category;
+import ru.orangesoftware.financisto2.model.MyEntity;
+import ru.orangesoftware.financisto2.model.Project;
+import ru.orangesoftware.financisto2.model.Transaction;
+import ru.orangesoftware.financisto2.test.builders.AccountBuilder;
+import ru.orangesoftware.financisto2.test.builders.CategoryBuilder;
+import ru.orangesoftware.financisto2.test.builders.DateTime;
+import ru.orangesoftware.financisto2.test.builders.TransactionBuilder;
+import ru.orangesoftware.financisto2.test.db.AbstractDbTest;
 
 /**
  * Created by IntelliJ IDEA.
