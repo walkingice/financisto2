@@ -1,1 +1,0 @@
-ALTER TABLE attributes ADD COLUMN title text;

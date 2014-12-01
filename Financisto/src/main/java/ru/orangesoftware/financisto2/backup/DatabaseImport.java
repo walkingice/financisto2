@@ -32,12 +32,6 @@ import ru.orangesoftware.financisto2.db.MyEntityManager;
 import ru.orangesoftware.financisto2.export.Export;
 import ru.orangesoftware.financisto2.export.dropbox.Dropbox;
 
-import static ru.orangesoftware.financisto2.backup.Backup.RESTORE_SCRIPTS;
-
-/*import com.google.api.client.http.GenericUrl;
-import com.google.api.client.http.HttpResponse;
-import com.google.api.services.drive.Drive;*/
-
 public class DatabaseImport extends FullDatabaseImport {
 
 	private final DatabaseSchemaEvolution schemaEvolution;
@@ -77,7 +71,6 @@ public class DatabaseImport extends FullDatabaseImport {
         BufferedReader br = new BufferedReader(isr, 65535);
         try {
             recoverDatabase(br);
-            runRestoreAlterscripts();
         } finally {
             br.close();
         }
@@ -127,12 +120,6 @@ public class DatabaseImport extends FullDatabaseImport {
                 }
             }
         }
-	}
-
-	private void runRestoreAlterscripts() throws IOException {
-		for (String script : RESTORE_SCRIPTS) {
-			schemaEvolution.runAlterScript(db, script);
-		}
 	}
 
 }

@@ -30,14 +30,6 @@ public final class Backup {
 	public static final String[] BACKUP_TABLES_WITH_SYSTEM_IDS = {
 		"attributes", "category", "project", "locations"};
 
-    public static final String[] RESTORE_SCRIPTS = {
-            "20100114_1158_alter_accounts_types.sql",
-            "20100511_2253_add_delete_after_expired_attribute.sql",
-            "20110420_2316_add_split_category.sql",
-            "20110903_0129_alter_template_splits.sql",
-            "20140507_2255_add_electronic_account_type.sql"
-    };
-
 	private Backup() {}
 	
 	public static String[] listBackups(Context context) {
