@@ -57,7 +57,7 @@ public class CsvImportTest extends AbstractImportExportTest {
 
     public void test_should_collect_all_categories_from_transactions() {
         //given
-        csvImport = new CsvImport(db, defaultOptions);
+        csvImport = new CsvImport(db, em, defaultOptions);
         List<CsvTransaction> transactions = new LinkedList<CsvTransaction>();
         transactions.add(newCsvTransactionWithCategory(null, "A"));
         transactions.add(newCsvTransactionWithCategory("", "A"));
@@ -74,7 +74,7 @@ public class CsvImportTest extends AbstractImportExportTest {
 
     public void test_should_insert_all_categories_from_transactions() {
         //given
-        csvImport = new CsvImport(db, defaultOptions);
+        csvImport = new CsvImport(db, em, defaultOptions);
         List<CsvTransaction> transactions = new LinkedList<CsvTransaction>();
         transactions.add(newCsvTransactionWithCategory(null, null));
         transactions.add(newCsvTransactionWithCategory("", ""));
@@ -102,7 +102,7 @@ public class CsvImportTest extends AbstractImportExportTest {
 
     public void test_should_insert_all_projects_from_transactions() {
         //given
-        csvImport = new CsvImport(db, defaultOptions);
+        csvImport = new CsvImport(db, em, defaultOptions);
         List<CsvTransaction> transactions = new LinkedList<CsvTransaction>();
         transactions.add(newCsvTransactionWithProject(null));
         transactions.add(newCsvTransactionWithProject(""));
@@ -129,7 +129,7 @@ public class CsvImportTest extends AbstractImportExportTest {
 
     public void test_should_insert_all_payees_from_transactions() {
         //given
-        csvImport = new CsvImport(db, defaultOptions);
+        csvImport = new CsvImport(db, em, defaultOptions);
         List<CsvTransaction> transactions = new LinkedList<CsvTransaction>();
         transactions.add(newCsvTransactionWithPayee(null));
         transactions.add(newCsvTransactionWithPayee(""));
@@ -209,7 +209,7 @@ public class CsvImportTest extends AbstractImportExportTest {
         Log.d("Financisto", "Created a temporary backup file: " + tmp.getAbsolutePath());
         options = new CsvImportOptions(options.currency, options.dateFormat.toPattern(),
                 options.selectedAccountId, options.filter, tmp.getAbsolutePath(), options.fieldSeparator, options.useHeaderFromFile);
-        csvImport = new CsvImport(db, options);
+        csvImport = new CsvImport(db, em, options);
         csvImport.doImport();
     }
 

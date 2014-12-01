@@ -97,23 +97,21 @@ public class QifUtils {
      * Adopted from http://jgnash.svn.sourceforge.net/viewvc/jgnash/jgnash2/trunk/src/jgnash/imports/qif/QifUtils.java
      */
     public static long parseMoney(String money) {
-        String sMoney = money;
-
-        if (sMoney != null) {
+        if (money != null) {
             BigDecimal bdMoney;
-            sMoney = sMoney.trim(); // to be safe
+            money = money.trim(); // to be safe
             try {
-                bdMoney = new BigDecimal(sMoney);
+                bdMoney = new BigDecimal(money);
                 return moneyAsLong(bdMoney);
             } catch (NumberFormatException e) {
                 /* there must be commas, etc in the number.  Need to look for them
                  * and remove them first, and then try BigDecimal again.  If that
                  * fails, then give up and use NumberFormat and scale it down
                  * */
-                String[] split = MONEY_PREFIX_PATTERN.split(sMoney);
-                if (split.length > 2) {
+                String[] split = MONEY_PREFIX_PATTERN.split(money);
+                if (split.length > 1) {
                     StringBuilder buf = new StringBuilder();
-                    if (sMoney.startsWith("-")) {
+                    if (money.startsWith("-")) {
                         buf.append('-');
                     }
                     for (int i = 0; i < split.length - 1; i++) {
@@ -130,7 +128,7 @@ public class QifUtils {
                 }
                 NumberFormat formatter = NumberFormat.getNumberInstance();
                 try {
-                    Number num = formatter.parse(sMoney);
+                    Number num = formatter.parse(money);
                     BigDecimal bd = new BigDecimal(num.floatValue());
                     if (bd.scale() > 6) {
                         bd = bd.setScale(2, BigDecimal.ROUND_HALF_UP);
@@ -138,7 +136,7 @@ public class QifUtils {
                     return moneyAsLong(bd);
                 } catch (ParseException ignored) {
                 }
-                Log.e("QifUtils", "Could not parse money " + sMoney);
+                Log.e("QifUtils", "Could not parse money " + money);
             }
         }
         return 0;

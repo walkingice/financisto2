@@ -53,13 +53,13 @@ public class PlannerTest extends AbstractDbTest {
     @Override
     public void setUp() throws Exception {
         super.setUp();
-        c1 = CurrencyBuilder.withDb(db).name("USD").title("Dollar").symbol("$").create();
-        c2 = CurrencyBuilder.withDb(db).name("SGD").title("Singapore Dollar").symbol("S$").makeDefault().create();
-        a1 = AccountBuilder.createDefault(db, c1);
-        a2 = AccountBuilder.createDefault(db, c2);
+        c1 = CurrencyBuilder.withDb(em).name("USD").title("Dollar").symbol("$").create();
+        c2 = CurrencyBuilder.withDb(em).name("SGD").title("Singapore Dollar").symbol("S$").makeDefault().create();
+        a1 = AccountBuilder.createDefault(em, c1);
+        a2 = AccountBuilder.createDefault(em, c2);
         categoriesMap = CategoryBuilder.createDefaultHierarchy(db);
         homeCurrency = em.getHomeCurrency();
-        CurrencyCache.initialize(db.em());
+        CurrencyCache.initialize(em);
     }
 
     public void test_should_generate_monthly_view_for_account() {
@@ -82,7 +82,7 @@ public class PlannerTest extends AbstractDbTest {
         //14 2011-08-15 -105 -> a2     r5
         //15 2011-08-16 -50            r1
         //16 2011-08-16 +40            r2
-        MonthlyViewPlanner planner = new MonthlyViewPlanner(db, a1, false, from, to, now);
+        MonthlyViewPlanner planner = new MonthlyViewPlanner(db, em, a1, false, from, to, now);
         TransactionList list = planner.getPlannedTransactionsWithTotals();
         logTransactions(list.transactions);
         assertTransactions(list.transactions,
@@ -109,7 +109,7 @@ public class PlannerTest extends AbstractDbTest {
 
     public void test_should_generate_credit_card_statement() {
         prepareData();
-        MonthlyViewPlanner planner = new MonthlyViewPlanner(db, a1, true, from, to, now);
+        MonthlyViewPlanner planner = new MonthlyViewPlanner(db, em, a1, true, from, to, now);
         TransactionList statement = planner.getCreditCardStatement();
         List<TransactionInfo> transactions = statement.transactions;
         logTransactions(transactions);
@@ -163,7 +163,7 @@ public class PlannerTest extends AbstractDbTest {
         //2011-09-16 -50            r1
         //2011-09-16 +52  <- a2     r4
         //2011-09-16 +30  <- a2     r6
-        MonthlyViewPlanner planner = new MonthlyViewPlanner(db, a1, false, from, to, now);
+        MonthlyViewPlanner planner = new MonthlyViewPlanner(db, em, a1, false, from, to, now);
         List<TransactionInfo> transactions = planner.getPlannedTransactions();
         logTransactions(transactions);
         assertTransactions(transactions,
@@ -192,7 +192,7 @@ public class PlannerTest extends AbstractDbTest {
         from = date(2011, 7, 1).atMidnight().asDate();
         to = date(2011, 7, 16).atDayEnd().asDate();
 
-        MonthlyViewPlanner planner = new MonthlyViewPlanner(db, a1, false, from, to, now);
+        MonthlyViewPlanner planner = new MonthlyViewPlanner(db, em, a1, false, from, to, now);
         List<TransactionInfo> transactions = planner.getPlannedTransactions();
         logTransactions(transactions);
         assertTransactions(transactions,
@@ -272,7 +272,7 @@ public class PlannerTest extends AbstractDbTest {
         to = end.atDayEnd().asDate();
         WhereFilter filter = WhereFilter.empty();
         filter.put(new DateTimeCriteria(now.getTime(), to.getTime()));
-        FuturePlanner planner = new FuturePlanner(db, filter, now);
+        FuturePlanner planner = new FuturePlanner(db, em, filter, now);
         TransactionList data = planner.getPlannedTransactionsWithTotals();
         logTransactions(data.transactions);
         return data;

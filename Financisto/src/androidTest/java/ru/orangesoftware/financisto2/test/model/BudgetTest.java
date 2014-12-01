@@ -31,7 +31,7 @@ public class BudgetTest extends AbstractDbTest {
     @Override
     public void setUp() throws Exception {
         super.setUp();
-        account = AccountBuilder.createDefault(db);
+        account = AccountBuilder.createDefault(em);
         categoriesMap = CategoryBuilder.createDefaultHierarchy(db);
         categories = MyEntity.asMap(db.getCategoriesList(true));
         project = new Project();
@@ -51,7 +51,7 @@ public class BudgetTest extends AbstractDbTest {
         budgetOne.includeSubcategories = true;
         budgetOne.startDate = DateTime.date(2011, 4, 1).atMidnight().asLong();
         budgetOne.endDate = DateTime.date(2011, 4, 30).at(23, 59, 59, 999).asLong();
-        db.em().saveOrUpdate(budgetOne);
+        em.saveOrUpdate(budgetOne);
     }
 
     public void test_should_calculate_budget_correctly_with_regular_transactions() {

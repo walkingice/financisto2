@@ -40,7 +40,7 @@ public class CsvExportTest extends AbstractExportTest<CsvExport, CsvExportOption
         a1 = createFirstAccount();
         a2 = createSecondAccount();
         categoriesMap = CategoryBuilder.createDefaultHierarchy(db);
-        CurrencyCache.initialize(db.em());
+        CurrencyCache.initialize(em);
     }
 
     public void test_should_include_header() throws Exception {
@@ -65,8 +65,8 @@ public class CsvExportTest extends AbstractExportTest<CsvExport, CsvExportOption
         TransferBuilder.withDb(db).dateTime(DateTime.date(2011, 8, 3).at(22, 46, 0, 0))
                 .fromAccount(a1).fromAmount(-450000).toAccount(a2).toAmount(25600).create();
         assertEquals(
-                "2011-08-03,22:46:00,My Cash Account,-4500.00,SGD,\"\",\"\",\"\",\"\",\"\",Transfer Out,<NO_PROJECT>,\n"+
-                "2011-08-03,22:46:00,My Bank Account,256.00,CZK,\"\",\"\",\"\",\"\",\"\",Transfer In,<NO_PROJECT>,\n",
+                "2011-08-03,22:46:00,My Cash Account,-4500.00,SGD,\"\",\"\",\"\",\"\",\"\",Transfer Out,No project,\n"+
+                "2011-08-03,22:46:00,My Bank Account,256.00,CZK,\"\",\"\",\"\",\"\",\"\",Transfer In,No project,\n",
                 exportAsString(options));
     }
 
@@ -79,8 +79,8 @@ public class CsvExportTest extends AbstractExportTest<CsvExport, CsvExportOption
                 .create();
         assertEquals(
                 "2011-08-03,22:34:55,My Cash Account,-20.00,SGD,\"\",\"\",SPLIT,\"\",P1,Home,R1,My note\n"+
-                "~,\"\",My Cash Account,-5.00,SGD,\"\",\"\",A1,A,P1,\"\",<NO_PROJECT>,\n"+
-                "~,\"\",My Cash Account,-15.00,SGD,\"\",\"\",A2,A,P1,\"\",<NO_PROJECT>,\n",
+                "~,\"\",My Cash Account,-5.00,SGD,\"\",\"\",A1,A,P1,\"\",No project,\n"+
+                "~,\"\",My Cash Account,-15.00,SGD,\"\",\"\",A2,A,P1,\"\",No project,\n",
                 exportAsString(options));
     }
 
@@ -92,8 +92,8 @@ public class CsvExportTest extends AbstractExportTest<CsvExport, CsvExportOption
                 .create();
         assertEquals(
                 "2011-08-03,22:34:55,My Cash Account,-5.00,SGD,\"\",\"\",SPLIT,\"\",P1,Home,R1,My note\n"+
-                        "~,\"\",My Cash Account,-5.00,SGD,\"\",\"\",\"\",\"\",\"\",Transfer Out,<NO_PROJECT>,\n"+
-                        "~,\"\",My Bank Account,1.00,CZK,\"\",\"\",\"\",\"\",\"\",Transfer In,<NO_PROJECT>,\n",
+                        "~,\"\",My Cash Account,-5.00,SGD,\"\",\"\",\"\",\"\",\"\",Transfer Out,No project,\n"+
+                        "~,\"\",My Bank Account,1.00,CZK,\"\",\"\",\"\",\"\",\"\",Transfer In,No project,\n",
                 exportAsString(options));
     }
 
@@ -111,7 +111,7 @@ public class CsvExportTest extends AbstractExportTest<CsvExport, CsvExportOption
 
 
     private Currency createExportCurrency() {
-        Currency c = CurrencyBuilder.withDb(db)
+        Currency c = CurrencyBuilder.withDb(em)
                 .title("USD")
                 .name("USD")
                 .symbol("$")
@@ -123,7 +123,7 @@ public class CsvExportTest extends AbstractExportTest<CsvExport, CsvExportOption
 
     @Override
     protected CsvExport createExport(CsvExportOptions options) {
-        return new CsvExport(getContext(), db, options);
+        return new CsvExport(getContext(), db, em, options);
     }
 
 }

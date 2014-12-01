@@ -44,8 +44,8 @@ public class AccountPurgeTest extends AbstractDbTest {
     @Override
     public void setUp() throws Exception {
         super.setUp();
-        a1 = AccountBuilder.createDefault(db);
-        a2 = AccountBuilder.createDefault(db);
+        a1 = AccountBuilder.createDefault(em);
+        a2 = AccountBuilder.createDefault(em);
         categoriesMap = CategoryBuilder.createDefaultHierarchy(db);
         /*                        A1     A2
         * 29/05 A1 +10          |  40  |

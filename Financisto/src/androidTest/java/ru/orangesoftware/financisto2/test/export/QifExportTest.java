@@ -258,7 +258,7 @@ public class QifExportTest extends AbstractExportTest<QifExport, QifExportOption
                 "ENote on first split\n"+
                 "SA:A2\n"+
                 "$-1,000.00\n"+
-                "S<NO_CATEGORY>\n"+
+                "SNo category\n"+
                 "$-500.10\n"+
                 "ENote on third split\n"+
                 "^\n",
@@ -442,7 +442,7 @@ public class QifExportTest extends AbstractExportTest<QifExport, QifExportOption
 
     @Override
     protected QifExport createExport(QifExportOptions options) {
-        return new QifExport(getContext(), db, options);
+        return new QifExport(getContext(), db, em, options);
     }
 
 }

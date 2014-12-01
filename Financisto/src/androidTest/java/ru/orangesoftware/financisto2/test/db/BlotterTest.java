@@ -36,7 +36,7 @@ public class BlotterTest extends AbstractDbTest {
     @Override
     public void setUp() throws Exception {
         super.setUp();
-        a1 = AccountBuilder.createDefault(db);
+        a1 = AccountBuilder.createDefault(em);
     }
 
     public void test_should_sort_transactions_in_the_blotter_with_the_same_datetime_according_to_filter() {

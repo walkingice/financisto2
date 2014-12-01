@@ -429,7 +429,7 @@ public class QifParserTest extends AndroidTestCase {
             "ENote on first split\n"+
             "SA:A2\n"+
             "$-1,000.00\n"+
-            "S<NO_CATEGORY>\n"+
+            "SNo category\n"+
             "$500.10\n"+
             "ENote on third split\n"+
             "^\n");
@@ -455,7 +455,7 @@ public class QifParserTest extends AndroidTestCase {
         assertEquals(DateTime.date(2011, 7, 12).atMidnight().asDate(), s.date);
 
         s = t.splits.get(2);
-        assertEquals("<NO_CATEGORY>", s.category);
+        assertEquals("No category", s.category);
         assertEquals(50010, s.amount);
         assertEquals(DateTime.date(2011, 7, 12).atMidnight().asDate(), s.date);
         assertEquals("Note on third split", s.memo);

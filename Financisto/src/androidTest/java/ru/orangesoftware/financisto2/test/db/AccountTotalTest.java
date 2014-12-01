@@ -21,9 +21,9 @@ public class AccountTotalTest extends AbstractDbTest {
     @Override
     public void setUp() throws Exception {
         super.setUp();
-        a1 = AccountBuilder.createDefault(db);
-        a2 = AccountBuilder.createDefault(db);
-        a3 = AccountBuilder.createDefault(db);
+        a1 = AccountBuilder.createDefault(em);
+        a2 = AccountBuilder.createDefault(em);
+        a3 = AccountBuilder.createDefault(em);
         categoriesMap = CategoryBuilder.createDefaultHierarchy(db);
     }
 

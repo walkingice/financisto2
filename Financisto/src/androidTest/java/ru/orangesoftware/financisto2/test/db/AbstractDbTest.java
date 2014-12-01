@@ -44,12 +44,12 @@ public abstract class AbstractDbTest extends AndroidTestCase {
     }
 
     public void assertAccountTotal(Account account, long total) {
-        Account a = db.em().getAccount(account.id);
+        Account a = em.getAccount(account.id);
         assertEquals("Account "+account.id+" total", total, a.totalAmount);
     }
 
     public void assertLastTransactionDate(Account account, DateTime dateTime) {
-        Account a = db.em().getAccount(account.id);
+        Account a = em.getAccount(account.id);
         assertEquals("Account "+account.id+" last transaction date", dateTime.asLong(), a.lastTransactionDate);
     }
 

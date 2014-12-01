@@ -43,17 +43,17 @@ public class UIEventHandler {
 
     private void initialLoad() {
         long t3, t2, t1, t0 = System.currentTimeMillis();
-        SQLiteDatabase x = db.db();
-        x.beginTransaction();
+        SQLiteDatabase sqlDb = db.db();
+        sqlDb.beginTransaction();
         t1 = System.currentTimeMillis();
         try {
-            updateFieldInTable(x, DatabaseHelper.CATEGORY_TABLE, 0, "title", context.getString(R.string.no_category));
-            updateFieldInTable(x, DatabaseHelper.CATEGORY_TABLE, -1, "title", context.getString(R.string.split));
-            updateFieldInTable(x, DatabaseHelper.PROJECT_TABLE, 0, "title", context.getString(R.string.no_project));
-            updateFieldInTable(x, DatabaseHelper.LOCATIONS_TABLE, 0, "name", context.getString(R.string.current_location));
-            x.setTransactionSuccessful();
+            updateFieldInTable(sqlDb, DatabaseHelper.CATEGORY_TABLE, 0, "title", context.getString(R.string.no_category));
+            updateFieldInTable(sqlDb, DatabaseHelper.CATEGORY_TABLE, -1, "title", context.getString(R.string.split));
+            updateFieldInTable(sqlDb, DatabaseHelper.PROJECT_TABLE, 0, "title", context.getString(R.string.no_project));
+            updateFieldInTable(sqlDb, DatabaseHelper.LOCATIONS_TABLE, 0, "name", context.getString(R.string.current_location));
+            sqlDb.setTransactionSuccessful();
         } finally {
-            x.endTransaction();
+            sqlDb.endTransaction();
         }
         t2 = System.currentTimeMillis();
         if (MyPreferences.shouldUpdateHomeCurrency(context)) {

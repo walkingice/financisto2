@@ -49,7 +49,7 @@ public abstract class AbstractImportExportTest extends AbstractDbTest {
     }
 
     private Currency createCurrency(String currency) {
-        Currency c = CurrencyBuilder.withDb(db)
+        Currency c = CurrencyBuilder.withDb(em)
                 .title("Singapore Dollar")
                 .name(currency)
                 .separators("''", "'.'")

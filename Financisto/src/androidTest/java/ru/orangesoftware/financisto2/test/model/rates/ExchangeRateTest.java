@@ -33,9 +33,9 @@ public class ExchangeRateTest extends AbstractDbTest {
     @Override
     public void setUp() throws Exception {
         super.setUp();
-        c1 = CurrencyBuilder.withDb(db).name("USD").title("Dollar").symbol("$").create();
-        c2 = CurrencyBuilder.withDb(db).name("EUR").title("Euro").symbol("€").create();
-        c3 = CurrencyBuilder.withDb(db).name("RUB").title("Ruble").symbol("p.").create();
+        c1 = CurrencyBuilder.withDb(em).name("USD").title("Dollar").symbol("$").create();
+        c2 = CurrencyBuilder.withDb(em).name("EUR").title("Euro").symbol("€").create();
+        c3 = CurrencyBuilder.withDb(em).name("RUB").title("Ruble").symbol("p.").create();
     }
 
     public void test_should_calculate_opposite_rate() {

@@ -66,7 +66,7 @@ public class MyEntityManager extends EntityManager {
 
     public final Context context;
 
-    protected MyEntityManager(Context context) {
+    @VisibleForTesting public MyEntityManager(Context context) {
         this.context = context;
     }
 

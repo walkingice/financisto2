@@ -63,10 +63,10 @@ public class RecurrenceSchedulerTest extends AndroidTestCase {
 	private List<RestoredTransaction> assertRestoredSize(List<TransactionInfo> schedules, long now, int count) {
 		// given
         ArrayList<TransactionInfo> scheduled = new ArrayList<TransactionInfo>(schedules);
-        DatabaseAdapter db = new FakeDatabaseAdapter(getContext(), scheduled);
-        MyEntityManager em = new FakeEntityManager(getContext(), scheduled);
         RecurrenceScheduler scheduler = new RecurrenceScheduler();
-		// when
+        scheduler.db = new FakeDatabaseAdapter(getContext(), scheduled);
+        scheduler.em = new FakeEntityManager(getContext(), scheduled);
+        // when
 		List<RestoredTransaction> missed = scheduler.getMissedSchedules(now);
 		// then 
 		assertNotNull(missed);

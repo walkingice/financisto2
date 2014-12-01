@@ -1,6 +1,7 @@
 package ru.orangesoftware.financisto2.test.builders;
 
 import ru.orangesoftware.financisto2.db.DatabaseAdapter;
+import ru.orangesoftware.financisto2.db.MyEntityManager;
 import ru.orangesoftware.financisto2.model.Account;
 import ru.orangesoftware.financisto2.model.Currency;
 
@@ -11,24 +12,24 @@ import ru.orangesoftware.financisto2.model.Currency;
  */
 public class AccountBuilder {
 
-    private final DatabaseAdapter db;
+    private final MyEntityManager em;
     private final Account a = new Account();
 
-    public static Account createDefault(DatabaseAdapter db) {
-        Currency c = CurrencyBuilder.createDefault(db);
-        return createDefault(db, c);
+    public static Account createDefault(MyEntityManager em) {
+        Currency c = CurrencyBuilder.createDefault(em);
+        return createDefault(em, c);
     }
 
-    public static Account createDefault(DatabaseAdapter db, Currency c) {
-        return withDb(db).title("Cash").currency(c).create();
+    public static Account createDefault(MyEntityManager em, Currency c) {
+        return withDb(em).title("Cash").currency(c).create();
     }
 
-    public static AccountBuilder withDb(DatabaseAdapter db) {
-        return new AccountBuilder(db);
+    public static AccountBuilder withDb(MyEntityManager em) {
+        return new AccountBuilder(em);
     }
 
-    private AccountBuilder(DatabaseAdapter db) {
-        this.db = db;
+    private AccountBuilder(MyEntityManager em) {
+        this.em = em;
     }
 
     public AccountBuilder title(String title) {
@@ -57,7 +58,7 @@ public class AccountBuilder {
     }
 
     public Account create() {
-        db.em().saveAccount(a);
+        em.saveAccount(a);
         return a;
     }
 }

@@ -100,7 +100,7 @@ public class QifTransaction {
             if (split.category != null) {
                 qifWriter.write("S").write(split.category).newLine();
             } else {
-                qifWriter.write("S<NO_CATEGORY>").newLine();
+                qifWriter.write("SNo category").newLine();
             }
         }
         qifWriter.write("$").write(Utils.amountToString(options.currency, split.amount)).newLine();

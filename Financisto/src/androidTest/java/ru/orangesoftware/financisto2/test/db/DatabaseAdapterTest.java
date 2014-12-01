@@ -29,7 +29,7 @@ public class DatabaseAdapterTest extends AbstractDbTest {
     @Override
     public void setUp() throws Exception {
         super.setUp();
-        a1 = AccountBuilder.createDefault(db);
+        a1 = AccountBuilder.createDefault(em);
         categoriesMap = CategoryBuilder.createDefaultHierarchy(db);
     }
 
@@ -83,20 +83,20 @@ public class DatabaseAdapterTest extends AbstractDbTest {
         assertTrue(db.singleCurrencyOnly());
 
         // two accounts with the same currency
-        AccountBuilder.withDb(db).currency(a1.currency).title("Account2").create();
+        AccountBuilder.withDb(em).currency(a1.currency).title("Account2").create();
         assertTrue(db.singleCurrencyOnly());
 
         //another account with a different currency, but not included into totals
-        Currency c2 = CurrencyBuilder.withDb(db).name("USD").title("Dollar").symbol("$").create();
-        AccountBuilder.withDb(db).currency(c2).title("Account3").doNotIncludeIntoTotals().create();
+        Currency c2 = CurrencyBuilder.withDb(em).name("USD").title("Dollar").symbol("$").create();
+        AccountBuilder.withDb(em).currency(c2).title("Account3").doNotIncludeIntoTotals().create();
         assertTrue(db.singleCurrencyOnly());
 
         //this account is not active
-        AccountBuilder.withDb(db).currency(c2).title("Account4").inactive().create();
+        AccountBuilder.withDb(em).currency(c2).title("Account4").inactive().create();
         assertTrue(db.singleCurrencyOnly());
 
         //now it's two currencies
-        AccountBuilder.withDb(db).currency(c2).title("Account5").create();
+        AccountBuilder.withDb(em).currency(c2).title("Account5").create();
         assertFalse(db.singleCurrencyOnly());
     }
 
@@ -116,7 +116,7 @@ public class DatabaseAdapterTest extends AbstractDbTest {
 
     public void test_should_return_id_of_the_nearest_transaction_which_is_older_than_specified_date() {
         //given
-        a2 = AccountBuilder.createDefault(db);
+        a2 = AccountBuilder.createDefault(em);
         Transaction t8 = TransactionBuilder.withDb(db).dateTime(DateTime.date(2012, 5, 25).at(17, 30, 45, 0)).account(a2).amount(-234).create();
         Transaction t7 = TransactionBuilder.withDb(db).dateTime(DateTime.date(2012, 5, 25).at(16, 30, 45, 0)).account(a1).amount(-234).create();
         Transaction t6 = TransactionBuilder.withDb(db).dateTime(DateTime.date(2012, 5, 24).at(23, 59, 59, 999)).account(a1).amount(200).create();
@@ -138,7 +138,7 @@ public class DatabaseAdapterTest extends AbstractDbTest {
 
     public void test_should_delete_old_transactions() {
         //given
-        a2 = AccountBuilder.createDefault(db);
+        a2 = AccountBuilder.createDefault(em);
         TransactionBuilder.withDb(db).dateTime(DateTime.date(2012, 5, 25).at(17, 30, 45, 0)).account(a2).amount(-234).create();
         TransactionBuilder.withDb(db).dateTime(DateTime.date(2012, 5, 24).at(12, 30, 0, 0)).account(a1).amount(-100)
                 .withSplit(categoriesMap.get("A1"), -50)
@@ -181,9 +181,9 @@ public class DatabaseAdapterTest extends AbstractDbTest {
 
     public void test_should_find_latest_transaction_date_for_an_account() {
         //given
-        Account a2 = AccountBuilder.createDefault(db);
-        Account a3 = AccountBuilder.createDefault(db);
-        Account a4 = AccountBuilder.createDefault(db);
+        Account a2 = AccountBuilder.createDefault(em);
+        Account a3 = AccountBuilder.createDefault(em);
+        Account a4 = AccountBuilder.createDefault(em);
         TransactionBuilder.withDb(db).dateTime(DateTime.date(2012, 5, 25).at(17, 30, 45, 0)).account(a2).amount(-234).create(); //L2
         TransactionBuilder.withDb(db).scheduleOnce(DateTime.date(2012, 5, 23).at(0, 0, 0, 45)).account(a1).amount(100).create();
         TransactionBuilder.withDb(db).dateTime(DateTime.date(2012, 5, 23).at(23, 59, 59, 999)).account(a1).amount(10).create(); //L1
@@ -209,7 +209,7 @@ public class DatabaseAdapterTest extends AbstractDbTest {
         //then
         Category c = em.get(Category.class, Category.NO_CATEGORY_ID);
         assertNotNull(c);
-        assertEquals("<NO_CATEGORY>", c.title);
+        assertEquals("No category", c.title);
     }
 
     private String fetchFirstPayee(String s) {

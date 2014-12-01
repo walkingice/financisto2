@@ -101,7 +101,7 @@ public class DatabaseAdapter {
 
     private boolean updateAccountBalance = true;
 
-    protected DatabaseAdapter(Context context) {
+    @VisibleForTesting public DatabaseAdapter(Context context) {
         this.context = context;
     }
 
@@ -1786,7 +1786,7 @@ public class DatabaseAdapter {
     public void restoreNoCategory() {
         Category c = em.get(Category.class, Category.NO_CATEGORY_ID);
         if (c == null) {
-            db().execSQL("INSERT INTO category (_id, title, left, right) VALUES (0, '<NO_CATEGORY>', 1, 2)");
+            db().execSQL("INSERT INTO category (_id, title, left, right) VALUES (0, 'No category', 1, 2)");
         }
         CategoryTree<Category> tree = getCategoriesTree(false);
         tree.reIndex();

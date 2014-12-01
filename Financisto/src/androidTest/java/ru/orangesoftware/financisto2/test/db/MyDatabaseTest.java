@@ -22,7 +22,7 @@ public class MyDatabaseTest extends AbstractDbTest {
     @Override
     public void setUp() throws Exception {
         super.setUp();
-        a1 = AccountBuilder.createDefault(db);
+        a1 = AccountBuilder.createDefault(em);
         categoriesMap = CategoryBuilder.createDefaultHierarchy(db);
     }
 

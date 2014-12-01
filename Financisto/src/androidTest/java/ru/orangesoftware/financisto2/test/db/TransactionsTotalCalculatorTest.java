@@ -52,21 +52,21 @@ public class TransactionsTotalCalculatorTest extends AbstractDbTest {
 
         Map<String, Category> categories = CategoryBuilder.createDefaultHierarchy(db);
 
-        c1 = CurrencyBuilder.withDb(db).name("USD").title("Dollar").symbol("$").makeDefault().create();
-        c2 = CurrencyBuilder.withDb(db).name("EUR").title("Euro").symbol("€").create();
-        c3 = CurrencyBuilder.withDb(db).name("SGD").title("Singapore Dollar").symbol("S$").create();
-        c4 = CurrencyBuilder.withDb(db).name("RUB").title("Russian Ruble").symbol("p.").create();
+        c1 = CurrencyBuilder.withDb(em).name("USD").title("Dollar").symbol("$").makeDefault().create();
+        c2 = CurrencyBuilder.withDb(em).name("EUR").title("Euro").symbol("€").create();
+        c3 = CurrencyBuilder.withDb(em).name("SGD").title("Singapore Dollar").symbol("S$").create();
+        c4 = CurrencyBuilder.withDb(em).name("RUB").title("Russian Ruble").symbol("p.").create();
 
-        c = new TransactionsTotalCalculator(db, WhereFilter.empty());
+        c = new TransactionsTotalCalculator(db, em, WhereFilter.empty());
 
         RateBuilder.withDb(db).from(c1).to(c2).at(DateTime.date(2012, 1, 17)).rate(r_c1c2_17th).create();
         RateBuilder.withDb(db).from(c1).to(c2).at(DateTime.date(2012, 1, 18)).rate(r_c1c2_18th).create();
         RateBuilder.withDb(db).from(c1).to(c3).at(DateTime.date(2012, 1, 5)).rate(r_c1c3_5th).create();
         RateBuilder.withDb(db).from(c2).to(c3).at(DateTime.date(2012, 1, 5)).rate(r_c2c3_5th).create();
 
-        a1 = AccountBuilder.withDb(db).title("Cash").currency(c1).create();
-        a2 = AccountBuilder.withDb(db).title("Bank").currency(c2).create();
-        a3 = AccountBuilder.withDb(db).title("Cash2").currency(c1).doNotIncludeIntoTotals().create();
+        a1 = AccountBuilder.withDb(em).title("Cash").currency(c1).create();
+        a2 = AccountBuilder.withDb(em).title("Bank").currency(c2).create();
+        a3 = AccountBuilder.withDb(em).title("Cash2").currency(c1).doNotIncludeIntoTotals().create();
 
         /*
         a1t1 09 A1 USD -100 (orig: EUR -20)

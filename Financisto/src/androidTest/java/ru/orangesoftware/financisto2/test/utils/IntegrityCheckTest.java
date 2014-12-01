@@ -28,9 +28,9 @@ public class IntegrityCheckTest extends AbstractDbTest {
     @Override
     public void setUp() throws Exception {
         super.setUp();
-        a1 = AccountBuilder.createDefault(db);
-        a2 = AccountBuilder.createDefault(db);
-        integrity = new IntegrityCheck(db);
+        a1 = AccountBuilder.createDefault(em);
+        a2 = AccountBuilder.createDefault(em);
+        integrity = new IntegrityCheck(db, em);
     }
 
     public void test_should_detect_that_running_balance_is_broken() {

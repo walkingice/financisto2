@@ -62,7 +62,7 @@ public class DatabaseBackupTest extends AbstractImportExportTest {
 
     private void restoreDatabase(String fileName) throws IOException {
         Context context = getContext();
-        DatabaseImport databaseImport = DatabaseImport.createFromFileBackup(context, db, fileName);
+        DatabaseImport databaseImport = DatabaseImport.createFromFileBackup(context, db, em, fileName);
         databaseImport.importDatabase();
     }
 

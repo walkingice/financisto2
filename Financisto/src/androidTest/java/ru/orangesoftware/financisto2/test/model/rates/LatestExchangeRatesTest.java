@@ -33,14 +33,14 @@ public class LatestExchangeRatesTest extends AbstractDbTest {
     @Override
     public void setUp() throws Exception {
         super.setUp();
-        c1 = CurrencyBuilder.withDb(db).name("USD").title("Dollar").symbol("$").create();
-        c2 = CurrencyBuilder.withDb(db).name("EUR").title("Euro").symbol("€").create();
+        c1 = CurrencyBuilder.withDb(em).name("USD").title("Dollar").symbol("$").create();
+        c2 = CurrencyBuilder.withDb(em).name("EUR").title("Euro").symbol("€").create();
     }
 
     public void test_should_find_the_most_actual_rate_for_every_currency() {
-        Currency c1 = CurrencyBuilder.withDb(db).name("USD").title("Dollar").symbol("$").create();
-        Currency c2 = CurrencyBuilder.withDb(db).name("EUR").title("Euro").symbol("€").create();
-        Currency c3 = CurrencyBuilder.withDb(db).name("SGD").title("Singapore Dollar").symbol("S$").create();
+        Currency c1 = CurrencyBuilder.withDb(em).name("USD").title("Dollar").symbol("$").create();
+        Currency c2 = CurrencyBuilder.withDb(em).name("EUR").title("Euro").symbol("€").create();
+        Currency c3 = CurrencyBuilder.withDb(em).name("SGD").title("Singapore Dollar").symbol("S$").create();
 
         RateBuilder.withDb(db).from(c1).to(c2).at(DateTime.date(2012, 1, 17)).rate(0.78592f).create();
         RateBuilder.withDb(db).from(c1).to(c2).at(DateTime.date(2012, 1, 18)).rate(0.78635f).create();
@@ -75,8 +75,8 @@ public class LatestExchangeRatesTest extends AbstractDbTest {
     }
 
     public void test_should_calculate_accounts_total_in_home_currency() {
-        AccountBuilder.withDb(db).title("Cash").currency(c1).total(500).create();
-        AccountBuilder.withDb(db).title("Bank").currency(c2).total(1200).create();
+        AccountBuilder.withDb(em).title("Cash").currency(c1).total(500).create();
+        AccountBuilder.withDb(em).title("Bank").currency(c2).total(1200).create();
         RateBuilder.withDb(db).from(c1).to(c2).at(DateTime.date(2012, 1, 17)).rate(0.78592f).create();
         RateBuilder.withDb(db).from(c1).to(c2).at(DateTime.date(2012, 1, 18)).rate(0.78635f).create();
 
@@ -87,24 +87,24 @@ public class LatestExchangeRatesTest extends AbstractDbTest {
         assertEquals((long)(1200+(0.78635f)*500), db.getAccountsTotal(c2).balance);
 
         // total in c3
-        Currency c3 = CurrencyBuilder.withDb(db).name("SGD").title("Singapore Dollar").symbol("S$").create();
+        Currency c3 = CurrencyBuilder.withDb(em).name("SGD").title("Singapore Dollar").symbol("S$").create();
         assertTrue(db.getAccountsTotal(c3).isError());
     }
 
     public void test_should_calculate_accounts_total_in_every_currency() {
-        AccountBuilder.withDb(db).title("Cash1").currency(c1).total(500).create();
+        AccountBuilder.withDb(em).title("Cash1").currency(c1).total(500).create();
 
         Total[] totals = db.getAccountsTotal();
         assertTotal(totals, c1, 500);
 
-        AccountBuilder.withDb(db).title("Bank1").currency(c2).total(-200).create();
+        AccountBuilder.withDb(em).title("Bank1").currency(c2).total(-200).create();
 
         totals = db.getAccountsTotal();
         assertTotal(totals, c1, 500);
         assertTotal(totals, c2, -200);
 
-        AccountBuilder.withDb(db).title("Cash2").currency(c1).total(400).create();
-        AccountBuilder.withDb(db).title("Bank2").currency(c2).total(-100).create();
+        AccountBuilder.withDb(em).title("Cash2").currency(c1).total(400).create();
+        AccountBuilder.withDb(em).title("Bank2").currency(c2).total(-100).create();
 
         totals = db.getAccountsTotal();
         assertTotal(totals, c1, 900);
@@ -122,7 +122,7 @@ public class LatestExchangeRatesTest extends AbstractDbTest {
     }
 
     public void test_should_calculate_accounts_total_correctly_with_big_amounts() {
-        AccountBuilder.withDb(db).title("Cash").currency(c1).total(36487931200L).create();
+        AccountBuilder.withDb(em).title("Cash").currency(c1).total(36487931200L).create();
         assertEquals(36487931200L, db.getAccountsTotal(c1).balance);
     }
 

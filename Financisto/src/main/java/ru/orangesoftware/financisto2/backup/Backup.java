@@ -24,8 +24,7 @@ public final class Backup {
 		"account","attributes","category_attribute",
 		"transaction_attribute","budget","category",
 		"currency","locations","project","transactions",
-        "payee","ccard_closing_date","split",
-        "currency_exchange_rate"};
+        "payee","ccard_closing_date", "currency_exchange_rate"};
 	
 	public static final String[] BACKUP_TABLES_WITH_SYSTEM_IDS = {
 		"attributes", "category", "project", "locations"};

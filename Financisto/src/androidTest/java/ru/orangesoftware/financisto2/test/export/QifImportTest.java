@@ -355,7 +355,7 @@ public class QifImportTest extends AbstractDbTest {
         assertEquals(-100000, s.fromAmount);
 
         s = splits.get(2);
-        assertEquals("<NO_CATEGORY>", s.category.title);
+        assertEquals("No category", s.category.title);
         assertEquals(50010, s.fromAmount);
         assertEquals("Note on third split", s.note);
     }
@@ -420,7 +420,7 @@ public class QifImportTest extends AbstractDbTest {
 
     private void doImport(QifParser p) {
         QifImportOptions options = new QifImportOptions("", EU_FORMAT, Currency.EMPTY);
-        qifImport = new QifImport(getContext(), db, options);
+        qifImport = new QifImport(getContext(), db, em, options);
         qifImport.doImport(p);
     }
 
