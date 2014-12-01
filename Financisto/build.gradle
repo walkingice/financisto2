@@ -48,8 +48,8 @@ dependencies {
     compile 'com.google.android.gms:play-services:4.4.52'
     compile 'com.google.code.gson:gson:2.3'
 
-    apt "org.androidannotations:androidannotations:3.0.1"
-    compile "org.androidannotations:androidannotations-api:3.0.1"
+    apt "org.androidannotations:androidannotations:3.2"
+    compile "org.androidannotations:androidannotations-api:3.2"
 
     compile 'com.commonsware.cwac:wakeful:1.0.1'
     compile 'org.achartengine:achartengine:1.2.0'
