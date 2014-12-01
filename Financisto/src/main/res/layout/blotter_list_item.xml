@@ -54,7 +54,7 @@
         android:layout_toLeftOf="@+id/right_center"
         android:ellipsize="marquee"
         android:singleLine="true"
-        android:text="center"
+        android:text="Center"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:layout_below="@+id/top" />
 
