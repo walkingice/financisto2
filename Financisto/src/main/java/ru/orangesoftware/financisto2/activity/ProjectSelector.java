@@ -18,9 +18,9 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import ru.orangesoftware.financisto2.R;
+import ru.orangesoftware.financisto2.db.DatabaseAdapter;
+import ru.orangesoftware.financisto2.db.DatabaseAdapter_;
 import ru.orangesoftware.financisto2.db.DatabaseHelper;
-import ru.orangesoftware.financisto2.db.MyEntityManager;
-import ru.orangesoftware.financisto2.db.MyEntityManager_;
 import ru.orangesoftware.financisto2.model.MyEntity;
 import ru.orangesoftware.financisto2.model.Project;
 import ru.orangesoftware.financisto2.utils.MyPreferences;
@@ -36,7 +36,7 @@ import static ru.orangesoftware.financisto2.activity.AbstractActivity.setVisibil
 public class ProjectSelector {
 
     private final Activity activity;
-    private final MyEntityManager em;
+    private final DatabaseAdapter db;
     private final ActivityLayout x;
     private final boolean isShowProject;
 
@@ -49,13 +49,13 @@ public class ProjectSelector {
 
     public ProjectSelector(Activity activity, ActivityLayout x) {
         this.activity = activity;
-        this.em = MyEntityManager_.getInstance_(activity);
+        this.db = DatabaseAdapter_.getInstance_(activity);
         this.x = x;
         this.isShowProject = MyPreferences.isShowProject(activity);
     }
 
     public void fetchProjects() {
-        projects = em.getActiveProjectsList(true);
+        projects = db.getActiveProjectsList(true);
         projectAdapter = TransactionUtils.createProjectAdapter(activity, projects);
     }
 

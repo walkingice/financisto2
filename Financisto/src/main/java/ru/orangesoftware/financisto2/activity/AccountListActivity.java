@@ -153,7 +153,7 @@ public class AccountListActivity extends AbstractListActivity {
     private void showAccountInfo(long id) {
         LayoutInflater layoutInflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         NodeInflater inflater = new NodeInflater(layoutInflater);
-        AccountInfoDialog accountInfoDialog = new AccountInfoDialog(this, id, db, em, inflater);
+        AccountInfoDialog accountInfoDialog = new AccountInfoDialog(this, id, db, inflater);
         accountInfoDialog.show();
     }
 
@@ -173,7 +173,7 @@ public class AccountListActivity extends AbstractListActivity {
 	}
 
     private void showAccountTransactions(long id) {
-        Account account = em.getAccount(id);
+        Account account = db.getAccount(id);
         if (account != null) {
             Intent intent = new Intent(AccountListActivity.this, BlotterActivity.class);
             Criteria.eq(BlotterFilter.FROM_ACCOUNT_ID, String.valueOf(id))

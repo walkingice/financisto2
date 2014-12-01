@@ -81,7 +81,7 @@ public class QifImportTestCases extends AbstractDbTest {
                 "L[My Bank Account]\n" +
                 "^");
 
-        List<Account> accounts = em.getAllAccountsList();
+        List<Account> accounts = db.getAllAccountsList();
         assertEquals(2, accounts.size());
 
         Account a = accounts.get(0);
@@ -90,7 +90,7 @@ public class QifImportTestCases extends AbstractDbTest {
         assertAccountTotal(a, -2140);
         assertFinalBalanceForAccount(a, -2140);
 
-        List<TransactionInfo> transactions = em.getTransactionsForAccount(a.id);
+        List<TransactionInfo> transactions = db.getTransactionsForAccount(a.id);
         assertEquals(2, transactions.size());
 
         TransactionInfo t = transactions.get(0);
@@ -113,7 +113,7 @@ public class QifImportTestCases extends AbstractDbTest {
         assertAccountTotal(a, 5490);
         assertFinalBalanceForAccount(a, 5490);
 
-        transactions = em.getTransactionsForAccount(a.id);
+        transactions = db.getTransactionsForAccount(a.id);
         assertEquals(1, transactions.size());
 
         t = transactions.get(0);
@@ -190,7 +190,7 @@ public class QifImportTestCases extends AbstractDbTest {
             "MOpening amount (BBB)\n" +
             "^");
 
-        List<Account> accounts = em.getAllAccountsList();
+        List<Account> accounts = db.getAllAccountsList();
         assertEquals(2, accounts.size());
 
         Account a = accounts.get(0);
@@ -218,7 +218,7 @@ public class QifImportTestCases extends AbstractDbTest {
         w.close();
         Log.d("Financisto", "Created a temporary backup file: "+tmp.getAbsolutePath());
         QifImportOptions options = new QifImportOptions(tmp.getAbsolutePath(), EU_FORMAT, Currency.EMPTY);
-        qifImport = new QifImport(getContext(), db, em, options);
+        qifImport = new QifImport(getContext(), db, options);
         qifImport.importDatabase();
     }
 

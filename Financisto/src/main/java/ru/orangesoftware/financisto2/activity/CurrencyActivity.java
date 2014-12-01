@@ -27,7 +27,7 @@ import org.androidannotations.annotations.res.StringArrayRes;
 import java.text.DecimalFormatSymbols;
 
 import ru.orangesoftware.financisto2.R;
-import ru.orangesoftware.financisto2.db.MyEntityManager;
+import ru.orangesoftware.financisto2.db.DatabaseAdapter;
 import ru.orangesoftware.financisto2.model.Currency;
 import ru.orangesoftware.financisto2.model.SymbolFormat;
 import ru.orangesoftware.financisto2.utils.CurrencyCache;
@@ -43,7 +43,7 @@ public class CurrencyActivity extends Activity {
     private static final DecimalFormatSymbols s = new DecimalFormatSymbols();
 
     @Bean
-    protected MyEntityManager em;
+    protected DatabaseAdapter db;
 
     @Extra
     protected long currencyId = -1;
@@ -82,7 +82,7 @@ public class CurrencyActivity extends Activity {
         maxDecimals = decimals.getCount() - 1;
 
         if (currencyId != -1) {
-            currency = em.load(Currency.class, currencyId);
+            currency = db.load(Currency.class, currencyId);
             editCurrency();
         } else {
             makeDefaultIfNecessary();
@@ -102,8 +102,8 @@ public class CurrencyActivity extends Activity {
             currency.decimalSeparator = decimalSeparators.getSelectedItem().toString();
             currency.groupSeparator = groupSeparators.getSelectedItem().toString();
             currency.symbolFormat = symbolFormats[symbolFormat.getSelectedItemPosition()];
-            long id = em.saveOrUpdate(currency);
-            CurrencyCache.initialize(em);
+            long id = db.saveOrUpdate(currency);
+            CurrencyCache.initialize(db);
             Intent data = new Intent();
             data.putExtra(CURRENCY_ID_EXTRA, id);
             setResult(RESULT_OK, data);
@@ -118,7 +118,7 @@ public class CurrencyActivity extends Activity {
     }
 
     private void makeDefaultIfNecessary() {
-        isDefault.setChecked(em.getAllCurrenciesList().isEmpty());
+        isDefault.setChecked(db.getAllCurrenciesList().isEmpty());
     }
 
     private void editCurrency() {

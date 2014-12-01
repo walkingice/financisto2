@@ -21,7 +21,6 @@ import ru.orangesoftware.financisto2.adapter.CategoryListAdapter;
 import ru.orangesoftware.financisto2.adapter.MyEntityAdapter;
 import ru.orangesoftware.financisto2.db.DatabaseAdapter;
 import ru.orangesoftware.financisto2.db.DatabaseHelper.AccountColumns;
-import ru.orangesoftware.financisto2.db.MyEntityManager;
 import ru.orangesoftware.financisto2.model.Account;
 import ru.orangesoftware.financisto2.model.Currency;
 import ru.orangesoftware.financisto2.model.Payee;
@@ -73,7 +72,7 @@ public class TransactionUtils {
 				new String[]{"e_name"}, new int[]{android.R.id.text1});
 	}
 
-    public static SimpleCursorAdapter createPayeeAdapter(Context context, final MyEntityManager em) {
+    public static SimpleCursorAdapter createPayeeAdapter(Context context, final DatabaseAdapter db) {
         return new SimpleCursorAdapter(context, android.R.layout.simple_dropdown_item_1line, null,
                 new String[]{"e_title"}, new int[]{android.R.id.text1}){
             @Override
@@ -84,9 +83,9 @@ public class TransactionUtils {
             @Override
             public Cursor runQueryOnBackgroundThread(CharSequence constraint) {
                 if (constraint == null) {
-                    return em.getAllPayees();
+                    return db.getAllPayees();
                 } else {
-                    return em.getAllPayeesLike(constraint);
+                    return db.getAllPayeesLike(constraint);
                 }
             }
         };

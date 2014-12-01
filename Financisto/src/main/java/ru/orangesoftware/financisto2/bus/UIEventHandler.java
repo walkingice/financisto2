@@ -13,7 +13,6 @@ import java.util.List;
 import ru.orangesoftware.financisto2.R;
 import ru.orangesoftware.financisto2.db.DatabaseAdapter;
 import ru.orangesoftware.financisto2.db.DatabaseHelper;
-import ru.orangesoftware.financisto2.db.MyEntityManager;
 import ru.orangesoftware.financisto2.filter.WhereFilter;
 import ru.orangesoftware.financisto2.model.Account;
 import ru.orangesoftware.financisto2.utils.CurrencyCache;
@@ -26,9 +25,6 @@ public class UIEventHandler {
 
     @Bean
     public DatabaseAdapter db;
-
-    @Bean
-    public MyEntityManager em;
 
     @Bean
     public GreenRobotBus bus;
@@ -59,7 +55,7 @@ public class UIEventHandler {
         if (MyPreferences.shouldUpdateHomeCurrency(context)) {
             db.setDefaultHomeCurrency();
         }
-        CurrencyCache.initialize(em);
+        CurrencyCache.initialize(db);
         t3 = System.currentTimeMillis();
         if (MyPreferences.shouldRebuildRunningBalance(context)) {
             db.rebuildRunningBalances();
@@ -76,7 +72,7 @@ public class UIEventHandler {
     }
 
     public void onEventBackgroundThread(GetAccountList event) {
-        List<Account> accounts = em.getAllAccountsList(MyPreferences.isHideClosedAccounts(context));
+        List<Account> accounts = db.getAllAccountsList(MyPreferences.isHideClosedAccounts(context));
         bus.post(new AccountList(accounts));
     }
 

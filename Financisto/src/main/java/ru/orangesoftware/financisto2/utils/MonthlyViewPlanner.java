@@ -10,7 +10,6 @@ package ru.orangesoftware.financisto2.utils;
 
 import android.database.Cursor;
 
-import ru.orangesoftware.financisto2.db.MyEntityManager;
 import ru.orangesoftware.financisto2.filter.WhereFilter;
 import ru.orangesoftware.financisto2.db.DatabaseAdapter;
 import ru.orangesoftware.financisto2.db.DatabaseHelper;
@@ -44,8 +43,8 @@ public class MonthlyViewPlanner extends AbstractPlanner {
     private final Account account;
     private final boolean isStatementPreview;
 
-    public MonthlyViewPlanner(DatabaseAdapter db, MyEntityManager em, Account account, boolean isStatementPreview, Date startDate, Date endDate, Date now) {
-        super(db, em, createMonthlyViewFilter(startDate, endDate, account), now);
+    public MonthlyViewPlanner(DatabaseAdapter db, Account account, boolean isStatementPreview, Date startDate, Date endDate, Date now) {
+        super(db, createMonthlyViewFilter(startDate, endDate, account), now);
         this.account = account;
         this.isStatementPreview = isStatementPreview;
     }

@@ -31,8 +31,8 @@ public class HistoryExchangeRatesTest extends AbstractDbTest {
     @Override
     public void setUp() throws Exception {
         super.setUp();
-        c1 = CurrencyBuilder.withDb(em).name("USD").title("Dollar").symbol("$").create();
-        c2 = CurrencyBuilder.withDb(em).name("EUR").title("Euro").symbol("€").create();
+        c1 = CurrencyBuilder.withDb(db).name("USD").title("Dollar").symbol("$").create();
+        c2 = CurrencyBuilder.withDb(db).name("EUR").title("Euro").symbol("€").create();
     }
 
     public void test_should_get_rates_for_every_date() {

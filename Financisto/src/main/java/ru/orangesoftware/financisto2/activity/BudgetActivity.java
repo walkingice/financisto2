@@ -78,7 +78,7 @@ public class BudgetActivity extends AbstractActivity {
         accountAdapter = new ArrayAdapter<AccountOption>(this, android.R.layout.simple_spinner_dropdown_item, accountOptions);
 
 		categories = db.getCategoriesList(true);
-		projects = em.getActiveProjectsList(true);
+		projects = db.getActiveProjectsList(true);
 		
 		LinearLayout layout = (LinearLayout) findViewById(R.id.list);
 
@@ -117,7 +117,7 @@ public class BudgetActivity extends AbstractActivity {
 			public void onClick(View arg0) {
 				if (checkSelected(budget.currency != null ? budget.currency : budget.account, R.string.select_account)) {
 					updateBudgetFromUI();
-					long id = em.insertBudget(budget);
+					long id = db.insertBudget(budget);
 					Intent intent = new Intent();
 					intent.putExtra(BUDGET_ID_EXTRA, id);
 					setResult(RESULT_OK, intent);
@@ -140,7 +140,7 @@ public class BudgetActivity extends AbstractActivity {
 		if (intent != null) {
 			long id = intent.getLongExtra(BUDGET_ID_EXTRA, -1);
 			if (id != -1) {
-				budget = em.load(Budget.class, id);
+				budget = db.load(Budget.class, id);
 				editBudget();
 			} else {
 				selectRecur(RecurUtils.createDefaultRecur().toString());
@@ -151,12 +151,12 @@ public class BudgetActivity extends AbstractActivity {
 
     private List<AccountOption> createAccountsList() {
         List<AccountOption> accounts = new ArrayList<AccountOption>();
-        List<Currency> currenciesList = em.getAllCurrenciesList("name");
+        List<Currency> currenciesList = db.getAllCurrenciesList("name");
         for (Currency currency : currenciesList) {
             String title = getString(R.string.account_by_currency, currency.name);
             accounts.add(new AccountOption(title, currency, null));
         }
-        List<Account> accountsList = em.getAllAccountsList();
+        List<Account> accountsList = db.getAllAccountsList();
         for (Account account : accountsList) {
             accounts.add(new AccountOption(account.title, null, account));
         }
@@ -353,7 +353,7 @@ public class BudgetActivity extends AbstractActivity {
                     categories = merge(categories, db.getCategoriesList(true));
                     break;
                 case NEW_PROJECT_REQUEST:
-                    projects = merge(projects, em.getActiveProjectsList(true));
+                    projects = merge(projects, db.getActiveProjectsList(true));
                     break;
                 case RECUR_REQUEST:
                     String recur = data.getStringExtra(RecurActivity.EXTRA_RECUR);

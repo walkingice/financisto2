@@ -39,7 +39,6 @@ import ru.orangesoftware.financisto2.bus.DeleteEntity;
 import ru.orangesoftware.financisto2.bus.EditEntity;
 import ru.orangesoftware.financisto2.bus.GreenRobotBus;
 import ru.orangesoftware.financisto2.db.DatabaseAdapter;
-import ru.orangesoftware.financisto2.db.MyEntityManager;
 import ru.orangesoftware.financisto2.model.Category;
 import ru.orangesoftware.financisto2.model.CategoryTree;
 
@@ -52,8 +51,7 @@ public class CategoryListActivity2 extends ListActivity {
 	
     @Bean
     protected DatabaseAdapter db;
-    @Bean
-    protected MyEntityManager em;
+
     @Bean
     protected GreenRobotBus bus;
 
@@ -100,7 +98,7 @@ public class CategoryListActivity2 extends ListActivity {
     public void reload() {
         long t0 = System.currentTimeMillis();
         categories = db.getCategoriesTree(false);
-        attributes = db.getAllAttributesMap();
+        attributes = db.getAttributesMapping();
         updateAdapter();
         long t1 = System.currentTimeMillis();
         Log.d("CategoryListActivity2", "Requery in "+(t1-t0)+"ms");
@@ -120,7 +118,7 @@ public class CategoryListActivity2 extends ListActivity {
 
     @SuppressWarnings("unused")
 	public void onEventMainThread(final DeleteEntity event) {
-		Category c = em.getCategory(event.id);
+		Category c = db.getCategory(event.id);
 		new AlertDialog.Builder(this)
 			.setTitle(c.getTitle())
 			.setIcon(android.R.drawable.ic_dialog_alert)

@@ -58,7 +58,7 @@ public class CategorySelectorActivity extends AbstractListActivity {
 
     @Override
     protected void internalOnCreate(Bundle savedInstanceState) {
-        attributes = db.getAllAttributesMap();
+        attributes = db.getAttributesMapping();
         navigator = new CategoryTreeNavigator(db);
         if (MyPreferences.isSeparateIncomeExpense(this)) {
             navigator.separateIncomeAndExpense();

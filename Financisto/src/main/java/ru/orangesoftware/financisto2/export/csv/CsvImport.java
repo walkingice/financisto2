@@ -3,7 +3,6 @@ package ru.orangesoftware.financisto2.export.csv;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import ru.orangesoftware.financisto2.db.DatabaseAdapter;
-import ru.orangesoftware.financisto2.db.MyEntityManager;
 import ru.orangesoftware.financisto2.export.CategoryCache;
 import ru.orangesoftware.financisto2.export.CategoryInfo;
 import ru.orangesoftware.financisto2.export.ProgressListener;
@@ -20,18 +19,16 @@ import java.util.*;
 public class CsvImport {
 
     private final DatabaseAdapter db;
-    private final MyEntityManager em;
     private final CsvImportOptions options;
     private final Account account;
     private char decimalSeparator;
     private char groupSeparator;
     private ProgressListener progressListener;
 
-    public CsvImport(DatabaseAdapter db, MyEntityManager em, CsvImportOptions options) {
+    public CsvImport(DatabaseAdapter db, CsvImportOptions options) {
         this.db = db;
-        this.em = em;
         this.options = options;
-        this.account = em.getAccount(options.selectedAccountId);
+        this.account = db.getAccount(options.selectedAccountId);
         this.decimalSeparator = options.currency.decimalSeparator.charAt(1);
         this.groupSeparator = options.currency.groupSeparator.charAt(1);
     }
@@ -61,14 +58,14 @@ public class CsvImport {
     }
 
     public Map<String, Project> collectAndInsertProjects(List<CsvTransaction> transactions) {
-        Map<String, Project> map = em.getAllProjectsByTitleMap(false);
+        Map<String, Project> map = db.getAllProjectsByTitleMap(false);
         for (CsvTransaction transaction : transactions) {
             String project = transaction.project;
             if (isNewProject(map, project)) {
                 Project p = new Project();
                 p.title = project;
                 p.isActive = true;
-                em.saveOrUpdate(p);
+                db.saveOrUpdate(p);
                 map.put(project, p);
             }
         }
@@ -80,13 +77,13 @@ public class CsvImport {
     }
 
     public Map<String, Payee> collectAndInsertPayees(List<CsvTransaction> transactions) {
-        Map<String, Payee> map = em.getAllPayeeByTitleMap();
+        Map<String, Payee> map = db.getAllPayeeByTitleMap();
         for (CsvTransaction transaction : transactions) {
             String payee = transaction.payee;
             if (isNewEntity(map, payee)) {
                 Payee p = new Payee();
                 p.title = payee;
-                em.saveOrUpdate(p);
+                db.saveOrUpdate(p);
                 map.put(payee, p);
             }
         }
@@ -106,7 +103,7 @@ public class CsvImport {
     }
 
     private Map<String, Currency> collectAndInsertCurrencies(List<CsvTransaction> transactions) {
-        Map<String, Currency> map = em.getAllCurrenciesByTtitleMap();
+        Map<String, Currency> map = db.getAllCurrenciesByTtitleMap();
         for (CsvTransaction transaction : transactions) {
             String currency = transaction.originalCurrency;
             if (isNewEntity(map, currency)) {
@@ -117,7 +114,7 @@ public class CsvImport {
                 c.decimalSeparator = Currency.EMPTY.decimalSeparator;
                 c.groupSeparator = Currency.EMPTY.groupSeparator;
                 c.isDefault = false;
-                em.saveOrUpdate(c);
+                db.saveOrUpdate(c);
                 map.put(currency, c);
             }
         }

@@ -16,7 +16,6 @@ import android.database.Cursor;
 import ru.orangesoftware.financisto2.blotter.BlotterFilter;
 import ru.orangesoftware.financisto2.filter.WhereFilter;
 import ru.orangesoftware.financisto2.db.DatabaseAdapter;
-import ru.orangesoftware.financisto2.db.MyEntityManager;
 import ru.orangesoftware.financisto2.export.Export;
 import ru.orangesoftware.financisto2.filter.Criteria;
 import ru.orangesoftware.financisto2.model.Account;
@@ -33,20 +32,18 @@ import java.util.Map;
 public class QifExport extends Export {
 
     private final DatabaseAdapter db;
-    private final MyEntityManager em;
     private final QifExportOptions options;
     private final CategoryTree<Category> categories;
     private final Map<Long, Category> categoriesMap;
     private final Map<Long, Account> accountsMap;
 
-    public QifExport(Context context, DatabaseAdapter db, MyEntityManager em, QifExportOptions options) {
+    public QifExport(Context context, DatabaseAdapter db, QifExportOptions options) {
         super(context, false);
         this.db = db;
-        this.em = em;
         this.options = options;
         this.categories = db.getCategoriesTree(false);
         this.categoriesMap = categories.asMap();
-        this.accountsMap = em.getAllAccountsMap();
+        this.accountsMap = db.getAllAccountsMap();
     }
 
     @Override
@@ -81,7 +78,7 @@ public class QifExport extends Export {
     }
 
     private void writeAccountsAndTransactions(QifBufferedWriter qifWriter) throws IOException {
-        List<Account> accounts = em.getAllAccountsList();
+        List<Account> accounts = db.getAllAccountsList();
         for (Account a : accounts) {
             if (isSelectedAccount(a)) {
                 QifAccount qifAccount = writeAccount(qifWriter, a);
@@ -121,7 +118,7 @@ public class QifExport extends Export {
                 QifTransaction qifTransaction = QifTransaction.fromBlotterCursor(c, categoriesMap);
                 if (qifTransaction.isSplit()) {
                     List<QifTransaction> qifSplits = fromTransactions(
-                            em.getSplitsForTransaction(qifTransaction.id), categoriesMap, accountsMap);
+                            db.getSplitsForTransaction(qifTransaction.id), categoriesMap, accountsMap);
                     qifTransaction.setSplits(qifSplits);
                 }
                 qifTransaction.writeTo(qifWriter, options);

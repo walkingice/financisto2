@@ -9,7 +9,6 @@
 package ru.orangesoftware.financisto2.test.builders;
 
 import ru.orangesoftware.financisto2.db.DatabaseAdapter;
-import ru.orangesoftware.financisto2.db.MyEntityManager;
 import ru.orangesoftware.financisto2.model.Attribute;
 import ru.orangesoftware.financisto2.model.TransactionAttribute;
 
@@ -20,14 +19,14 @@ import ru.orangesoftware.financisto2.model.TransactionAttribute;
  */
 public class AttributeBuilder {
 
-    private final MyEntityManager em;
+    private final DatabaseAdapter db;
 
-    private AttributeBuilder(MyEntityManager em) {
-        this.em = em;
+    private AttributeBuilder(DatabaseAdapter db) {
+        this.db = db;
     }
 
-    public static AttributeBuilder withDb(MyEntityManager em) {
-        return new AttributeBuilder(em);
+    public static AttributeBuilder withDb(DatabaseAdapter db) {
+        return new AttributeBuilder(db);
     }
 
     public Attribute createTextAttribute(String name) {
@@ -42,7 +41,7 @@ public class AttributeBuilder {
         Attribute a = new Attribute();
         a.name = name;
         a.type = type;
-        a.id = em.saveOrUpdate(a);
+        a.id = db.saveOrUpdate(a);
         return a;
     }
 

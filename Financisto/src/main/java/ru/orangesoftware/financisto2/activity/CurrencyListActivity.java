@@ -28,7 +28,7 @@ import ru.orangesoftware.financisto2.R;
 import ru.orangesoftware.financisto2.adapter.CurrencyListAdapter;
 import ru.orangesoftware.financisto2.bus.DeleteEntity;
 import ru.orangesoftware.financisto2.bus.GreenRobotBus;
-import ru.orangesoftware.financisto2.db.MyEntityManager;
+import ru.orangesoftware.financisto2.db.DatabaseAdapter;
 import ru.orangesoftware.financisto2.model.Currency;
 
 @EActivity(R.layout.currency_list)
@@ -39,7 +39,7 @@ public class CurrencyListActivity extends ListActivity {
 	private static final int EDIT_CURRENCY_REQUEST = 2;
 
     @Bean
-    protected MyEntityManager em;
+    protected DatabaseAdapter db;
 
     @Bean
     protected GreenRobotBus bus;
@@ -63,14 +63,14 @@ public class CurrencyListActivity extends ListActivity {
     }
 
     private void reload() {
-        List<Currency> currencies = em.getAllCurrenciesList("name");
+        List<Currency> currencies = db.getAllCurrenciesList("name");
         CurrencyListAdapter adapter = new CurrencyListAdapter(bus, currencies);
         setListAdapter(adapter);
     }
 
     @OptionsItem(R.id.menu_add)
     protected void onAdd() {
-        new CurrencySelector(this, em, new CurrencySelector.OnCurrencyCreatedListener() {
+        new CurrencySelector(this, db, new CurrencySelector.OnCurrencyCreatedListener() {
             @Override
             public void onCreated(long currencyId) {
                 if (currencyId == 0) {
@@ -101,7 +101,7 @@ public class CurrencyListActivity extends ListActivity {
 
     @SuppressWarnings("unused")
     public void onEventMainThread(DeleteEntity event) {
-		if (em.deleteCurrency(event.id) == 1) {
+		if (db.deleteCurrency(event.id) == 1) {
 			reload();
 		} else {
 			new AlertDialog.Builder(this)

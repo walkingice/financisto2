@@ -8,7 +8,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 import ru.orangesoftware.financisto2.db.DatabaseHelper;
-import ru.orangesoftware.financisto2.db.MyEntityManager;
+import ru.orangesoftware.financisto2.db.DatabaseAdapter;
 import ru.orangesoftware.financisto2.db.DatabaseHelper.AccountColumns;
 import ru.orangesoftware.financisto2.db.DatabaseHelper.TransactionColumns;
 import ru.orangesoftware.financisto2.graph.Report2DChart;
@@ -112,9 +112,9 @@ public class ReportDataByPeriod {
 	 * @param filterId The report filtering id in transactions table 
 	 * @param dbAdapter Database adapter to query data
 	 */
-	public ReportDataByPeriod(Context context, int periodLength, Currency currency, String filterColumn, int[] filterId, MyEntityManager em) {
+	public ReportDataByPeriod(Context context, int periodLength, Currency currency, String filterColumn, int[] filterId, DatabaseAdapter db) {
 		Calendar startPeriod = Report2DChart.getDefaultStartPeriod(periodLength);
-		init(context, startPeriod, periodLength, currency, filterColumn, filterId, em);
+		init(context, startPeriod, periodLength, currency, filterColumn, filterId, db);
 	}
 	
 	/**
@@ -125,9 +125,9 @@ public class ReportDataByPeriod {
 	 * @param filterId The report filtering id in transactions table 
 	 * @param dbAdapter Database adapter to query data
 	 */
-	public ReportDataByPeriod(Context context, int periodLength, Currency currency, String filterColumn, int filterId, MyEntityManager em) {
+	public ReportDataByPeriod(Context context, int periodLength, Currency currency, String filterColumn, int filterId, DatabaseAdapter db) {
 		Calendar startPeriod = Report2DChart.getDefaultStartPeriod(periodLength);
-		init(context, startPeriod, periodLength, currency, filterColumn, new int[]{filterId}, em);
+		init(context, startPeriod, periodLength, currency, filterColumn, new int[]{filterId}, db);
 	}
 
 	/**
@@ -139,8 +139,8 @@ public class ReportDataByPeriod {
 	 * @param filterId The report filtering id in transactions table 
 	 * @param dbAdapter Database adapter to query data
 	 */
-	public ReportDataByPeriod(Context context, Calendar startDate, int periodLength, Currency currency, String filterColumn, int[] filterId, MyEntityManager em) {
-		init(context, startDate, periodLength, currency, filterColumn, filterId, em);
+	public ReportDataByPeriod(Context context, Calendar startDate, int periodLength, Currency currency, String filterColumn, int[] filterId, DatabaseAdapter db) {
+		init(context, startDate, periodLength, currency, filterColumn, filterId, db);
 	}
 	
 	/**
@@ -152,8 +152,8 @@ public class ReportDataByPeriod {
 	 * @param filterId The report filtering id in transactions table 
 	 * @param dbAdapter Database adapter to query data
 	 */
-	public ReportDataByPeriod(Context context, Calendar startDate, int periodLength, Currency currency, String filterColumn, int filterId, MyEntityManager em) {
-		init(context, startDate, periodLength, currency, filterColumn, new int[]{filterId}, em);
+	public ReportDataByPeriod(Context context, Calendar startDate, int periodLength, Currency currency, String filterColumn, int filterId, DatabaseAdapter db) {
+		init(context, startDate, periodLength, currency, filterColumn, new int[]{filterId}, db);
 	}
 	
 	/**
@@ -165,20 +165,20 @@ public class ReportDataByPeriod {
 	 * @param filterId The report filtering id in transactions table 
 	 * @param dbAdapter Database adapter to query data
 	 */
-	private void init(Context context, Calendar startDate, int periodLength, Currency currency, String filterColumn, int[] filterId, MyEntityManager em) {
+	private void init(Context context, Calendar startDate, int periodLength, Currency currency, String filterColumn, int[] filterId, DatabaseAdapter db) {
 		this.context = context;
 		this.periodLength = periodLength;
 		startDate.set(startDate.get(Calendar.YEAR), startDate.get(Calendar.MONTH), 01, 00, 00, 00);
 		this.startDate = startDate;
 		
-		SQLiteDatabase db = em.db();
+		SQLiteDatabase sqlDb = db.db();
 		Cursor cursor = null;
 
 		fillEmptyList(startDate, periodLength);
 
 		try {
 			// search accounts for which the reference currency is the given currency
-			int[] accounts = getAccountsByCurrency(currency, db);
+			int[] accounts = getAccountsByCurrency(currency, sqlDb);
 			if (accounts.length==0) {
 				max=min=0;
 				absMax=absMin=0;
@@ -189,7 +189,7 @@ public class ReportDataByPeriod {
 			String where = getWhereClause(filterColumn, filterId, accounts);
 			String[] pars = getWherePars(startDate, periodLength, filterId, accounts);
 			// query data
-			cursor = db.query(TRANSACTION_TABLE, new String[]{filterColumn, TransactionColumns.from_amount.name(), TransactionColumns.datetime.name(), TransactionColumns.datetime.name()},
+			cursor = sqlDb.query(TRANSACTION_TABLE, new String[]{filterColumn, TransactionColumns.from_amount.name(), TransactionColumns.datetime.name(), TransactionColumns.datetime.name()},
 					   where, pars, null, null, TransactionColumns.datetime.name());
 			// extract data and fill statistics
 			extractData(cursor); 

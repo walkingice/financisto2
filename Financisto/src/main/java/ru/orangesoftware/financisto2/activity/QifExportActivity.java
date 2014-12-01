@@ -26,8 +26,6 @@ import java.util.List;
 import ru.orangesoftware.financisto2.R;
 import ru.orangesoftware.financisto2.db.DatabaseAdapter;
 import ru.orangesoftware.financisto2.db.DatabaseAdapter_;
-import ru.orangesoftware.financisto2.db.MyEntityManager;
-import ru.orangesoftware.financisto2.db.MyEntityManager_;
 import ru.orangesoftware.financisto2.model.Account;
 import ru.orangesoftware.financisto2.model.MultiChoiceItem;
 import ru.orangesoftware.financisto2.utils.CurrencyExportPreferences;
@@ -57,8 +55,7 @@ public class QifExportActivity extends AbstractExportActivity implements Activit
         final ActivityLayout activityLayout = new ActivityLayout(nodeInflater, this);
 
         db = DatabaseAdapter_.getInstance_(this);
-        MyEntityManager em = MyEntityManager_.getInstance_(this);
-        accounts = em.getAllAccountsList();
+        accounts = db.getAllAccountsList();
 
         bAccounts = (Button)findViewById(R.id.bAccounts);
         bAccounts.setOnClickListener(new View.OnClickListener() {

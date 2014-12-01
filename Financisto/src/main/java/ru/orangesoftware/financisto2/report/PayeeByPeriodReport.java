@@ -3,7 +3,7 @@ package ru.orangesoftware.financisto2.report;
 import android.content.Context;
 import ru.orangesoftware.financisto2.R;
 import ru.orangesoftware.financisto2.db.DatabaseHelper.TransactionColumns;
-import ru.orangesoftware.financisto2.db.MyEntityManager;
+import ru.orangesoftware.financisto2.db.DatabaseAdapter;
 import ru.orangesoftware.financisto2.graph.Report2DChart;
 import ru.orangesoftware.financisto2.model.Currency;
 import ru.orangesoftware.financisto2.model.Payee;
@@ -18,15 +18,15 @@ import java.util.List;
  */
 public class PayeeByPeriodReport extends Report2DChart {
 
-	public PayeeByPeriodReport(Context context, MyEntityManager em, Calendar startPeriod, int periodLength, Currency currency) {
-		super(context, em, startPeriod, periodLength, currency);
+	public PayeeByPeriodReport(Context context, DatabaseAdapter db, Calendar startPeriod, int periodLength, Currency currency) {
+		super(context, db, startPeriod, periodLength, currency);
 	}
 
 	@Override
 	public String getFilterName() {
 		if (filterIds.size()>0) {
 			long payeeId = filterIds.get(currentFilterOrder);
-			Payee payee = em.get(Payee.class, payeeId);
+			Payee payee = db.get(Payee.class, payeeId);
 			if (payee != null) {
 				return payee.getTitle();
 			} else {
@@ -47,7 +47,7 @@ public class PayeeByPeriodReport extends Report2DChart {
 	public void setFilterIds() {
 		filterIds = new ArrayList<Long>();
 		currentFilterOrder = 0;
-		List<Payee> payees = em.getAllPayeeList();
+		List<Payee> payees = db.getAllPayeeList();
 		if (payees.size() > 0) {
             for (Payee p : payees) {
                 filterIds.add(p.getId());

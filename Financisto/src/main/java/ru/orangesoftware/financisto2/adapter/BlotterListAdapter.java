@@ -34,7 +34,7 @@ import java.util.HashMap;
 
 import ru.orangesoftware.financisto2.R;
 import ru.orangesoftware.financisto2.db.DatabaseHelper.BlotterColumns;
-import ru.orangesoftware.financisto2.db.MyEntityManager;
+import ru.orangesoftware.financisto2.db.DatabaseAdapter;
 import ru.orangesoftware.financisto2.model.CategoryEntity;
 import ru.orangesoftware.financisto2.model.Currency;
 import ru.orangesoftware.financisto2.model.TransactionStatus;
@@ -57,7 +57,7 @@ public class BlotterListAdapter extends ResourceCursorAdapter {
     public Utils u;
 
     @Bean
-    protected MyEntityManager em;
+    protected DatabaseAdapter db;
 
     @DrawableRes(R.drawable.ic_action_arrow_left_bottom)
     public Drawable icBlotterIncome;
@@ -140,9 +140,9 @@ public class BlotterListAdapter extends ResourceCursorAdapter {
             u.setTransferTitleText(noteView, fromAccountTitle, toAccountTitle);
 
             long fromCurrencyId = cursor.getLong(BlotterColumns.from_account_currency_id.ordinal());
-            Currency fromCurrency = CurrencyCache.getCurrency(em, fromCurrencyId);
+            Currency fromCurrency = CurrencyCache.getCurrency(db, fromCurrencyId);
             long toCurrencyId = cursor.getLong(BlotterColumns.to_account_currency_id.ordinal());
-            Currency toCurrency = CurrencyCache.getCurrency(em, toCurrencyId);
+            Currency toCurrency = CurrencyCache.getCurrency(db, toCurrencyId);
 
             long fromAmount = cursor.getLong(BlotterColumns.from_amount.ordinal());
             long toAmount = cursor.getLong(BlotterColumns.to_amount.ordinal());
@@ -160,11 +160,11 @@ public class BlotterListAdapter extends ResourceCursorAdapter {
             setTransactionTitleText(cursor, noteView);
             sb.setLength(0);
             long fromCurrencyId = cursor.getLong(BlotterColumns.from_account_currency_id.ordinal());
-            Currency fromCurrency = CurrencyCache.getCurrency(em, fromCurrencyId);
+            Currency fromCurrency = CurrencyCache.getCurrency(db, fromCurrencyId);
             long amount = cursor.getLong(BlotterColumns.from_amount.ordinal());
             long originalCurrencyId = cursor.getLong(BlotterColumns.original_currency_id.ordinal());
             if (originalCurrencyId > 0) {
-                Currency originalCurrency = CurrencyCache.getCurrency(em, originalCurrencyId);
+                Currency originalCurrency = CurrencyCache.getCurrency(db, originalCurrencyId);
                 long originalAmount = cursor.getLong(BlotterColumns.original_from_amount.ordinal());
                 u.setAmountText(sb, v.rightView, originalCurrency, originalAmount, fromCurrency, amount, true);
             } else {

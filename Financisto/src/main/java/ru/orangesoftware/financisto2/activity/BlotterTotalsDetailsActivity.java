@@ -45,9 +45,9 @@ public class BlotterTotalsDetailsActivity extends AbstractTotalsDetailsActivity 
         WhereFilter filter = WhereFilter.copyOf(blotterFilter);
         if (filter.getAccountId() > 0) {
             shouldShowHomeCurrencyTotal = false;
-            return new AccountTotalCalculationTask(this, db, em, filter, null);
+            return new AccountTotalCalculationTask(this, db, filter, null);
         } else {
-            return new BlotterTotalCalculationTask(this, db, em, filter, null);
+            return new BlotterTotalCalculationTask(this, db, filter, null);
         }
     }
 

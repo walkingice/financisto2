@@ -16,7 +16,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import ru.orangesoftware.financisto2.db.DatabaseAdapter;
-import ru.orangesoftware.financisto2.db.MyEntityManager;
 import ru.orangesoftware.financisto2.service.RecurrenceScheduler;
 import ru.orangesoftware.financisto2.service.RecurrenceScheduler_;
 import ru.orangesoftware.financisto2.utils.CurrencyCache;
@@ -27,28 +26,26 @@ import static ru.orangesoftware.financisto2.backup.Backup.tableHasSystemIds;
 public abstract class FullDatabaseImport {
 
 	protected final Context context;
-	protected final DatabaseAdapter dbAdapter;
-    protected final MyEntityManager em;
-	protected final SQLiteDatabase db;
+	protected final DatabaseAdapter db;
+	protected final SQLiteDatabase sqlDb;
 
-	public FullDatabaseImport(Context context, DatabaseAdapter dbAdapter, MyEntityManager em) {
+	public FullDatabaseImport(Context context, DatabaseAdapter dbAdapter) {
 		this.context = context;
-		this.dbAdapter = dbAdapter;
-        this.em = em;
-        this.db = dbAdapter.db();
+		this.db = dbAdapter;
+        this.sqlDb = dbAdapter.db();
     }
 
 	public void importDatabase() throws IOException {
-        db.beginTransaction();
+        sqlDb.beginTransaction();
         try {
             cleanDatabase();
             restoreDatabase();
-            db.setTransactionSuccessful();
+            sqlDb.setTransactionSuccessful();
         } finally {
-            db.endTransaction();
+            sqlDb.endTransaction();
         }
-        CurrencyCache.initialize(em);
-        new IntegrityFix(dbAdapter).fix();
+        CurrencyCache.initialize(db);
+        new IntegrityFix(db).fix();
         scheduleAll();
     }
 
@@ -57,9 +54,9 @@ public abstract class FullDatabaseImport {
     private void cleanDatabase() {
         for (String tableName : tablesToClean()) {
             if (tableHasSystemIds(tableName) && shouldKeepSystemEntries()) {
-                db.execSQL("delete from "+tableName+" where _id>0");
+                sqlDb.execSQL("delete from " + tableName + " where _id>0");
             } else {
-                db.execSQL("delete from "+tableName);
+                sqlDb.execSQL("delete from " + tableName);
             }
         }
     }

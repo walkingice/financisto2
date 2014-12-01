@@ -70,7 +70,7 @@ public class LocationsListActivity extends AbstractListActivity {
 
 	@Override
 	protected Cursor createCursor() {
-		return em.getAllLocations(false);
+		return db.getAllLocations(false);
 	}
 	
 	@Override
@@ -81,7 +81,7 @@ public class LocationsListActivity extends AbstractListActivity {
 
 	@Override
 	protected void deleteItem(View v, int position, long id) {
-		em.deleteLocation(id);
+		db.deleteLocation(id);
 		cursor.requery();
 	}
 
@@ -141,7 +141,7 @@ public class LocationsListActivity extends AbstractListActivity {
 				Toast t = Toast.makeText(LocationsListActivity.this, found, Toast.LENGTH_LONG);
 				t.show();
 				location.resolvedAddress = found;
-				em.saveLocation(location);
+				db.saveLocation(location);
 				recreateCursor();
             } else if (geocoder.lastException != null) {
 				Toast t = Toast.makeText(LocationsListActivity.this, R.string.service_is_not_available, Toast.LENGTH_LONG);

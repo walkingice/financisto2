@@ -39,12 +39,12 @@ public class TransactionsTotalCalculatorBenchmark extends AbstractDbTest {
     @Override
     public void setUp() throws Exception {
         super.setUp();
-        c1 = CurrencyBuilder.withDb(em).name("USD").title("Dollar").symbol("$").create();
-        c2 = CurrencyBuilder.withDb(em).name("EUR").title("Euro").symbol("€").create();
+        c1 = CurrencyBuilder.withDb(db).name("USD").title("Dollar").symbol("$").create();
+        c2 = CurrencyBuilder.withDb(db).name("EUR").title("Euro").symbol("€").create();
 
-        c = new TransactionsTotalCalculator(db, em, WhereFilter.empty());
+        c = new TransactionsTotalCalculator(db, WhereFilter.empty());
 
-        a1 = AccountBuilder.withDb(em).title("Cash").currency(c1).create();
+        a1 = AccountBuilder.withDb(db).title("Cash").currency(c1).create();
     }
 
     public void test_should_benchmark_blotter_total_in_home_currency() {

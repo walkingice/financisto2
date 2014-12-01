@@ -5,7 +5,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import ru.orangesoftware.financisto2.R;
-import ru.orangesoftware.financisto2.db.MyEntityManager;
+import ru.orangesoftware.financisto2.db.DatabaseAdapter;
 import ru.orangesoftware.financisto2.db.DatabaseHelper.TransactionColumns;
 import ru.orangesoftware.financisto2.graph.Report2DChart;
 import ru.orangesoftware.financisto2.model.Currency;
@@ -26,8 +26,8 @@ public class ProjectByPeriodReport extends Report2DChart {
 	 * @param periodLength
 	 * @param currency
 	 */
-	public ProjectByPeriodReport(Context context, MyEntityManager em, int periodLength, Currency currency) {
-		super(context, em, periodLength, currency);
+	public ProjectByPeriodReport(Context context, DatabaseAdapter db, int periodLength, Currency currency) {
+		super(context, db, periodLength, currency);
 	}
 	
 	/**
@@ -38,8 +38,8 @@ public class ProjectByPeriodReport extends Report2DChart {
 	 * @param periodLength
 	 * @param currency
 	 */
-	public ProjectByPeriodReport(Context context, MyEntityManager em, Calendar startPeriod, int periodLength, Currency currency) {
-		super(context, em, startPeriod, periodLength, currency);
+	public ProjectByPeriodReport(Context context, DatabaseAdapter db, Calendar startPeriod, int periodLength, Currency currency) {
+		super(context, db, startPeriod, periodLength, currency);
 	}
 
 	/* (non-Javadoc)
@@ -49,7 +49,7 @@ public class ProjectByPeriodReport extends Report2DChart {
 	public String getFilterName() {
 		if (filterIds.size()>0) {
 			long projectId = filterIds.get(currentFilterOrder);
-			Project project = em.getProject(projectId);
+			Project project = db.getProject(projectId);
 			if (project!=null) {
 				return project.getTitle();
 			} else {
@@ -74,7 +74,7 @@ public class ProjectByPeriodReport extends Report2DChart {
 		boolean includeNoProject = MyPreferences.includeNoFilterInReport(context);
 		filterIds = new ArrayList<Long>();
 		currentFilterOrder = 0;
-		ArrayList<Project> projects = em.getAllProjectsList(includeNoProject);
+		ArrayList<Project> projects = db.getAllProjectsList(includeNoProject);
 		if (projects.size()>0) {
 			Project p;
 			for (int i=0; i<projects.size(); i++) {

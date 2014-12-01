@@ -8,8 +8,8 @@ import java.util.Calendar;
 import java.util.List;
 
 import ru.orangesoftware.financisto2.R;
+import ru.orangesoftware.financisto2.db.DatabaseAdapter;
 import ru.orangesoftware.financisto2.db.DatabaseHelper;
-import ru.orangesoftware.financisto2.db.MyEntityManager;
 import ru.orangesoftware.financisto2.db.DatabaseHelper.CategoryColumns;
 import ru.orangesoftware.financisto2.db.DatabaseHelper.TransactionColumns;
 import ru.orangesoftware.financisto2.graph.Report2DChart;
@@ -29,15 +29,15 @@ import android.database.sqlite.SQLiteDatabase;
  */
 public class CategoryByPeriodReport extends Report2DChart {
 	
-	public CategoryByPeriodReport(Context context, MyEntityManager em, Calendar startPeriod, int periodLength, Currency currency) {
-		super(context, em, startPeriod, periodLength, currency);
+	public CategoryByPeriodReport(Context context, DatabaseAdapter db, Calendar startPeriod, int periodLength, Currency currency) {
+		super(context, db, startPeriod, periodLength, currency);
 	}
 
 	@Override
 	public String getFilterName() {
 		if (filterIds.size()>0) {
 			long categoryId = filterIds.get(currentFilterOrder);
-			Category category = em.getCategory(categoryId);
+			Category category = db.getCategory(categoryId);
 			if (category!=null) {
 				return category.getTitle();
 			} else {
@@ -65,7 +65,7 @@ public class CategoryByPeriodReport extends Report2DChart {
 		boolean includeNoCategory = MyPreferences.includeNoFilterInReport(context);
 		filterIds = new ArrayList<Long>();
 		currentFilterOrder = 0;
-		List<Category> categories = em.getAllCategoriesList(includeNoCategory);
+		List<Category> categories = db.getAllCategoriesList(includeNoCategory);
 		if (categories.size()>0) {
 			Category c;
             for (Category category : categories) {
@@ -94,14 +94,14 @@ public class CategoryByPeriodReport extends Report2DChart {
 	protected void build() {
 		boolean addSubs = MyPreferences.addSubCategoriesToSum(context);
 		if (addSubs) {
-			SQLiteDatabase db = em.db();
+			SQLiteDatabase sqlDb = db.db();
 			Cursor cursor = null;
 			try {
 				long categoryId = filterIds.get(currentFilterOrder);
-				Category parent = em.getCategory(categoryId);
+				Category parent = db.getCategory(categoryId);
 				String where = CategoryColumns.left+" BETWEEN ? AND ?";
 				String[] pars = new String[]{String.valueOf(parent.left), String.valueOf(parent.right)};
-				cursor = db.query(DatabaseHelper.CATEGORY_TABLE, new String[]{CategoryColumns._id.name()}, where, pars, null, null, null);
+				cursor = sqlDb.query(DatabaseHelper.CATEGORY_TABLE, new String[]{CategoryColumns._id.name()}, where, pars, null, null, null);
 				int[] categories = new int[cursor.getCount()+1];
 				int i=0;
 				while (cursor.moveToNext()) {
@@ -109,13 +109,13 @@ public class CategoryByPeriodReport extends Report2DChart {
 					i++;
 				}
 				categories[i] = filterIds.get(currentFilterOrder).intValue();
-				data = new ReportDataByPeriod(context, startPeriod, periodLength, currency, columnFilter, categories, em);
+				data = new ReportDataByPeriod(context, startPeriod, periodLength, currency, columnFilter, categories, db);
 			} finally {
 				if (cursor!=null) cursor.close();
 			}
 		} else {
 			// only root category
-			data = new ReportDataByPeriod(context, startPeriod, periodLength, currency, columnFilter, filterIds.get(currentFilterOrder).intValue(), em);
+			data = new ReportDataByPeriod(context, startPeriod, periodLength, currency, columnFilter, filterIds.get(currentFilterOrder).intValue(), db);
 		}
 		
 		points = new ArrayList<Report2DPoint>();

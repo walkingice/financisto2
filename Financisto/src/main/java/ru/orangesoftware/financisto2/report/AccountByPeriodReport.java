@@ -5,7 +5,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import ru.orangesoftware.financisto2.R;
-import ru.orangesoftware.financisto2.db.MyEntityManager;
+import ru.orangesoftware.financisto2.db.DatabaseAdapter;
 import ru.orangesoftware.financisto2.db.DatabaseHelper.TransactionColumns;
 import ru.orangesoftware.financisto2.graph.Report2DChart;
 import ru.orangesoftware.financisto2.model.Account;
@@ -25,8 +25,8 @@ public class AccountByPeriodReport extends Report2DChart {
 	 * @param periodLength
 	 * @param currency
 	 */
-	public AccountByPeriodReport(Context context, MyEntityManager em, int periodLength, Currency currency) {
-		super(context, em, periodLength, currency);
+	public AccountByPeriodReport(Context context, DatabaseAdapter db, int periodLength, Currency currency) {
+		super(context, db, periodLength, currency);
 	}
 	
 	/**
@@ -36,8 +36,8 @@ public class AccountByPeriodReport extends Report2DChart {
 	 * @param periodLength
 	 * @param currency
 	 */
-	public AccountByPeriodReport(Context context, MyEntityManager em, Calendar startPeriod, int periodLength, Currency currency) {
-		super(context, em, startPeriod, periodLength, currency);
+	public AccountByPeriodReport(Context context, DatabaseAdapter db, Calendar startPeriod, int periodLength, Currency currency) {
+		super(context, db, startPeriod, periodLength, currency);
 	}
 
 	/* (non-Javadoc)
@@ -55,7 +55,7 @@ public class AccountByPeriodReport extends Report2DChart {
 	public String getFilterName() {
 		if (filterIds.size()>0) {
 			long accountId = filterIds.get(currentFilterOrder);
-			Account a = em.getAccount(accountId);
+			Account a = db.getAccount(accountId);
 			if (a != null) {
 				return a.title;
 			} else {
@@ -74,7 +74,7 @@ public class AccountByPeriodReport extends Report2DChart {
 	public void setFilterIds() {
 		filterIds = new ArrayList<Long>();
 		currentFilterOrder = 0;
-		List<Account> accounts = em.getAllAccountsList();
+		List<Account> accounts = db.getAllAccountsList();
 		if (accounts.size() > 0) {
 			Account a;
 			for (int i=0; i<accounts.size(); i++) {

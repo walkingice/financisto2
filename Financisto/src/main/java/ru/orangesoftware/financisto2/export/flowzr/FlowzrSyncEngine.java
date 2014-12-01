@@ -74,8 +74,6 @@ import ru.orangesoftware.financisto2.activity.FlowzrSyncActivity;
 import ru.orangesoftware.financisto2.db.DatabaseAdapter;
 import ru.orangesoftware.financisto2.db.DatabaseAdapter_;
 import ru.orangesoftware.financisto2.db.DatabaseHelper;
-import ru.orangesoftware.financisto2.db.MyEntityManager;
-import ru.orangesoftware.financisto2.db.MyEntityManager_;
 import ru.orangesoftware.financisto2.model.Account;
 import ru.orangesoftware.financisto2.model.Attribute;
 import ru.orangesoftware.financisto2.model.Budget;
@@ -110,8 +108,7 @@ public class FlowzrSyncEngine  {
 
     private final SQLiteDatabase db;
     private final DatabaseAdapter dba;
-    private final MyEntityManager em;
-    private DefaultHttpClient http_client;    
+    private DefaultHttpClient http_client;
     static InputStream isHttpcontent = null;
     static JSONObject jObj = null;
     static String json = "";
@@ -152,7 +149,6 @@ public class FlowzrSyncEngine  {
     	this.flowzrSyncActivity=a;
     	FlowzrSyncActivity.isRunning=true;
         this.dba = DatabaseAdapter_.getInstance_(context);
-        this.em = MyEntityManager_.getInstance_(context);
         this.db = dba.db();
 		
         if (flowzrSyncActivity==null) {
@@ -514,7 +510,7 @@ public class FlowzrSyncEngine  {
 	       	 				//load parent id
 	       	 				Category cat=dba.getCategory(c.getInt(0)); // sql build/load parentId	
 	       	 				if (cat.getParentId()>KEY_CREATE) {
-	       	 					Category pcat=em.load(Category.class, cat.getParentId());
+	       	 					Category pcat=dba.load(Category.class, cat.getParentId());
 	       	 					rowObject.put( "parent" ,  pcat.remoteKey); 
 	       	 					rowObject.put( "parent_id" ,  pcat.id); 
 	       	 				}
@@ -530,7 +526,7 @@ public class FlowzrSyncEngine  {
 	       	 	            Map<Long, String> attributesMap = dba.getAllAttributesForTransaction(c.getInt(0));
 	       	 	            String transaction_attribute="";
 	       	 	            for (long attributeId : attributesMap.keySet()) {
-	       	 	                transaction_attribute+= em.get(Attribute.class, attributeId).remoteKey + "=" + attributesMap.get(attributeId) +";";
+	       	 	                transaction_attribute+= dba.get(Attribute.class, attributeId).remoteKey + "=" + attributesMap.get(attributeId) +";";
 	       	 	            } 
 	       	 	            rowObject.put( "transaction_attribute" ,  transaction_attribute );        	 				
 	       	 			}        	    			
@@ -743,7 +739,7 @@ public class FlowzrSyncEngine  {
 			return null;
 		}
 		
-		Attribute tEntity=em.get(Attribute.class,localKey);
+		Attribute tEntity=dba.get(Attribute.class,localKey);
 		
 		try {			
 			tEntity.remoteKey=jsonObjectEntity.getString("key");
@@ -757,7 +753,7 @@ public class FlowzrSyncEngine  {
 			if (jsonObjectEntity.has("list_values")) {			
 				tEntity.listValues=jsonObjectEntity.getString("list_values");
 			}
-			em.saveOrUpdate(tEntity);
+			dba.saveOrUpdate(tEntity);
 			return tEntity;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -769,7 +765,7 @@ public class FlowzrSyncEngine  {
 		if (!jsonObjectEntity.has("name")) {
 			return null;
 		}
-		MyEntity tEntity=(MyEntity) em.get(clazz, id);
+		MyEntity tEntity=(MyEntity) dba.get(clazz, id);
 		if (tEntity==null) {
 			if (clazz==Project.class) {
 				tEntity= new Project();
@@ -791,7 +787,7 @@ public class FlowzrSyncEngine  {
 					}
 				}
 			}
-			em.saveOrUpdate((MyEntity)tEntity);
+			dba.saveOrUpdate((MyEntity)tEntity);
 			return tEntity;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -828,13 +824,13 @@ public class FlowzrSyncEngine  {
 				for (String attr_key: jsonObjectEntity.getString("attributes").split(";")) {
 						int l=(int) getLocalKey(DatabaseHelper.ATTRIBUTES_TABLE, attr_key);
 						if (l>0) {						
-							Attribute attr=em.get(Attribute.class,l);
+							Attribute attr=dba.get(Attribute.class,l);
 							attributes.add(attr);
 						}
 				}				
 			}
 			//updated on + remote key
-			em.saveOrUpdate(tEntity);
+			dba.saveOrUpdate(tEntity);
 			//left, right
 			dba.insertOrUpdate(tEntity, attributes);
 
@@ -854,8 +850,8 @@ public class FlowzrSyncEngine  {
 			long toCurrencyId= getLocalKey(DatabaseHelper.CURRENCY_TABLE, jsonObjectEntity.getString("to_currency"));
 			long fromCurrencyId= getLocalKey(DatabaseHelper.CURRENCY_TABLE, jsonObjectEntity.getString("from_currency"));
 			if (toCurrencyId>-1 && fromCurrencyId>-1) {
-				Currency toCurrency=em.load(Currency.class,toCurrencyId);
-				Currency fromCurrency=em.load(Currency.class, fromCurrencyId);
+				Currency toCurrency=dba.load(Currency.class,toCurrencyId);
+				Currency fromCurrency=dba.load(Currency.class, fromCurrencyId);
 				long effective_date=jsonObjectEntity.getLong("effective_date")*1000;
 				double rate=jsonObjectEntity.getDouble("rate");
 				ExchangeRate exRate= new ExchangeRate();				
@@ -874,7 +870,7 @@ public class FlowzrSyncEngine  {
 	}
 	
 	public Object saveOrUpdateBudgetFromJSON(long id,JSONObject jsonObjectEntity) throws JSONException {
-		Budget tEntity=em.get(Budget.class, id);
+		Budget tEntity=dba.get(Budget.class, id);
 		if (tEntity==null) {
 			tEntity = new Budget();
 			tEntity.id=KEY_CREATE; 									
@@ -931,7 +927,7 @@ public class FlowzrSyncEngine  {
 //		}
 		if (jsonObjectEntity.has("budget_account_id")) {				
 			try {
-				tEntity.account=em.load(Account.class,getLocalKey(DatabaseHelper.ACCOUNT_TABLE, jsonObjectEntity.getString("budget_account_id")));
+				tEntity.account=dba.load(Account.class,getLocalKey(DatabaseHelper.ACCOUNT_TABLE, jsonObjectEntity.getString("budget_account_id")));
 			} catch (Exception e) {
 				Log.e(TAG,"Error parsing Budget.budget_account_id ");				
 				e.printStackTrace();
@@ -939,7 +935,7 @@ public class FlowzrSyncEngine  {
 		} else {
 			if (jsonObjectEntity.has("budget_currency_id")) {				
 				try {
-					tEntity.currency=em.load(Currency.class,getLocalKey(DatabaseHelper.CURRENCY_TABLE, jsonObjectEntity.getString("budget_currency_id")));
+					tEntity.currency=dba.load(Currency.class,getLocalKey(DatabaseHelper.CURRENCY_TABLE, jsonObjectEntity.getString("budget_currency_id")));
 					tEntity.currencyId=getLocalKey(DatabaseHelper.CURRENCY_TABLE, jsonObjectEntity.getString("budget_currency_id"));
 				} catch (Exception e) {
 					Log.e(TAG,"Error parsing Budget.budget_currency_id ");				
@@ -1013,12 +1009,12 @@ public class FlowzrSyncEngine  {
 					e.printStackTrace();
 				}
 		}			
-		em.insertBudget(tEntity);
+		dba.insertBudget(tEntity);
 		return tEntity;	 						
 	}	
 	
 	public Object saveOrUpdateLocationFromJSON(long id,JSONObject jsonObjectEntity) {				
-		MyLocation tEntity=em.get(MyLocation.class, id); 
+		MyLocation tEntity=dba.get(MyLocation.class, id);
 		if (tEntity==null) {
 			tEntity=new MyLocation();			
 			tEntity.id=KEY_CREATE; 			
@@ -1069,7 +1065,7 @@ public class FlowzrSyncEngine  {
 			if (jsonObjectEntity.has("dateTime")) {
 				tEntity.dateTime=jsonObjectEntity.getLong("dateTime");						
 			}
-			em.saveOrUpdate(tEntity);					
+			dba.saveOrUpdate(tEntity);
 			return tEntity;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1079,7 +1075,7 @@ public class FlowzrSyncEngine  {
 	
 	
 	public Object saveOrUpdateCurrencyFromJSON(long id,JSONObject jsonObjectEntity) {
-		Currency tEntity=em.get(Currency.class, id);
+		Currency tEntity=dba.get(Currency.class, id);
 		if (tEntity==null) {
 			tEntity = Currency.EMPTY;
 			tEntity.id=KEY_CREATE; 
@@ -1134,7 +1130,7 @@ public class FlowzrSyncEngine  {
 			} catch (Exception e) {
 				Log.e(TAG,"Error pulling Currency.symbol");					
 			}
-			em.saveOrUpdate(tEntity); 				
+			dba.saveOrUpdate(tEntity);
 			return tEntity;
 		} catch (Exception e) {			
 			e.printStackTrace();
@@ -1144,7 +1140,7 @@ public class FlowzrSyncEngine  {
 	
 	public Object saveOrUpdateAccountFromJSON(long id,JSONObject jsonObjectAccount) {
 
-		Account tEntity=em.get(Account.class, id);
+		Account tEntity=dba.get(Account.class, id);
 
 		if (tEntity==null) {
 			tEntity = new Account();
@@ -1179,7 +1175,7 @@ public class FlowzrSyncEngine  {
 			Collection<Currency> currencies=CurrencyCache.getAllCurrencies();			
 			if (jsonObjectAccount.has("currency_id")) {			
 				try {
-					c=em.load(Currency.class,getLocalKey(DatabaseHelper.CURRENCY_TABLE, jsonObjectAccount.getString("currency_id")));				
+					c=dba.load(Currency.class,getLocalKey(DatabaseHelper.CURRENCY_TABLE, jsonObjectAccount.getString("currency_id")));
 					tEntity.currency=c;
 				} catch (Exception e) {
 					Log.e(TAG,"unable to load currency for account "  + tEntity.title + " with " +  jsonObjectAccount.getString("currency_id"));
@@ -1205,7 +1201,7 @@ public class FlowzrSyncEngine  {
 					}	
 					tEntity.currency=c;
 					c.id=-1; //db put!
-					em.saveOrUpdate(c);							
+					dba.saveOrUpdate(c);
 				}
 			} else if  (tEntity.currency==null) {
 				//no currency provided use default
@@ -1220,10 +1216,10 @@ public class FlowzrSyncEngine  {
 					c.isDefault=true;
 					tEntity.currency=c;	
 					c.id=-1; //db put!
-					em.saveOrUpdate(c);							
+					dba.saveOrUpdate(c);
 				}
 			}
-			CurrencyCache.initialize(em);			
+			CurrencyCache.initialize(dba);
 			//card_issuer
 		 	if (jsonObjectAccount.has("card_issuer")) {
 		 		tEntity.cardIssuer=jsonObjectAccount.getString("card_issuer");
@@ -1272,7 +1268,7 @@ public class FlowzrSyncEngine  {
 		 		tEntity.type=jsonObjectAccount.getString(DatabaseHelper.AccountColumns.TYPE);
 		 	}
 	 	
-			em.saveOrUpdate(tEntity);						
+			dba.saveOrUpdate(tEntity);
 			return tEntity;			
 		} catch (Exception e1) {					
 			e1.printStackTrace();
@@ -1281,7 +1277,7 @@ public class FlowzrSyncEngine  {
 	}
 
 	public Object saveOrUpdateTransactionFromJSON(long id,JSONObject jsonObjectResponse) throws JSONException,Exception {
-		Transaction tEntity=em.get(Transaction.class, id);		
+		Transaction tEntity=dba.get(Transaction.class, id);
 		if (tEntity==null) {
 			tEntity= new Transaction();
 			tEntity.id=KEY_CREATE; 			
@@ -1303,10 +1299,10 @@ public class FlowzrSyncEngine  {
 				long pid=getLocalKey(DatabaseHelper.TRANSACTION_TABLE, jsonObjectResponse.getString("parent_tr"));
 				if (pid>KEY_CREATE) {
 					tEntity.parentId=pid;
-					Transaction parent_tr=em.load(Transaction.class, tEntity.parentId);
+					Transaction parent_tr=dba.load(Transaction.class, tEntity.parentId);
 					if (parent_tr.categoryId!=Category.SPLIT_CATEGORY_ID) {
 						parent_tr.categoryId=Category.SPLIT_CATEGORY_ID;
-						em.saveOrUpdate(parent_tr);					
+						dba.saveOrUpdate(parent_tr);
 					}
 				} else {
 					try {
@@ -1314,10 +1310,10 @@ public class FlowzrSyncEngine  {
 						requery(DatabaseHelper.TRANSACTION_TABLE,Transaction.class,key);
 						long pid2=getLocalKey(DatabaseHelper.TRANSACTION_TABLE, jsonObjectResponse.getString("parent_tr"));
 	    				tEntity.parentId=pid2;
-	    				Transaction parent_tr=em.load(Transaction.class, tEntity.parentId);
+	    				Transaction parent_tr=dba.load(Transaction.class, tEntity.parentId);
 	    				if (parent_tr.categoryId!=Category.SPLIT_CATEGORY_ID) {
 	    						parent_tr.categoryId=Category.SPLIT_CATEGORY_ID;
-	    						em.saveOrUpdate(parent_tr);					
+	    						dba.saveOrUpdate(parent_tr);
 	    				}
 					} catch (Exception e) {
 						//add to delete log ?
@@ -1454,7 +1450,7 @@ public class FlowzrSyncEngine  {
 	    		} 		
 	    	}
 		}
-		id=em.saveOrUpdate(tEntity);			
+		id=dba.saveOrUpdate(tEntity);
 		if (attributes!=null) {
             dba.db().delete(DatabaseHelper.TRANSACTION_ATTRIBUTE_TABLE, DatabaseHelper.TransactionAttributeColumns.TRANSACTION_ID+"=?",
                     new String[]{String.valueOf(id)});
@@ -1725,15 +1721,15 @@ public class FlowzrSyncEngine  {
 			} else if (tableName.equals(DatabaseHelper.TRANSACTION_TABLE)) {
 				dba.deleteTransaction(id);								
 			} else if (tableName.equals(DatabaseHelper.CURRENCY_TABLE)) {
-				em.deleteCurrency(id);					
+				dba.deleteCurrency(id);
 			} else if (tableName.equals(DatabaseHelper.BUDGET_TABLE)) {
-				em.deleteBudget(id);
+				dba.deleteBudget(id);
 			} else if (tableName.equals(DatabaseHelper.LOCATIONS_TABLE)) {
-				em.deleteLocation(id);
+				dba.deleteLocation(id);
 			} else if (tableName.equals(DatabaseHelper.PROJECT_TABLE)) {
-				em.deleteProject(id);							
+				dba.deleteProject(id);
 			} else if (tableName.equals(DatabaseHelper.PAYEE_TABLE)) {
-				em.delete(Payee.class,id);								
+				dba.delete(Payee.class,id);
 			} else  if (tableName.equals(DatabaseHelper.CATEGORY_TABLE)) {
 				dba.deleteCategory(id);
 			}

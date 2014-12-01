@@ -211,7 +211,7 @@ public abstract class AbstractTransactionActivity extends AbstractActivity imple
         projectSelector.fetchProjects();
 
 		if (isShowLocation) {
-			locationCursor = em.getAllLocations(true);
+			locationCursor = db.getAllLocations(true);
 			startManagingCursor(locationCursor);
 			locationAdapter = TransactionUtils.createLocationAdapter(this, locationCursor);
 		}
@@ -230,9 +230,9 @@ public abstract class AbstractTransactionActivity extends AbstractActivity imple
         }
 
 		if (transaction.id == -1) {
-			accountCursor = em.getAllActiveAccounts();
+			accountCursor = db.getAllActiveAccounts();
 		} else {
-			accountCursor = em.getAccountsForTransaction(transaction);
+			accountCursor = db.getAccountsForTransaction(transaction);
 		}
 		startManagingCursor(accountCursor);
 		accountAdapter = TransactionUtils.createAccountAdapter(this, accountCursor);		
@@ -301,7 +301,7 @@ public abstract class AbstractTransactionActivity extends AbstractActivity imple
 		if (transaction.isScheduled()) {
 			recurText = x.addListNode(layout, R.id.recurrence_pattern, R.string.recur, R.string.recur_interval_no_recur);
 			notificationText = x.addListNode(layout, R.id.notification, R.string.notification, R.string.notification_options_default);
-			Attribute sa = em.getSystemAttribute(SystemAttribute.DELETE_AFTER_EXPIRED);
+			Attribute sa = db.getSystemAttribute(SystemAttribute.DELETE_AFTER_EXPIRED);
 			deleteAfterExpired = AttributeViewFactory.createViewForAttribute(this, sa);
 			String value = transaction.getSystemAttribute(SystemAttribute.DELETE_AFTER_EXPIRED);
 			deleteAfterExpired.inflateView(layout, value != null ? value : sa.defaultValue);
@@ -349,7 +349,7 @@ public abstract class AbstractTransactionActivity extends AbstractActivity imple
     }
 
     protected void createPayeeNode(LinearLayout layout) {
-        payeeAdapter = TransactionUtils.createPayeeAdapter(this, em);
+        payeeAdapter = TransactionUtils.createPayeeAdapter(this, db);
         payeeText = new AutoCompleteTextView(this);
         payeeText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS |
                 InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS |
@@ -663,7 +663,7 @@ public abstract class AbstractTransactionActivity extends AbstractActivity imple
 	}
 	
 	protected Account selectAccount(long accountId, boolean selectLast) {
-        Account a = em.getAccount(accountId);
+        Account a = db.getAccount(accountId);
         if (a != null) {
             accountText.setText(a.title);
             rateView.selectCurrencyFrom(a.currency);
@@ -702,7 +702,7 @@ public abstract class AbstractTransactionActivity extends AbstractActivity imple
 			selectCurrentLocation(false);
 		} else {
 			if (isShowLocation) {
-                MyLocation location = em.get(MyLocation.class, locationId);
+                MyLocation location = db.get(MyLocation.class, locationId);
 				if (location != null) {
 					locationText.setText(location.toString());
 					selectedLocationId = locationId;
@@ -891,7 +891,7 @@ public abstract class AbstractTransactionActivity extends AbstractActivity imple
 			transaction.longitude = lastFix != null ? lastFix.getLongitude() : 0;
 		}
         if (isShowPayee) {
-            transaction.payeeId = db.insertPayee(text(payeeText));
+            transaction.payeeId = db.insertPayee(text(payeeText)).id;
         }
 		if (isShowNote) {
 			transaction.note = text(noteText);
@@ -907,7 +907,7 @@ public abstract class AbstractTransactionActivity extends AbstractActivity imple
 
     protected void selectPayee(long payeeId) {
         if (isShowPayee) {
-            Payee p = em.get(Payee.class, payeeId);
+            Payee p = db.get(Payee.class, payeeId);
             selectPayee(p);
         }
     }

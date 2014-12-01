@@ -57,7 +57,7 @@ public class CsvImportTest extends AbstractImportExportTest {
 
     public void test_should_collect_all_categories_from_transactions() {
         //given
-        csvImport = new CsvImport(db, em, defaultOptions);
+        csvImport = new CsvImport(db, defaultOptions);
         List<CsvTransaction> transactions = new LinkedList<CsvTransaction>();
         transactions.add(newCsvTransactionWithCategory(null, "A"));
         transactions.add(newCsvTransactionWithCategory("", "A"));
@@ -74,7 +74,7 @@ public class CsvImportTest extends AbstractImportExportTest {
 
     public void test_should_insert_all_categories_from_transactions() {
         //given
-        csvImport = new CsvImport(db, em, defaultOptions);
+        csvImport = new CsvImport(db, defaultOptions);
         List<CsvTransaction> transactions = new LinkedList<CsvTransaction>();
         transactions.add(newCsvTransactionWithCategory(null, null));
         transactions.add(newCsvTransactionWithCategory("", ""));
@@ -102,7 +102,7 @@ public class CsvImportTest extends AbstractImportExportTest {
 
     public void test_should_insert_all_projects_from_transactions() {
         //given
-        csvImport = new CsvImport(db, em, defaultOptions);
+        csvImport = new CsvImport(db, defaultOptions);
         List<CsvTransaction> transactions = new LinkedList<CsvTransaction>();
         transactions.add(newCsvTransactionWithProject(null));
         transactions.add(newCsvTransactionWithProject(""));
@@ -113,7 +113,7 @@ public class CsvImportTest extends AbstractImportExportTest {
         //when
         Map<String, Project> projects = csvImport.collectAndInsertProjects(transactions);
         //then
-        List<Project> allProjects = em.getActiveProjectsList(false);
+        List<Project> allProjects = db.getActiveProjectsList(false);
         assertEquals(2, allProjects.size());
         assertEquals(2, projects.size());
         //when
@@ -122,14 +122,14 @@ public class CsvImportTest extends AbstractImportExportTest {
         transactions.add(newCsvTransactionWithProject("P3"));
         projects = csvImport.collectAndInsertProjects(transactions);
         //then
-        allProjects = em.getActiveProjectsList(false);
+        allProjects = db.getActiveProjectsList(false);
         assertEquals(3, allProjects.size());
         assertEquals(3, projects.size());
     }
 
     public void test_should_insert_all_payees_from_transactions() {
         //given
-        csvImport = new CsvImport(db, em, defaultOptions);
+        csvImport = new CsvImport(db, defaultOptions);
         List<CsvTransaction> transactions = new LinkedList<CsvTransaction>();
         transactions.add(newCsvTransactionWithPayee(null));
         transactions.add(newCsvTransactionWithPayee(""));
@@ -139,7 +139,7 @@ public class CsvImportTest extends AbstractImportExportTest {
         //when
         Map<String, Payee> payees = csvImport.collectAndInsertPayees(transactions);
         //then
-        List<Payee> allPayees = em.getAllPayeeList();
+        List<Payee> allPayees = db.getAllPayeeList();
         assertEquals(2, allPayees.size());
         assertEquals(2, payees.size());
         //when
@@ -148,7 +148,7 @@ public class CsvImportTest extends AbstractImportExportTest {
         transactions.add(newCsvTransactionWithPayee("Payee3"));
         payees = csvImport.collectAndInsertPayees(transactions);
         //then
-        allPayees = em.getAllPayeeList();
+        allPayees = db.getAllPayeeList();
         assertEquals(3, allPayees.size());
         assertEquals(3, payees.size());
     }
@@ -162,7 +162,7 @@ public class CsvImportTest extends AbstractImportExportTest {
         doImport("date,time,account,amount,currency,category,parent,payee,location,project,note\n" +
                 "10.07.2011,07:13:17,AAA,-10.50,SGD,AA1,A:A1,P1,,,", defaultOptions);
 
-        List<TransactionInfo> transactions = em.getTransactionsForAccount(defaultAccountId);
+        List<TransactionInfo> transactions = db.getTransactionsForAccount(defaultAccountId);
         assertEquals(1, transactions.size());
 
         TransactionInfo t = transactions.get(0);
@@ -180,7 +180,7 @@ public class CsvImportTest extends AbstractImportExportTest {
                 "11.07.2011,07:13:17,AAA,2100.56,SGD,1680.10,USD,B,\"\",P1,Current location,No project\n"+
                 "10.07.2011,07:13:17,AAA,2100.56,SGD,\"\",\"\",B,\"\",P1,Current location,No project,", defaultOptions);
 
-        List<TransactionInfo> transactions = em.getTransactionsForAccount(defaultAccountId);
+        List<TransactionInfo> transactions = db.getTransactionsForAccount(defaultAccountId);
         assertEquals(2, transactions.size());
 
         TransactionInfo t = transactions.get(0);
@@ -209,7 +209,7 @@ public class CsvImportTest extends AbstractImportExportTest {
         Log.d("Financisto", "Created a temporary backup file: " + tmp.getAbsolutePath());
         options = new CsvImportOptions(options.currency, options.dateFormat.toPattern(),
                 options.selectedAccountId, options.filter, tmp.getAbsolutePath(), options.fieldSeparator, options.useHeaderFromFile);
-        csvImport = new CsvImport(db, em, options);
+        csvImport = new CsvImport(db, options);
         csvImport.doImport();
     }
 

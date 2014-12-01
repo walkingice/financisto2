@@ -55,10 +55,10 @@ public abstract class AbstractSplitActivity extends AbstractActivity {
         projectSelector.fetchProjects();
 
         if (split.fromAccountId > 0) {
-            fromAccount = em.getAccount(split.fromAccountId);
+            fromAccount = db.getAccount(split.fromAccountId);
         }
         if (split.originalCurrencyId > 0) {
-            originalCurrency = CurrencyCache.getCurrency(em, split.originalCurrencyId);
+            originalCurrency = CurrencyCache.getCurrency(db, split.originalCurrencyId);
         }
 
         createUI(layout);

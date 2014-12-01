@@ -52,7 +52,7 @@ public class QifImportTest extends AbstractDbTest {
         qifParserTest.test_should_parse_empty_account();
         doImport();
 
-        List<Account> accounts = em.getAllAccountsList();
+        List<Account> accounts = db.getAllAccountsList();
         assertEquals(1, accounts.size());
         assertEquals("My Cash Account", accounts.get(0).title);
         assertEquals(AccountType.CASH.name(), accounts.get(0).type);
@@ -62,7 +62,7 @@ public class QifImportTest extends AbstractDbTest {
         qifParserTest.test_should_parse_a_couple_of_empty_accounts();
         doImport();
 
-        List<Account> accounts = em.getAllAccountsList();
+        List<Account> accounts = db.getAllAccountsList();
         sortAccountsById(accounts);
 
         assertEquals(2, accounts.size());
@@ -118,13 +118,13 @@ public class QifImportTest extends AbstractDbTest {
         qifParserTest.test_should_parse_classes();
         doImport();
 
-        List<Project> projects = em.getAllProjectsList(false);
+        List<Project> projects = db.getAllProjectsList(false);
         assertEquals(3, projects.size());
 
-        List<Account> accounts = em.getAllAccountsList();
+        List<Account> accounts = db.getAllAccountsList();
         assertEquals(1, accounts.size());
 
-        List<TransactionInfo> transactions = em.getTransactionsForAccount(accounts.get(0).id);
+        List<TransactionInfo> transactions = db.getTransactionsForAccount(accounts.get(0).id);
         assertEquals(4, transactions.size());
 
         TransactionInfo t = transactions.get(0);
@@ -155,10 +155,10 @@ public class QifImportTest extends AbstractDbTest {
         qifParserTest.test_should_parse_account_with_a_couple_of_transactions();
         doImport();
 
-        List<Account> accounts = em.getAllAccountsList();
+        List<Account> accounts = db.getAllAccountsList();
         assertEquals(1, accounts.size());
 
-        List<TransactionInfo> transactions = em.getTransactionsForAccount(accounts.get(0).id);
+        List<TransactionInfo> transactions = db.getTransactionsForAccount(accounts.get(0).id);
         assertEquals(2, transactions.size());
 
         TransactionInfo t = transactions.get(0);
@@ -179,14 +179,14 @@ public class QifImportTest extends AbstractDbTest {
         qifParserTest.test_should_parse_multiple_accounts();
         doImport();
 
-        List<Account> accounts = em.getAllAccountsList();
+        List<Account> accounts = db.getAllAccountsList();
         assertEquals(2, accounts.size());
 
         Account a = accounts.get(0);
         assertEquals("My Bank Account", a.title);
         assertEquals(AccountType.BANK.name(), a.type);
 
-        List<TransactionInfo> transactions = em.getTransactionsForAccount(a.id);
+        List<TransactionInfo> transactions = db.getTransactionsForAccount(a.id);
         assertEquals(2, transactions.size());
 
         TransactionInfo t = transactions.get(0);
@@ -201,7 +201,7 @@ public class QifImportTest extends AbstractDbTest {
         assertEquals("My Cash Account", a.title);
         assertEquals(AccountType.CASH.name(), a.type);
 
-        transactions = em.getTransactionsForAccount(a.id);
+        transactions = db.getTransactionsForAccount(a.id);
         assertEquals(3, transactions.size());
 
         t = transactions.get(0);
@@ -221,14 +221,14 @@ public class QifImportTest extends AbstractDbTest {
         qifParserTest.test_should_parse_transfers();
         doImport();
 
-        List<Account> accounts = em.getAllAccountsList();
+        List<Account> accounts = db.getAllAccountsList();
         assertEquals(2, accounts.size());
 
         Account a = accounts.get(0);
         assertEquals("My Bank Account", a.title);
         assertEquals(AccountType.BANK.name(), a.type);
 
-        List<TransactionInfo> transactions = em.getTransactionsForAccount(a.id);
+        List<TransactionInfo> transactions = db.getTransactionsForAccount(a.id);
         assertEquals(1, transactions.size());
 
         TransactionInfo t = transactions.get(0);
@@ -244,7 +244,7 @@ public class QifImportTest extends AbstractDbTest {
         assertEquals("My Cash Account", a.title);
         assertEquals(AccountType.CASH.name(), a.type);
 
-        transactions = em.getTransactionsForAccount(a.id);
+        transactions = db.getTransactionsForAccount(a.id);
         assertEquals(0, transactions.size());
     }
 
@@ -279,14 +279,14 @@ public class QifImportTest extends AbstractDbTest {
             "^\n");
         doImport();
 
-        List<Account> accounts = em.getAllAccountsList();
+        List<Account> accounts = db.getAllAccountsList();
         assertEquals(2, accounts.size());
 
         Account a = accounts.get(0);
         assertEquals("My Bank Account", a.title);
         assertEquals(AccountType.BANK.name(), a.type);
 
-        List<TransactionInfo> transactions = em.getTransactionsForAccount(a.id);
+        List<TransactionInfo> transactions = db.getTransactionsForAccount(a.id);
         assertEquals(2, transactions.size());
 
         TransactionInfo t = transactions.get(0);
@@ -307,7 +307,7 @@ public class QifImportTest extends AbstractDbTest {
         assertEquals("My Cash Account", a.title);
         assertEquals(AccountType.CASH.name(), a.type);
 
-        transactions = em.getTransactionsForAccount(a.id);
+        transactions = db.getTransactionsForAccount(a.id);
         assertEquals(2, transactions.size());
 
         t = transactions.get(0);
@@ -329,14 +329,14 @@ public class QifImportTest extends AbstractDbTest {
         qifParserTest.test_should_parse_splits();
         doImport();
 
-        List<Account> accounts = em.getAllAccountsList();
+        List<Account> accounts = db.getAllAccountsList();
         assertEquals(1, accounts.size());
 
         Account a = accounts.get(0);
         assertEquals("My Cash Account", a.title);
         assertEquals(AccountType.CASH.name(), a.type);
 
-        List<TransactionInfo> transactions = em.getTransactionsForAccount(a.id);
+        List<TransactionInfo> transactions = db.getTransactionsForAccount(a.id);
         assertEquals(1, transactions.size());
 
         TransactionInfo t = transactions.get(0);
@@ -364,21 +364,21 @@ public class QifImportTest extends AbstractDbTest {
         qifParserTest.test_should_parse_transfer_splits();
         doImport();
 
-        List<Account> accounts = em.getAllAccountsList();
+        List<Account> accounts = db.getAllAccountsList();
         assertEquals(2, accounts.size());
 
         Account a = accounts.get(0);
         assertEquals("My Bank Account", a.title);
         assertEquals(AccountType.BANK.name(), a.type);
 
-        List<TransactionInfo> transactions = em.getTransactionsForAccount(a.id);
+        List<TransactionInfo> transactions = db.getTransactionsForAccount(a.id);
         assertEquals(0, transactions.size());
 
         a = accounts.get(1);
         assertEquals("My Cash Account", a.title);
         assertEquals(AccountType.CASH.name(), a.type);
 
-        transactions = em.getTransactionsForAccount(a.id);
+        transactions = db.getTransactionsForAccount(a.id);
         assertEquals(1, transactions.size());
 
         TransactionInfo t = transactions.get(0);
@@ -400,7 +400,7 @@ public class QifImportTest extends AbstractDbTest {
     }
 
     private List<TransactionInfo> getSplitsForTransaction(long transactionId) {
-        Query<TransactionInfo> q = em.createQuery(TransactionInfo.class);
+        Query<TransactionInfo> q = db.createQuery(TransactionInfo.class);
         q.where(Expressions.eq("parentId", transactionId));
         return q.list();
     }
@@ -420,7 +420,7 @@ public class QifImportTest extends AbstractDbTest {
 
     private void doImport(QifParser p) {
         QifImportOptions options = new QifImportOptions("", EU_FORMAT, Currency.EMPTY);
-        qifImport = new QifImport(getContext(), db, em, options);
+        qifImport = new QifImport(getContext(), db, options);
         qifImport.doImport(p);
     }
 

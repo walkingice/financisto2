@@ -34,7 +34,7 @@ import ru.orangesoftware.financisto2.adapter.EntityListAdapter;
 import ru.orangesoftware.financisto2.bus.DeleteEntity;
 import ru.orangesoftware.financisto2.bus.EditEntity;
 import ru.orangesoftware.financisto2.bus.GreenRobotBus;
-import ru.orangesoftware.financisto2.db.MyEntityManager;
+import ru.orangesoftware.financisto2.db.DatabaseAdapter;
 import ru.orangesoftware.financisto2.filter.Criteria;
 import ru.orangesoftware.financisto2.model.ActiveMyEntity;
 
@@ -46,7 +46,7 @@ public abstract class MyEntityListActivity<T extends ActiveMyEntity> extends Lis
     private static final int EDIT_ENTITY_REQUEST = 2;
 
     @Bean
-    protected MyEntityManager em;
+    protected DatabaseAdapter db;
 
     @Bean
     protected GreenRobotBus bus;
@@ -108,7 +108,7 @@ public abstract class MyEntityListActivity<T extends ActiveMyEntity> extends Lis
     @SuppressWarnings("unused")
     public void onEventMainThread(final DeleteEntity event) {
         final long id = event.id;
-        T e = em.load(clazz, id);
+        T e = db.load(clazz, id);
         new AlertDialog.Builder(this)
                 .setMessage(getString(R.string.delete_confirm, e.getTitle()))
                 .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
@@ -125,12 +125,12 @@ public abstract class MyEntityListActivity<T extends ActiveMyEntity> extends Lis
     }
 
     protected void deleteItem(long id) {
-        em.delete(clazz, id);
+        db.delete(clazz, id);
         reload();
     }
 
     protected void viewItem(long id) {
-        T e = em.load(clazz, id);
+        T e = db.load(clazz, id);
         Intent intent = new Intent(this, BlotterActivity.class);
         Criteria blotterFilter = createBlotterCriteria(e);
         blotterFilter.toIntent(e.title, intent);

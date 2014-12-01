@@ -37,6 +37,10 @@ public class QifUtilsTest extends AndroidTestCase {
     }
 
     public void test_should_parse_money() {
+        assertEquals(20, parseMoney(".2"));
+        assertEquals(30, parseMoney(",3"));
+        assertEquals(-40, parseMoney("-.4"));
+        assertEquals(-50, parseMoney("-,5"));
         assertEquals(100, parseMoney("1.0"));
         assertEquals(-100, parseMoney("-1."));
         assertEquals(101, parseMoney("1,01"));

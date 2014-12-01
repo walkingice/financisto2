@@ -13,7 +13,6 @@ package ru.orangesoftware.financisto2.export.csv;
 import android.content.Context;
 import android.database.Cursor;
 import ru.orangesoftware.financisto2.db.DatabaseAdapter;
-import ru.orangesoftware.financisto2.db.MyEntityManager;
 import ru.orangesoftware.financisto2.export.Export;
 import ru.orangesoftware.financisto2.model.*;
 import ru.orangesoftware.financisto2.utils.CurrencyCache;
@@ -42,7 +41,6 @@ public class CsvExport extends Export {
     }
 
 	private final DatabaseAdapter db;
-    private final MyEntityManager em;
     private final CsvExportOptions options;
 
     private Map<Long, Category> categoriesMap;
@@ -51,10 +49,9 @@ public class CsvExport extends Export {
     private Map<Long, Project> projectMap;
     private Map<Long, MyLocation> locationMap;
 
-    public CsvExport(Context context, DatabaseAdapter db, MyEntityManager em, CsvExportOptions options) {
+    public CsvExport(Context context, DatabaseAdapter db, CsvExportOptions options) {
         super(context, false);
 		this.db = db;
-        this.em = em;
 		this.options = options;
 	}
 	
@@ -85,11 +82,11 @@ public class CsvExport extends Export {
 	protected void writeBody(BufferedWriter bw) throws IOException {
 		Csv.Writer w = new Csv.Writer(bw).delimiter(options.fieldSeparator);
 		try {
-            accountsMap = em.getAllAccountsMap();
+            accountsMap = db.getAllAccountsMap();
             categoriesMap = db.getAllCategoriesMap();
-            payeeMap = em.getAllPayeeByIdMap();
-            projectMap = em.getAllProjectsByIdMap(true);
-            locationMap = em.getAllLocationsByIdMap(false);
+            payeeMap = db.getAllPayeeByIdMap();
+            projectMap = db.getAllProjectsByIdMap(true);
+            locationMap = db.getAllLocationsByIdMap(false);
             Cursor c = db.getBlotter(options.filter);
 			try {			
 				while (c.moveToNext()) {
@@ -119,7 +116,7 @@ public class CsvExport extends Export {
             writeLine(w, dt, fromAccount.title, t.fromAmount, fromAccount.currency.id, t.originalFromAmount, t.originalCurrencyId,
                     category, payee, location, project, t.note);
             if (category != null && category.isSplit() && options.exportSplits) {
-                List<Transaction> splits = em.getSplitsForTransaction(t.id);
+                List<Transaction> splits = db.getSplitsForTransaction(t.id);
                 for (Transaction split : splits) {
                     split.dateTime = 0;
                     writeLine(w, split);
@@ -142,11 +139,11 @@ public class CsvExport extends Export {
 		w.value(account);
         String amountFormatted = options.amountFormat.format(new BigDecimal(amount).divide(Utils.HUNDRED));
         w.value(amountFormatted);
-		Currency c = CurrencyCache.getCurrency(em, currencyId);
+		Currency c = CurrencyCache.getCurrency(db, currencyId);
 		w.value(c.name);
         if (originalCurrencyId > 0) {
             w.value(options.amountFormat.format(new BigDecimal(originalAmount).divide(Utils.HUNDRED)));
-            Currency originalCurrency = CurrencyCache.getCurrency(em, originalCurrencyId);
+            Currency originalCurrency = CurrencyCache.getCurrency(db, originalCurrencyId);
             w.value(originalCurrency.name);
         } else {
             w.value("");

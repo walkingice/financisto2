@@ -9,7 +9,6 @@ import java.util.Calendar;
 import java.util.List;
 
 import ru.orangesoftware.financisto2.db.DatabaseAdapter;
-import ru.orangesoftware.financisto2.db.MyEntityManager;
 import ru.orangesoftware.financisto2.model.RestoredTransaction;
 import ru.orangesoftware.financisto2.model.TransactionInfo;
 import ru.orangesoftware.financisto2.service.RecurrenceScheduler;
@@ -65,7 +64,6 @@ public class RecurrenceSchedulerTest extends AndroidTestCase {
         ArrayList<TransactionInfo> scheduled = new ArrayList<TransactionInfo>(schedules);
         RecurrenceScheduler scheduler = new RecurrenceScheduler();
         scheduler.db = new FakeDatabaseAdapter(getContext(), scheduled);
-        scheduler.em = new FakeEntityManager(getContext(), scheduled);
         // when
 		List<RestoredTransaction> missed = scheduler.getMissedSchedules(now);
 		// then 
@@ -114,11 +112,11 @@ public class RecurrenceSchedulerTest extends AndroidTestCase {
 		return t;
 	}
 
-	static class FakeEntityManager extends MyEntityManager {
+	static class FakeDatabaseAdapter extends DatabaseAdapter {
 
 		private final ArrayList<TransactionInfo> scheduledTransactions;
 		
-		public FakeEntityManager(Context context, ArrayList<TransactionInfo> scheduledTransactions) {
+		public FakeDatabaseAdapter(Context context, ArrayList<TransactionInfo> scheduledTransactions) {
 			super(context);
 			this.scheduledTransactions = scheduledTransactions;
 		}
@@ -129,13 +127,5 @@ public class RecurrenceSchedulerTest extends AndroidTestCase {
 		}
 		
 	}
-
-    static class FakeDatabaseAdapter extends DatabaseAdapter {
-
-        FakeDatabaseAdapter(Context context, ArrayList<TransactionInfo> scheduled) {
-            super(context);
-        }
-
-    }
 
 }

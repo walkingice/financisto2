@@ -28,7 +28,7 @@ import ru.orangesoftware.financisto2.R;
 import ru.orangesoftware.financisto2.adapter.AttributeListAdapter;
 import ru.orangesoftware.financisto2.bus.DeleteEntity;
 import ru.orangesoftware.financisto2.bus.GreenRobotBus;
-import ru.orangesoftware.financisto2.db.MyEntityManager;
+import ru.orangesoftware.financisto2.db.DatabaseAdapter;
 import ru.orangesoftware.financisto2.model.Attribute;
 
 @EActivity(R.layout.attributes_list)
@@ -36,7 +36,7 @@ import ru.orangesoftware.financisto2.model.Attribute;
 public class AttributeListActivity extends ListActivity {
 
     @Bean
-    protected MyEntityManager em;
+    protected DatabaseAdapter db;
 
     @Bean
     protected GreenRobotBus bus;
@@ -59,7 +59,7 @@ public class AttributeListActivity extends ListActivity {
     }
 
     private void reload() {
-        List<Attribute> attributes = em.getAllAttributes();
+        List<Attribute> attributes = db.getAllAttributes();
         AttributeListAdapter adapter = new AttributeListAdapter(this, bus, attributes);
         setListAdapter(adapter);
     }
@@ -85,7 +85,7 @@ public class AttributeListActivity extends ListActivity {
 			.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener(){
 				@Override
 				public void onClick(DialogInterface arg0, int arg1) {
-					em.deleteAttribute(event.id);
+					db.deleteAttribute(event.id);
 					reload();
 				}				
 			})

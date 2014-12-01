@@ -5,7 +5,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import ru.orangesoftware.financisto2.R;
-import ru.orangesoftware.financisto2.db.MyEntityManager;
+import ru.orangesoftware.financisto2.db.DatabaseAdapter;
 import ru.orangesoftware.financisto2.db.DatabaseHelper.TransactionColumns;
 import ru.orangesoftware.financisto2.graph.Report2DChart;
 import ru.orangesoftware.financisto2.model.Currency;
@@ -26,8 +26,8 @@ public class LocationByPeriodReport extends Report2DChart {
 	 * @param periodLength
 	 * @param currency
 	 */
-	public LocationByPeriodReport(Context context, MyEntityManager em, int periodLength, Currency currency) {
-		super(context, em, periodLength, currency);
+	public LocationByPeriodReport(Context context, DatabaseAdapter db, int periodLength, Currency currency) {
+		super(context, db, periodLength, currency);
 	}
 	
 	/**
@@ -38,8 +38,8 @@ public class LocationByPeriodReport extends Report2DChart {
 	 * @param periodLength
 	 * @param currency
 	 */
-	public LocationByPeriodReport(Context context, MyEntityManager em, Calendar startPeriod, int periodLength, Currency currency) {
-		super(context, em, startPeriod, periodLength, currency);
+	public LocationByPeriodReport(Context context, DatabaseAdapter db, Calendar startPeriod, int periodLength, Currency currency) {
+		super(context, db, startPeriod, periodLength, currency);
 	}
 
 	/* (non-Javadoc)
@@ -57,7 +57,7 @@ public class LocationByPeriodReport extends Report2DChart {
 	public String getFilterName() {
 		if (filterIds.size()>0) {
 			long locationId = filterIds.get(currentFilterOrder);
-			MyLocation location = em.get(MyLocation.class, locationId);
+			MyLocation location = db.get(MyLocation.class, locationId);
 			if (location != null) {
 				return location.name;
 			} else {
@@ -77,7 +77,7 @@ public class LocationByPeriodReport extends Report2DChart {
 		boolean includeNoLocation = MyPreferences.includeNoFilterInReport(context);
 		filterIds = new ArrayList<Long>();
 		currentFilterOrder = 0;
-		List<MyLocation> locations = em.getAllLocationsList(includeNoLocation);
+		List<MyLocation> locations = db.getAllLocationsList(includeNoLocation);
 		if (locations.size()>0) {
 			MyLocation l;
 			for (int i=0; i<locations.size(); i++) {

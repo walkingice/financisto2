@@ -22,8 +22,6 @@ import java.util.List;
 import ru.orangesoftware.financisto2.R;
 import ru.orangesoftware.financisto2.db.DatabaseAdapter;
 import ru.orangesoftware.financisto2.db.DatabaseAdapter_;
-import ru.orangesoftware.financisto2.db.MyEntityManager;
-import ru.orangesoftware.financisto2.db.MyEntityManager_;
 import ru.orangesoftware.financisto2.model.MultiChoiceItem;
 
 public class QifImportActivity extends AbstractImportActivity implements ActivityLayoutListener {
@@ -40,11 +38,10 @@ public class QifImportActivity extends AbstractImportActivity implements Activit
 
     @Override
     protected void internalOnCreate() {
-        MyEntityManager em = MyEntityManager_.getInstance_(this);
         db = DatabaseAdapter_.getInstance_(this);
 
         Spinner currencySpinner = (Spinner)findViewById(R.id.spinnerCurrency);
-        Cursor currencyCursor = em.getAllCurrencies("name");
+        Cursor currencyCursor = db.getAllCurrencies("name");
         startManagingCursor(currencyCursor);
         SimpleCursorAdapter currencyAdapter = new SimpleCursorAdapter(this, android.R.layout.simple_spinner_item, currencyCursor,
                 new String[]{"e_name"}, new int[]{android.R.id.text1});

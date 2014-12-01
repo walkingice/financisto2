@@ -36,7 +36,7 @@ public class BlotterTest extends AbstractDbTest {
     @Override
     public void setUp() throws Exception {
         super.setUp();
-        a1 = AccountBuilder.createDefault(em);
+        a1 = AccountBuilder.createDefault(db);
     }
 
     public void test_should_sort_transactions_in_the_blotter_with_the_same_datetime_according_to_filter() {
@@ -56,7 +56,7 @@ public class BlotterTest extends AbstractDbTest {
         //given
         Transaction t1 = TransactionBuilder.withDb(db).account(a1).amount(1000).payee("P1").dateTime(dt).create();
         Transaction t2 = TransactionBuilder.withDb(db).account(a1).amount(2000).dateTime(dt).create();
-        Payee p = em.getPayee("P1");
+        Payee p = db.getPayee("P1");
         //then
         assertBlotter(getBlotter(WhereFilter.empty().eq(BlotterFilter.PAYEE_ID, String.valueOf(p.id))), t1);
         assertBlotter(getBlotter(WhereFilter.empty().isNull(BlotterFilter.PAYEE_ID)), t2);

@@ -28,7 +28,7 @@ public class ProjectListActivity extends MyEntityListActivity<Project> {
 
     @Override
     protected ArrayList<Project> loadEntities() {
-        return em.getAllProjectsList(false);
+        return db.getAllProjectsList(false);
     }
 
     @Override
@@ -43,7 +43,7 @@ public class ProjectListActivity extends MyEntityListActivity<Project> {
 
     @Override
     protected void deleteItem(long id) {
-        em.deleteProject(id);
+        db.deleteProject(id);
         reload();
     }
 

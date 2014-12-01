@@ -109,9 +109,9 @@ public class BlotterActivity extends AbstractListActivity {
     protected TotalCalculationTask createTotalCalculationTask() {
         WhereFilter filter = WhereFilter.copyOf(blotterFilter);
         if (filter.getAccountId() > 0) {
-            return new AccountTotalCalculationTask(this, db, em, filter, totalText);
+            return new AccountTotalCalculationTask(this, db, filter, totalText);
         } else {
-            return new BlotterTotalCalculationTask(this, db, em, filter, totalText);
+            return new BlotterTotalCalculationTask(this, db, filter, totalText);
         }
     }
 
@@ -443,8 +443,8 @@ public class BlotterActivity extends AbstractListActivity {
 
 	protected void applyFilter() {
 		long accountId = blotterFilter.getAccountId();
-		if (accountId != -1) {
-			Account a = em.getAccount(accountId);
+		if (accountId !=1) {
+			Account a = db.getAccount(accountId);
 			bAdd.setVisibility(a != null && a.isActive ? View.VISIBLE : View.GONE);
             if (showAllBlotterButtons) {
                 bTransfer.setVisibility(a != null && a.isActive ? View.VISIBLE : View.GONE);
@@ -480,7 +480,7 @@ public class BlotterActivity extends AbstractListActivity {
 	}
 
     private void showTransactionInfo(long id) {
-        TransactionInfoDialog transactionInfoView = new TransactionInfoDialog(this, db, em, inflater);
+        TransactionInfoDialog transactionInfoView = new TransactionInfoDialog(this, db, inflater);
         transactionInfoView.show(this, id);
     }
 
@@ -493,7 +493,7 @@ public class BlotterActivity extends AbstractListActivity {
 		if (accountId != -1) {
 	
 			// get account type
-			Account account = em.getAccount(accountId);
+			Account account = db.getAccount(accountId);
 			AccountType type = AccountType.valueOf(account.type);
 			
 			if (type.isCreditCard) {
@@ -530,7 +530,7 @@ public class BlotterActivity extends AbstractListActivity {
 
 	        case R.id.opt_menu_bill:
 	    		if (accountId != -1) {
-	    			Account account = em.getAccount(accountId);
+	    			Account account = db.getAccount(accountId);
 	    		
 		        	// call credit card bill activity sending account id
 		        	if (account.paymentDay>0 && account.closingDay>0) {

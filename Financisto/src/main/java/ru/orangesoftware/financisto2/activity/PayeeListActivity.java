@@ -28,7 +28,7 @@ public class PayeeListActivity extends MyEntityListActivity<Payee> {
 
     @Override
     protected List<Payee> loadEntities() {
-        return em.getAllPayeeList();
+        return db.getAllPayeeList();
     }
 
     @Override

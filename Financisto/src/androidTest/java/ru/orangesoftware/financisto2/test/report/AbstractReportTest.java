@@ -36,14 +36,14 @@ public abstract class AbstractReportTest extends AbstractDbTest {
     @Override
     public void setUp() throws Exception {
         super.setUp();
-        c1 = CurrencyBuilder.withDb(em).name("USD").title("Dollar").symbol("$").makeDefault().create();
-        c2 = CurrencyBuilder.withDb(em).name("SGD").title("Singapore Dollar").symbol("S$").create();
-        a1 = AccountBuilder.createDefault(em, c1);
-        a2 = AccountBuilder.createDefault(em, c1);
-        a3 = AccountBuilder.createDefault(em, c2);
+        c1 = CurrencyBuilder.withDb(db).name("USD").title("Dollar").symbol("$").makeDefault().create();
+        c2 = CurrencyBuilder.withDb(db).name("SGD").title("Singapore Dollar").symbol("S$").create();
+        a1 = AccountBuilder.createDefault(db, c1);
+        a2 = AccountBuilder.createDefault(db, c1);
+        a3 = AccountBuilder.createDefault(db, c2);
         categories = CategoryBuilder.createDefaultHierarchy(db);
         report = createReport();
-        CurrencyCache.initialize(em);
+        CurrencyCache.initialize(db);
     }
 
     protected abstract Report createReport();
@@ -54,7 +54,7 @@ public abstract class AbstractReportTest extends AbstractDbTest {
 
     List<GraphUnit> assertReportReturnsData(IncomeExpense incomeExpense) {
         report.setIncomeExpense(incomeExpense);
-        ReportData data = report.getReport(db, em, filter);
+        ReportData data = report.getReport(db, filter);
         assertNotNull(data);
         List<GraphUnit> units = data.units;
         assertNotNull(units);

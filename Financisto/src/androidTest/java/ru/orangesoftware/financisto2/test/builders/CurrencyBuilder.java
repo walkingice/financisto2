@@ -1,7 +1,6 @@
 package ru.orangesoftware.financisto2.test.builders;
 
 import ru.orangesoftware.financisto2.db.DatabaseAdapter;
-import ru.orangesoftware.financisto2.db.MyEntityManager;
 import ru.orangesoftware.financisto2.model.Currency;
 
 /**
@@ -11,19 +10,19 @@ import ru.orangesoftware.financisto2.model.Currency;
  */
 public class CurrencyBuilder {
 
-    private final MyEntityManager em;
+    private final DatabaseAdapter db;
     private final Currency c = new Currency();
 
-    public static Currency createDefault(MyEntityManager em) {
-        return withDb(em).title("Singapore Dollar").name("SGD").symbol("S$").create();
+    public static Currency createDefault(DatabaseAdapter db) {
+        return withDb(db).title("Singapore Dollar").name("SGD").symbol("S$").create();
     }
 
-    public static CurrencyBuilder withDb(MyEntityManager em) {
-        return new CurrencyBuilder(em);
+    public static CurrencyBuilder withDb(DatabaseAdapter db) {
+        return new CurrencyBuilder(db);
     }
 
-    private CurrencyBuilder(MyEntityManager em) {
-        this.em = em;
+    private CurrencyBuilder(DatabaseAdapter db) {
+        this.db = db;
     }
 
     public CurrencyBuilder title(String title) {
@@ -53,7 +52,7 @@ public class CurrencyBuilder {
     }
 
     public Currency create() {
-        em.saveOrUpdate(c);
+        db.saveOrUpdate(c);
         return c;
     }
 

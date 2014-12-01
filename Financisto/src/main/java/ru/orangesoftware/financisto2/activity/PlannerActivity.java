@@ -162,7 +162,7 @@ public class PlannerActivity extends AbstractListActivity {
 
         @Override
         protected TransactionList doInBackground(Void... voids) {
-            FuturePlanner planner = new FuturePlanner(db, em, filter, new Date());
+            FuturePlanner planner = new FuturePlanner(db, filter, new Date());
             return planner.getPlannedTransactionsWithTotals();
         }
 

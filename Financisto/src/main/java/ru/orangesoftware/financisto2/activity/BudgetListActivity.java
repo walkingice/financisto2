@@ -89,7 +89,7 @@ public class BudgetListActivity extends AbstractListActivity {
 			filter.put(new DateTimeCriteria(PeriodType.THIS_MONTH));
 		}
 
-		budgets = em.getAllBudgets(filter);
+		budgets = db.getAllBudgets(filter);
 		handler = new Handler();
 		
 		applyFilter();	
@@ -146,7 +146,7 @@ public class BudgetListActivity extends AbstractListActivity {
 	
     @Override
     public void recreateCursor() {
-        budgets = em.getAllBudgets(filter);
+        budgets = db.getAllBudgets(filter);
         updateAdapter();
         calculateTotals();
     }
@@ -175,21 +175,21 @@ public class BudgetListActivity extends AbstractListActivity {
 
 	@Override
 	protected void deleteItem(View v, int position, final long id) {
-		final Budget b = em.load(Budget.class, id);
+		final Budget b = db.load(Budget.class, id);
 		if (b.parentBudgetId > 0) {
 			new AlertDialog.Builder(this)
 			.setMessage(R.string.delete_budget_recurring_select)
 			.setPositiveButton(R.string.delete_budget_one_entry, new OnClickListener(){
 				@Override
 				public void onClick(DialogInterface arg0, int arg1) {
-					em.deleteBudgetOneEntry(id);
+					db.deleteBudgetOneEntry(id);
 					recreateCursor();
 				}
 			})
 			.setNeutralButton(R.string.delete_budget_all_entries, new OnClickListener(){
 				@Override
 				public void onClick(DialogInterface arg0, int arg1) {
-					em.deleteBudget(b.parentBudgetId);
+					db.deleteBudget(b.parentBudgetId);
 					recreateCursor();
 				}
 			})			
@@ -202,7 +202,7 @@ public class BudgetListActivity extends AbstractListActivity {
 			.setPositiveButton(R.string.yes, new OnClickListener(){
 				@Override
 				public void onClick(DialogInterface arg0, int arg1) {
-					em.deleteBudget(id);
+					db.deleteBudget(id);
 					recreateCursor();
 				}
 			})
@@ -213,7 +213,7 @@ public class BudgetListActivity extends AbstractListActivity {
 
 	@Override
 	public void editItem(View v, int position, long id) {
-		Budget b = em.load(Budget.class, id);
+		Budget b = db.load(Budget.class, id);
 		Recur recur = b.getRecur();
 		if (recur.interval != RecurInterval.NO_RECUR) {
 			Toast t = Toast.makeText(this, R.string.edit_recurring_budget, Toast.LENGTH_LONG);
@@ -231,7 +231,7 @@ public class BudgetListActivity extends AbstractListActivity {
 
 	@Override
 	protected void viewItem(View v, int position, long id) {
-        Budget b = em.load(Budget.class, id);
+        Budget b = db.load(Budget.class, id);
 		Intent intent = new Intent(this, BudgetBlotterActivity.class);
 		Criteria.eq(BlotterFilter.BUDGET_ID, String.valueOf(id))
 			.toIntent(b.title, intent);
@@ -251,7 +251,7 @@ public class BudgetListActivity extends AbstractListActivity {
 		@Override
 		protected Total doInBackground(Void... params) {
 			try {
-                BudgetsTotalCalculator c = new BudgetsTotalCalculator(db, em, budgets);
+                BudgetsTotalCalculator c = new BudgetsTotalCalculator(db, budgets);
                 c.updateBudgets(handler);
                 return c.calculateTotalInHomeCurrency();
 			} catch (Exception ex) {

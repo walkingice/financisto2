@@ -81,7 +81,7 @@ public class TransferActivity extends AbstractTransactionActivity {
     @Override
     protected void editTransaction(Transaction transaction) {
         if (transaction.fromAccountId > 0) {
-            Account fromAccount = em.getAccount(transaction.fromAccountId);
+            Account fromAccount = db.getAccount(transaction.fromAccountId);
             selectAccount(fromAccount, accountFromText, false);
             rateView.selectCurrencyFrom(fromAccount.currency);
             rateView.setFromAmount(transaction.fromAmount);
@@ -89,7 +89,7 @@ public class TransferActivity extends AbstractTransactionActivity {
         }
         commonEditTransaction(transaction);
         if (transaction.toAccountId > 0) {
-            Account toAccount = em.getAccount(transaction.toAccountId);
+            Account toAccount = db.getAccount(transaction.toAccountId);
             selectAccount(toAccount, accountToText, false);
             rateView.selectCurrencyTo(toAccount.currency);
             rateView.setToAmount(transaction.toAmount);
@@ -157,7 +157,7 @@ public class TransferActivity extends AbstractTransactionActivity {
 	}
 	
 	private void selectToAccount(long selectedId) {
-        Account account = em.getAccount(selectedId);
+        Account account = db.getAccount(selectedId);
         if (account != null) {
             selectAccount(account, accountToText, false);
             selectedAccountToId = selectedId;
@@ -167,7 +167,7 @@ public class TransferActivity extends AbstractTransactionActivity {
 
 	@Override
 	protected Account selectAccount(long accountId, boolean selectLast) {
-        Account account = em.getAccount(accountId);
+        Account account = db.getAccount(accountId);
         if (account != null) {
             selectAccount(account, accountFromText, selectLast);
             selectedAccountFromId = accountId;

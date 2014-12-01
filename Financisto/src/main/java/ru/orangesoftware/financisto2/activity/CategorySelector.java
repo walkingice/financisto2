@@ -25,8 +25,6 @@ import ru.orangesoftware.financisto2.R;
 import ru.orangesoftware.financisto2.db.DatabaseAdapter;
 import ru.orangesoftware.financisto2.db.DatabaseAdapter_;
 import ru.orangesoftware.financisto2.db.DatabaseHelper;
-import ru.orangesoftware.financisto2.db.MyEntityManager;
-import ru.orangesoftware.financisto2.db.MyEntityManager_;
 import ru.orangesoftware.financisto2.model.Attribute;
 import ru.orangesoftware.financisto2.model.Category;
 import ru.orangesoftware.financisto2.model.Transaction;
@@ -39,7 +37,6 @@ public class CategorySelector {
 
     private final Activity activity;
     private final DatabaseAdapter db;
-    private final MyEntityManager em;
     private final ActivityLayout x;
 
     private TextView categoryText;
@@ -54,7 +51,6 @@ public class CategorySelector {
     public CategorySelector(Activity activity, ActivityLayout x) {
         this.activity = activity;
         this.db = DatabaseAdapter_.getInstance_(activity);
-        this.em = MyEntityManager_.getInstance_(activity);
         this.x = x;
     }
 
@@ -124,7 +120,7 @@ public class CategorySelector {
 
     public void selectCategory(long categoryId, boolean selectLast) {
         if (selectedCategoryId != categoryId) {
-            Category category = em.getCategory(categoryId);
+            Category category = db.getCategory(categoryId);
             if (category != null) {
                 categoryText.setText(Category.getTitle(category.title, category.level));
                 selectedCategoryId = categoryId;

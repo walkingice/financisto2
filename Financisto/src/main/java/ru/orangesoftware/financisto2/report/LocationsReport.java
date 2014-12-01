@@ -14,7 +14,6 @@ import static ru.orangesoftware.financisto2.db.DatabaseHelper.V_REPORT_LOCATIONS
 
 import ru.orangesoftware.financisto2.R;
 import ru.orangesoftware.financisto2.blotter.BlotterFilter;
-import ru.orangesoftware.financisto2.db.MyEntityManager;
 import ru.orangesoftware.financisto2.filter.WhereFilter;
 import ru.orangesoftware.financisto2.filter.Criteria;
 import ru.orangesoftware.financisto2.db.DatabaseAdapter;
@@ -28,9 +27,9 @@ public class LocationsReport extends Report {
 	}
 
 	@Override
-	public ReportData getReport(DatabaseAdapter db, MyEntityManager em, WhereFilter filter) {
+	public ReportData getReport(DatabaseAdapter db, WhereFilter filter) {
         cleanupFilter(filter);
-		return queryReport(db, em, V_REPORT_LOCATIONS, filter);
+		return queryReport(db, V_REPORT_LOCATIONS, filter);
 	}
 
 	@Override

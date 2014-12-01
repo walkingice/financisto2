@@ -40,7 +40,6 @@ import java.util.List;
 
 import ru.orangesoftware.financisto2.R;
 import ru.orangesoftware.financisto2.db.DatabaseAdapter;
-import ru.orangesoftware.financisto2.db.MyEntityManager;
 import ru.orangesoftware.financisto2.model.Currency;
 import ru.orangesoftware.financisto2.rates.ExchangeRate;
 import ru.orangesoftware.financisto2.rates.ExchangeRateProvider;
@@ -65,8 +64,6 @@ public class ExchangeRatesListActivity extends ListActivity {
     private static final String NEW_LINE = String.format("%n");
 
     @Bean
-    protected MyEntityManager em;
-    @Bean
     protected DatabaseAdapter db;
 
     @SystemService
@@ -84,7 +81,7 @@ public class ExchangeRatesListActivity extends ListActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 
-        currencies = em.getAllCurrenciesList("name");
+        currencies = db.getAllCurrenciesList("name");
         currencyPairs = collectPairs();
 
         actionBar.setListNavigationCallbacks(createNavigationAdapter(), new ActionBar.OnNavigationListener() {
@@ -237,8 +234,8 @@ public class ExchangeRatesListActivity extends ListActivity {
             StringBuilder sb = new StringBuilder();
             for (ExchangeRate rate : result) {
                 if (sb.length() > 0) sb.append(NEW_LINE);
-                Currency fromCurrency = CurrencyCache.getCurrency(em, rate.fromCurrencyId);
-                Currency toCurrency = CurrencyCache.getCurrency(em, rate.toCurrencyId);
+                Currency fromCurrency = CurrencyCache.getCurrency(db, rate.fromCurrencyId);
+                Currency toCurrency = CurrencyCache.getCurrency(db, rate.toCurrencyId);
                 sb.append(fromCurrency.name).append("\u2192").append(toCurrency.name);
                 if (rate.isOk()) {
                     sb.append(" = ").append(nf.format(rate.rate));

@@ -11,7 +11,6 @@ import java.util.Set;
 import ru.orangesoftware.financisto2.db.DatabaseAdapter;
 import ru.orangesoftware.financisto2.db.DatabaseHelper;
 import ru.orangesoftware.financisto2.db.DatabaseUtils;
-import ru.orangesoftware.financisto2.db.MyEntityManager;
 import ru.orangesoftware.financisto2.model.Account;
 import ru.orangesoftware.financisto2.model.Category;
 import ru.orangesoftware.financisto2.model.Transaction;
@@ -26,16 +25,13 @@ public abstract class AbstractDbTest extends AndroidTestCase {
 
     private DatabaseHelper dbHelper;
     protected DatabaseAdapter db;
-    protected MyEntityManager em;
 
     @Override
     public void setUp() throws Exception {
         Context context = new RenamingDelegatingContext(getContext(), "test-");
         dbHelper = new DatabaseHelper(context);
         db = new DatabaseAdapter(context);
-        em = new MyEntityManager(context);
-        em.dbHelper = db.dbHelper = dbHelper;
-        db.em = em;
+        db.dbHelper = db.dbHelper = dbHelper;
     }
 
     @Override
@@ -44,12 +40,12 @@ public abstract class AbstractDbTest extends AndroidTestCase {
     }
 
     public void assertAccountTotal(Account account, long total) {
-        Account a = em.getAccount(account.id);
+        Account a = db.getAccount(account.id);
         assertEquals("Account "+account.id+" total", total, a.totalAmount);
     }
 
     public void assertLastTransactionDate(Account account, DateTime dateTime) {
-        Account a = em.getAccount(account.id);
+        Account a = db.getAccount(account.id);
         assertEquals("Account "+account.id+" last transaction date", dateTime.asLong(), a.lastTransactionDate);
     }
 

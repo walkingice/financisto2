@@ -14,7 +14,6 @@ import android.content.Context;
 import ru.orangesoftware.financisto2.activity.BlotterActivity;
 import ru.orangesoftware.financisto2.activity.SplitsBlotterActivity;
 import ru.orangesoftware.financisto2.blotter.BlotterFilter;
-import ru.orangesoftware.financisto2.db.MyEntityManager;
 import ru.orangesoftware.financisto2.filter.WhereFilter;
 import ru.orangesoftware.financisto2.filter.Criteria;
 import ru.orangesoftware.financisto2.db.DatabaseAdapter;
@@ -30,9 +29,9 @@ public class CategoryReportAll extends Report {
 	}
 
 	@Override
-	public ReportData getReport(DatabaseAdapter db, MyEntityManager em, WhereFilter filter) {
+	public ReportData getReport(DatabaseAdapter db, WhereFilter filter) {
         cleanupFilter(filter);
-		return queryReport(db, em, V_REPORT_CATEGORY, filter);
+		return queryReport(db, V_REPORT_CATEGORY, filter);
 	}
 	
 	@Override

@@ -14,7 +14,7 @@ import android.content.DialogInterface;
 import android.util.Log;
 import android.widget.Toast;
 import ru.orangesoftware.financisto2.R;
-import ru.orangesoftware.financisto2.db.MyEntityManager;
+import ru.orangesoftware.financisto2.db.DatabaseAdapter;
 import ru.orangesoftware.financisto2.export.csv.Csv;
 import ru.orangesoftware.financisto2.model.Currency;
 import ru.orangesoftware.financisto2.utils.CurrencyCache;
@@ -37,15 +37,15 @@ public class CurrencySelector {
     }
 
     private final Context context;
-    private final MyEntityManager em;
+    private final DatabaseAdapter db;
     private final List<List<String>> currencies;
     private final OnCurrencyCreatedListener listener;
 
     private int selectedCurrency = 0;
 
-    public CurrencySelector(Context context, MyEntityManager em, OnCurrencyCreatedListener listener) {
+    public CurrencySelector(Context context, DatabaseAdapter db, OnCurrencyCreatedListener listener) {
         this.context = context;
-        this.em = em;
+        this.db = db;
         this.listener = listener;
         this.currencies = readCurrenciesFromAsset();
     }
@@ -88,13 +88,13 @@ public class CurrencySelector {
         c.decimalSeparator = decodeSeparator(list.get(4));
         c.groupSeparator = decodeSeparator(list.get(5));
         c.isDefault = isTheFirstCurrencyAdded();
-        em.saveOrUpdate(c);
-        CurrencyCache.initialize(em);
+        db.saveOrUpdate(c);
+        CurrencyCache.initialize(db);
         listener.onCreated(c.id);
     }
 
     private boolean isTheFirstCurrencyAdded() {
-        return em.getAllCurrenciesList().isEmpty();
+        return db.getAllCurrenciesList().isEmpty();
     }
 
     private String decodeSeparator(String s) {

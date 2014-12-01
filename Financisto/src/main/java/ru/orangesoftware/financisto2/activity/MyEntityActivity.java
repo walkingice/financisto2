@@ -24,7 +24,7 @@ import org.androidannotations.annotations.ViewById;
 
 import ru.orangesoftware.financisto2.R;
 import ru.orangesoftware.financisto2.db.DatabaseHelper;
-import ru.orangesoftware.financisto2.db.MyEntityManager;
+import ru.orangesoftware.financisto2.db.DatabaseAdapter;
 import ru.orangesoftware.financisto2.model.ActiveMyEntity;
 import ru.orangesoftware.financisto2.utils.PinProtection;
 
@@ -32,7 +32,7 @@ import ru.orangesoftware.financisto2.utils.PinProtection;
 public abstract class MyEntityActivity<T extends ActiveMyEntity> extends Activity {
 	
     @Bean
-	protected MyEntityManager em;
+	protected DatabaseAdapter db;
 
     @Extra
     protected long id = -1;
@@ -50,7 +50,7 @@ public abstract class MyEntityActivity<T extends ActiveMyEntity> extends Activit
 	protected void afterViews() {
         Class<T> clazz = getEntityClass();
         if (id != -1) {
-            entity = em.load(clazz, id);
+            entity = db.load(clazz, id);
             editEntity();
         } else {
             try {
@@ -64,7 +64,7 @@ public abstract class MyEntityActivity<T extends ActiveMyEntity> extends Activit
     @Click(R.id.bOK)
     protected void onOK() {
         updateFromUI();
-        long id = em.saveOrUpdate(entity);
+        long id = db.saveOrUpdate(entity);
         Intent intent = new Intent();
         intent.putExtra(DatabaseHelper.EntityColumns.ID, id);
         setResult(RESULT_OK, intent);

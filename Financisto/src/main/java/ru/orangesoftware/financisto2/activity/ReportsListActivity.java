@@ -13,7 +13,7 @@ package ru.orangesoftware.financisto2.activity;
 
 import ru.orangesoftware.financisto2.R;
 import ru.orangesoftware.financisto2.adapter.ReportListAdapter;
-import ru.orangesoftware.financisto2.db.MyEntityManager;
+import ru.orangesoftware.financisto2.db.DatabaseAdapter;
 import ru.orangesoftware.financisto2.graph.Report2DChart;
 import ru.orangesoftware.financisto2.model.Currency;
 import ru.orangesoftware.financisto2.report.Report;
@@ -76,10 +76,10 @@ public class ReportsListActivity extends ListActivity {
 		}
 	}
 
-	public static Report createReport(Context context, MyEntityManager em, Bundle extras) {
+	public static Report createReport(Context context, DatabaseAdapter db, Bundle extras) {
 		String reportTypeName = extras.getString(EXTRA_REPORT_TYPE);
 		ReportType reportType = ReportType.valueOf(reportTypeName);
-        Currency c = em.getHomeCurrency();
+        Currency c = db.getHomeCurrency();
 		return reportType.createReport(context, c);
 	}
 

@@ -26,7 +26,6 @@ import java.util.Date;
 import java.util.List;
 
 import ru.orangesoftware.financisto2.db.DatabaseAdapter;
-import ru.orangesoftware.financisto2.db.MyEntityManager;
 import ru.orangesoftware.financisto2.model.RestoredTransaction;
 import ru.orangesoftware.financisto2.model.SystemAttribute;
 import ru.orangesoftware.financisto2.model.TransactionAttributeInfo;
@@ -47,9 +46,6 @@ public class RecurrenceScheduler {
     @Bean
     public DatabaseAdapter db;
 
-    @Bean
-    public MyEntityManager em;
-
     public int scheduleAll(Context context) {
         long now = System.currentTimeMillis();
         int restoredTransactionsCount = 0;
@@ -64,7 +60,7 @@ public class RecurrenceScheduler {
 
     public TransactionInfo scheduleOne(Context context, long scheduledTransactionId) {
         Log.i(TAG, "Alarm for "+scheduledTransactionId+" received..");
-        TransactionInfo transaction = em.getTransactionInfo(scheduledTransactionId);
+        TransactionInfo transaction = db.getTransactionInfo(scheduledTransactionId);
         if (transaction != null) {
             long transactionId = duplicateTransactionFromTemplate(transaction);
             boolean hasBeenRescheduled = rescheduleTransaction(context, transaction);
@@ -79,7 +75,7 @@ public class RecurrenceScheduler {
     }
 
     private void deleteTransactionIfNeeded(TransactionInfo transaction) {
-        TransactionAttributeInfo a = em.getSystemAttributeForTransaction(SystemAttribute.DELETE_AFTER_EXPIRED, transaction.id);
+        TransactionAttributeInfo a = db.getSystemAttributeForTransaction(SystemAttribute.DELETE_AFTER_EXPIRED, transaction.id);
         if (a != null && Boolean.valueOf(a.value)) {
             db.deleteTransaction(transaction.id);
         }
@@ -118,7 +114,7 @@ public class RecurrenceScheduler {
 		try {
 			Date endDate = new Date(now);
 			List<RestoredTransaction> restored = new ArrayList<RestoredTransaction>();
-			ArrayList<TransactionInfo> list = em.getAllScheduledTransactions();
+			ArrayList<TransactionInfo> list = db.getAllScheduledTransactions();
 			for (TransactionInfo t : list) {
 				if (t.recurrence != null) {
 					long lastRecurrence = t.lastRecurrence;
@@ -164,7 +160,7 @@ public class RecurrenceScheduler {
 	public ArrayList<TransactionInfo> getSortedSchedules(long now) {
 		long t0 = System.currentTimeMillis();
 		try {
-            ArrayList<TransactionInfo> list = em.getAllScheduledTransactions();
+            ArrayList<TransactionInfo> list = db.getAllScheduledTransactions();
             Log.i(TAG, "Got "+list.size()+" scheduled transactions");
 			calculateNextScheduleDateForAllTransactions(list, now);
 			sortTransactionsByScheduleDate(list, now);

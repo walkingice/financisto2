@@ -33,7 +33,7 @@ public class CategoryListAdapter extends ResourceCursorAdapter {
 	}		
 
 	public void fetchAttributes() {
-		this.attributes = db.getAllAttributesMap();
+		this.attributes = db.getAttributesMapping();
 	}
 	
 	@Override

@@ -89,24 +89,15 @@ import static ru.orangesoftware.financisto2.db.DatabaseHelper.V_BLOTTER_FOR_ACCO
 import static ru.orangesoftware.financisto2.db.DatabaseHelper.V_CATEGORY;
 
 @EBean(scope = EBean.Scope.Singleton)
-public class DatabaseAdapter {
+public class DatabaseAdapter extends MyEntityManager {
 
     private final Context context;
 
-    @Bean
-    public DatabaseHelper dbHelper;
-
-    @Bean
-    public MyEntityManager em;
-
     private boolean updateAccountBalance = true;
 
-    @VisibleForTesting public DatabaseAdapter(Context context) {
+    public DatabaseAdapter(Context context) {
+        super(context);
         this.context = context;
-    }
-
-    public SQLiteDatabase db() {
-        return dbHelper.getWritableDatabase();
     }
 
     // ===================================================================
@@ -131,7 +122,7 @@ public class DatabaseAdapter {
         db.beginTransaction();
         try {
             String[] sid = new String[]{String.valueOf(id)};
-            Account a = em.load(Account.class, id);
+            Account a = load(Account.class, id);
             writeDeleteLog(TRANSACTION_TABLE, a.remoteKey);
             db.execSQL(UPDATE_ORPHAN_TRANSACTIONS_1, sid);
             db.execSQL(UPDATE_ORPHAN_TRANSACTIONS_2, sid);
@@ -152,11 +143,11 @@ public class DatabaseAdapter {
     // ===================================================================
 
     public Transaction getTransaction(long id) {
-        Transaction t = em.get(Transaction.class, id);
+        Transaction t = get(Transaction.class, id);
         if (t != null) {
             t.systemAttributes = getSystemAttributesForTransaction(id);
             if (t.isSplitParent()) {
-                t.splits = em.getSplitsForTransaction(t.id);
+                t.splits = getSplitsForTransaction(t.id);
             }
             return t;
         }
@@ -207,12 +198,6 @@ public class DatabaseAdapter {
             }
         }
         return sortOrder;
-    }
-
-    public Cursor getAllScheduledTransactions() {
-        return db().query(V_ALL_TRANSACTIONS, BlotterColumns.NORMAL_PROJECTION,
-                BlotterColumns.is_template + "=? AND " + BlotterColumns.parent_id + "=?", new String[]{"2", "0"},
-                null, null, BlotterFilter.SORT_OLDER_TO_NEWER);
     }
 
     public Cursor getAllTemplates(WhereFilter filter) {
@@ -315,7 +300,7 @@ public class DatabaseAdapter {
             if (attributes.size() > 0) {
                 insertAttributes(transactionId, attributes);
             }
-            List<Transaction> splits = em.getSplitsForTransaction(id);
+            List<Transaction> splits = getSplitsForTransaction(id);
             if (multiplier > 1) {
                 for (Transaction split : splits) {
                     split.fromAmount *= multiplier;
@@ -439,15 +424,6 @@ public class DatabaseAdapter {
         return 0;
     }
 
-    public long insertPayee(String payee) {
-        if (Utils.isEmpty(payee)) {
-            return 0;
-        } else {
-            Payee p = em.insertPayee(payee);
-            return p.id;
-        }
-    }
-
     private long insertTransaction(Transaction t) {
         t.updatedOn = System.currentTimeMillis();
         long id = db().insert(TRANSACTION_TABLE, null, t.toValues());
@@ -534,7 +510,7 @@ public class DatabaseAdapter {
     }
 
     private void deleteSplitsForParentTransaction(long parentId) {
-        List<Transaction> splits = em.getSplitsForTransaction(parentId);
+        List<Transaction> splits = getSplitsForTransaction(parentId);
         SQLiteDatabase db = db();
         for (Transaction split : splits) {
             if (split.isTransfer()) {
@@ -682,7 +658,7 @@ public class DatabaseAdapter {
     }
 
     private long updateCategory(Category category) {
-        Category oldCategory = getCategory(category.id);
+        Category oldCategory = getCategoryWithParent(category.id);
         if (oldCategory.getParentId() == category.getParentId()) {
             updateCategory(category.id, category.title, category.type);
             updateChildCategoriesType(category.type, category.left, category.right);
@@ -730,7 +706,7 @@ public class DatabaseAdapter {
             + " AND parent." + CategoryColumns._id + "!=?"
             + " ORDER BY parent." + CategoryColumns.left + " DESC)";
 
-    public Category getCategory(long id) {
+    public Category getCategoryWithParent(long id) {
         SQLiteDatabase db = db();
         Cursor c = db.query(V_CATEGORY, CategoryViewColumns.NORMAL_PROJECTION,
                 CategoryViewColumns._id + "=?", new String[]{String.valueOf(id)}, null, null, null);
@@ -893,7 +869,7 @@ public class DatabaseAdapter {
         //UPDATE `	nset` SET `r` = `r` + 2 WHERE `r` > v_rightkey;
         //UPDATE `nset` SET `l` = `l` + 2 WHERE `l` > v_rightkey;
         //INSERT `nset` (`name`, `l`, `r`) VALUES (NodeName, v_rightkey + 1, v_rightkey + 2);
-        Category mate = getCategory(categoryId);
+        Category mate = getCategoryWithParent(categoryId);
         long parentId = mate.getParentId();
         int type = getActualCategoryType(parentId, category);
         return insertCategory(CategoryColumns.right.name(), categoryId, category.title, type);
@@ -902,7 +878,7 @@ public class DatabaseAdapter {
     private int getActualCategoryType(long parentId, Category category) {
         int type = category.type;
         if (parentId > 0) {
-            Category parent = getCategory(parentId);
+            Category parent = getCategoryWithParent(parentId);
             type = parent.type;
         }
         return type;
@@ -983,7 +959,7 @@ public class DatabaseAdapter {
         }
         db.beginTransaction();
         try {
-            Category category = em.load(Category.class, categoryId);
+            Category category = load(Category.class, categoryId);
             writeDeleteLog(CATEGORY_TABLE, category.remoteKey);
             int width = right - left + 1;
             String[] args = new String[]{String.valueOf(left), String.valueOf(right)};
@@ -1013,7 +989,7 @@ public class DatabaseAdapter {
 
     private void insertCategoryInTransaction(CategoryTree<Category> tree) {
         for (Category category : tree) {
-            em.reInsertCategory(category);
+            reInsertCategory(category);
             if (category.hasChildren()) {
                 insertCategoryInTransaction(category.children);
             }
@@ -1064,7 +1040,7 @@ public class DatabaseAdapter {
     // ===================================================================
 
     public List<Attribute> getAttributesForCategory(long categoryId) {
-        LongSparseArray<Attribute> attributesMap = em.getAllAttributesMap();
+        LongSparseArray<Attribute> attributesMap = getAllAttributesMap();
         Cursor c = db().query(V_ATTRIBUTES, AttributeViewColumns.NORMAL_PROJECTION,
                 AttributeViewColumns.CATEGORY_ID + "=?", new String[]{String.valueOf(categoryId)},
                 null, null, AttributeViewColumns.NAME);
@@ -1072,8 +1048,8 @@ public class DatabaseAdapter {
     }
 
     public List<Attribute> getAllAttributesForCategory(long categoryId) {
-        Category category = getCategory(categoryId);
-        LongSparseArray<Attribute> attributesMap = em.getAllAttributesMap();
+        Category category = getCategoryWithParent(categoryId);
+        LongSparseArray<Attribute> attributesMap = getAllAttributesMap();
         Cursor c = db().query(V_ATTRIBUTES, AttributeViewColumns.NORMAL_PROJECTION,
                 AttributeViewColumns.CATEGORY_LEFT + "<= ? AND " + AttributeViewColumns.CATEGORY_RIGHT + " >= ?",
                 new String[]{String.valueOf(category.left), String.valueOf(category.right)},
@@ -1097,7 +1073,7 @@ public class DatabaseAdapter {
         }
     }
 
-    public Map<Long, String> getAllAttributesMap() {
+    public Map<Long, String> getAttributesMapping() {
         Cursor c = db().query(V_ATTRIBUTES, AttributeViewColumns.NORMAL_PROJECTION, null, null, null, null,
                 AttributeViewColumns.CATEGORY_ID + ", " + AttributeViewColumns.NAME);
         try {
@@ -1357,7 +1333,7 @@ public class DatabaseAdapter {
      * Re-populates running_balance table for all accounts
      */
     public void rebuildRunningBalances() {
-        List<Account> accounts = em.getAllAccountsList();
+        List<Account> accounts = getAllAccountsList();
         for (Account account : accounts) {
             rebuildRunningBalanceForAccount(account);
         }
@@ -1612,7 +1588,7 @@ public class DatabaseAdapter {
     }
 
     public Total getAccountsTotalInHomeCurrency() {
-        Currency homeCurrency = em.getHomeCurrency();
+        Currency homeCurrency = getHomeCurrency();
         return getAccountsTotal(homeCurrency);
     }
 
@@ -1620,7 +1596,7 @@ public class DatabaseAdapter {
      * Calculates total in every currency for all accounts
      */
     public Total[] getAccountsTotal() {
-        List<Account> accounts = em.getAllAccountsList();
+        List<Account> accounts = getAllAccountsList();
         Map<Currency, Total> totalsMap = new HashMap<Currency, Total>();
         for (Account account : accounts) {
             if (account.shouldIncludeIntoTotals()) {
@@ -1642,7 +1618,7 @@ public class DatabaseAdapter {
      */
     public Total getAccountsTotal(Currency homeCurrency) {
         ExchangeRateProvider rates = getLatestRates();
-        List<Account> accounts = em.getAllAccountsList();
+        List<Account> accounts = getAllAccountsList();
         BigDecimal total = BigDecimal.ZERO;
         for (Account account : accounts) {
             if (account.shouldIncludeIntoTotals()) {
@@ -1683,12 +1659,12 @@ public class DatabaseAdapter {
     }
 
     public void setDefaultHomeCurrency() {
-        Currency homeCurrency = em.getHomeCurrency();
+        Currency homeCurrency = getHomeCurrency();
         long singleCurrencyId = getSingleCurrencyId();
         if (homeCurrency == Currency.EMPTY && singleCurrencyId > 0) {
-            Currency c = em.get(Currency.class, singleCurrencyId);
+            Currency c = get(Currency.class, singleCurrencyId);
             c.isDefault = true;
-            em.saveOrUpdate(c);
+            saveOrUpdate(c);
         }
     }
 
@@ -1711,13 +1687,13 @@ public class DatabaseAdapter {
     }
 
     private Transaction createTransactionFromNearest(Account account, long nearestTransactionId) {
-        Transaction nearestTransaction = em.get(Transaction.class, nearestTransactionId);
+        Transaction nearestTransaction = get(Transaction.class, nearestTransactionId);
         long balance = getAccountBalanceForTransaction(account, nearestTransaction);
         Transaction newTransaction = new Transaction();
         newTransaction.fromAccountId = account.id;
         newTransaction.dateTime = DateUtils.atDayEnd(nearestTransaction.dateTime);
         newTransaction.fromAmount = balance;
-        Payee payee = em.insertPayee(context.getString(R.string.purge_account_payee));
+        Payee payee = insertPayee(context.getString(R.string.purge_account_payee));
         newTransaction.payeeId = payee != null ? payee.id : 0;
         newTransaction.status = TransactionStatus.CL;
         return newTransaction;
@@ -1777,14 +1753,14 @@ public class DatabaseAdapter {
     }
 
     public void updateAccountsLastTransactionDate() {
-        List<Account> accounts = em.getAllAccountsList();
+        List<Account> accounts = getAllAccountsList();
         for (Account account : accounts) {
             updateAccountLastTransactionDate(account.id);
         }
     }
 
     public void restoreNoCategory() {
-        Category c = em.get(Category.class, Category.NO_CATEGORY_ID);
+        Category c = get(Category.class, Category.NO_CATEGORY_ID);
         if (c == null) {
             db().execSQL("INSERT INTO category (_id, title, left, right) VALUES (0, 'No category', 1, 2)");
         }

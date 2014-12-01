@@ -14,7 +14,6 @@ import ru.orangesoftware.financisto2.R;
 import ru.orangesoftware.financisto2.activity.MainActivity;
 import ru.orangesoftware.financisto2.backup.DatabaseImport;
 import ru.orangesoftware.financisto2.db.DatabaseAdapter;
-import ru.orangesoftware.financisto2.db.MyEntityManager;
 
 /**
  * Created by IntelliJ IDEA.
@@ -28,8 +27,8 @@ public class BackupImportTask extends ImportExportAsyncTask {
     }
 
     @Override
-    protected Object work(Context context, DatabaseAdapter db, MyEntityManager em, String... params) throws Exception {
-        DatabaseImport.createFromFileBackup(context, db, em, params[0]).importDatabase();
+    protected Object work(Context context, DatabaseAdapter db, String... params) throws Exception {
+        DatabaseImport.createFromFileBackup(context, db, params[0]).importDatabase();
         return true;
     }
 

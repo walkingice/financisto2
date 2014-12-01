@@ -11,7 +11,6 @@ package ru.orangesoftware.financisto2.utils;
 import android.database.Cursor;
 import ru.orangesoftware.financisto2.filter.WhereFilter;
 import ru.orangesoftware.financisto2.db.DatabaseAdapter;
-import ru.orangesoftware.financisto2.db.MyEntityManager;
 import ru.orangesoftware.financisto2.model.*;
 import ru.orangesoftware.financisto2.recur.Recurrence;
 
@@ -25,14 +24,12 @@ import java.util.*;
 public abstract class AbstractPlanner {
 
     protected final DatabaseAdapter db;
-    protected final MyEntityManager em;
 
     protected final WhereFilter filter;
     protected final Date now;
 
-    public AbstractPlanner(DatabaseAdapter db, MyEntityManager em, WhereFilter filter, Date now) {
+    public AbstractPlanner(DatabaseAdapter db, WhereFilter filter, Date now) {
         this.db = db;
-        this.em = em;
         this.filter = filter;
         this.now = now;
     }
@@ -62,7 +59,7 @@ public abstract class AbstractPlanner {
     protected abstract Cursor getRegularTransactions();
 
     private List<TransactionInfo> getScheduledTransactions() {
-        return em.getAllScheduledTransactions();
+        return db.getAllScheduledTransactions();
     }
 
     private List<TransactionInfo> planSchedules(List<TransactionInfo> scheduledTransactions) {
@@ -81,7 +78,7 @@ public abstract class AbstractPlanner {
 
     private void planSplitSchedules(TransactionInfo scheduledTransaction, List<TransactionInfo> plannedTransactions) {
         List<Date> dates = calculatePlannedDates(scheduledTransaction);
-        List<TransactionInfo> splits = em.getSplitsInfoForTransaction(scheduledTransaction.id);
+        List<TransactionInfo> splits = db.getSplitsInfoForTransaction(scheduledTransaction.id);
         for (TransactionInfo split : splits) {
             if (includeScheduledSplitTransaction(split)) {
                 TransactionInfo transaction = prepareScheduledTransaction(split);

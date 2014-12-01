@@ -103,12 +103,12 @@ public class ExchangeRateActivity extends AbstractActivity implements RateNodeOw
     }
 
     private boolean validateIntent() {
-        fromCurrency = em.get(Currency.class, fromCurrencyId);
+        fromCurrency = db.get(Currency.class, fromCurrencyId);
         if (fromCurrency == null) {
             return false;
         }
 
-        toCurrency = em.get(Currency.class, toCurrencyId);
+        toCurrency = db.get(Currency.class, toCurrencyId);
         if (toCurrency == null) {
             return false;
         }

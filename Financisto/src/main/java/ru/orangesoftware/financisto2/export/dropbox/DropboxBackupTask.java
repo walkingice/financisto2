@@ -13,7 +13,6 @@ import android.content.Context;
 import ru.orangesoftware.financisto2.activity.MainActivity;
 import ru.orangesoftware.financisto2.backup.DatabaseExport;
 import ru.orangesoftware.financisto2.db.DatabaseAdapter;
-import ru.orangesoftware.financisto2.db.MyEntityManager;
 import ru.orangesoftware.financisto2.export.ImportExportAsyncTask;
 
 /**
@@ -28,7 +27,7 @@ public class DropboxBackupTask extends ImportExportAsyncTask {
     }
 
     @Override
-    protected Object work(Context context, DatabaseAdapter db, MyEntityManager em, String... params) throws Exception {
+    protected Object work(Context context, DatabaseAdapter db, String... params) throws Exception {
         DatabaseExport export = new DatabaseExport(context, db.db(), true);
         String backupFileName = export.export();
         doForceUploadToDropbox(context, backupFileName);

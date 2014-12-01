@@ -24,7 +24,6 @@ import ru.orangesoftware.financisto2.adapter.AccountListAdapter2_;
 import ru.orangesoftware.financisto2.bus.AccountList;
 import ru.orangesoftware.financisto2.bus.GetAccountList;
 import ru.orangesoftware.financisto2.db.DatabaseAdapter;
-import ru.orangesoftware.financisto2.db.MyEntityManager;
 import ru.orangesoftware.financisto2.model.Account;
 
 import static ru.orangesoftware.financisto2.utils.MyPreferences.isQuickMenuEnabledForAccount;
@@ -32,9 +31,6 @@ import static ru.orangesoftware.financisto2.utils.MyPreferences.isQuickMenuEnabl
 @EFragment(R.layout.account_list)
 @OptionsMenu(R.menu.account_list_menu)
 public class AccountListFragment extends AbstractListFragment implements QuickActionWidget.OnQuickActionClickListener {
-
-    @Bean
-    protected MyEntityManager em;
 
     @Bean
     protected DatabaseAdapter db;
@@ -72,7 +68,7 @@ public class AccountListFragment extends AbstractListFragment implements QuickAc
 
     private void prepareAccountActionGrid() {
         Context context = getActivity();
-        Account a = em.getAccount(selectedId);
+        Account a = db.getAccount(selectedId);
         actionGrid = new QuickActionGrid(context);
         actionGrid.addQuickAction(new QuickAction(context, R.drawable.ic_action_info, R.string.info));
         actionGrid.addQuickAction(new QuickAction(context, R.drawable.ic_action_list, R.string.blotter));
@@ -144,7 +140,7 @@ public class AccountListFragment extends AbstractListFragment implements QuickAc
     }
 
     private void updateAccountBalance() {
-        Account a = em.getAccount(selectedId);
+        Account a = db.getAccount(selectedId);
         if (a != null) {
             TransactionActivity_.intent(this).accountId(selectedId)
                     .currentBalance(a.totalAmount).isUpdateBalanceMode(true).start();
@@ -156,9 +152,9 @@ public class AccountListFragment extends AbstractListFragment implements QuickAc
     }
 
     private void flipAccount() {
-        Account a = em.getAccount(selectedId);
+        Account a = db.getAccount(selectedId);
         a.isActive = !a.isActive;
-        em.saveAccount(a);
+        db.saveAccount(a);
         reload();
     }
 

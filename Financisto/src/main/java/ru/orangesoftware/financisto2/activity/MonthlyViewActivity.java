@@ -16,8 +16,6 @@ import ru.orangesoftware.financisto2.R;
 import ru.orangesoftware.financisto2.adapter.CreditCardStatementAdapter;
 import ru.orangesoftware.financisto2.db.DatabaseAdapter;
 import ru.orangesoftware.financisto2.db.DatabaseAdapter_;
-import ru.orangesoftware.financisto2.db.MyEntityManager;
-import ru.orangesoftware.financisto2.db.MyEntityManager_;
 import ru.orangesoftware.financisto2.model.*;
 import ru.orangesoftware.financisto2.utils.MonthlyViewPlanner;
 import ru.orangesoftware.financisto2.utils.PinProtection;
@@ -41,7 +39,6 @@ public class MonthlyViewActivity extends ListActivity {
     public static final String BILL_PREVIEW_EXTRA = "bill_preview";
 
 	private DatabaseAdapter db;
-    private MyEntityManager em;
 
 	private long accountId = 0;
     private Account account;
@@ -109,11 +106,9 @@ public class MonthlyViewActivity extends ListActivity {
     	
     	// get account data
         db = DatabaseAdapter_.getInstance_(this);
-        em = MyEntityManager_.getInstance_(this);
 
 		// set currency based on account
-		MyEntityManager em = MyEntityManager_.getInstance_(this);
-        account = em.getAccount(accountId);
+        account = db.getAccount(accountId);
 		
         if (month==0 && year==0) {
 	        // get current month and year in first launch
@@ -346,7 +341,7 @@ public class MonthlyViewActivity extends ListActivity {
 
         @Override
         protected TransactionList doInBackground(Void... voids) {
-            MonthlyViewPlanner planner = new MonthlyViewPlanner(db, em, account, isStatementPreview, open, close, now);
+            MonthlyViewPlanner planner = new MonthlyViewPlanner(db, account, isStatementPreview, open, close, now);
             TransactionList transactions;
             if (isStatementPreview) {
                 transactions = planner.getCreditCardStatement();

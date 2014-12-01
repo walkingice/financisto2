@@ -28,8 +28,8 @@ public class CategoryBuilder {
         Category a1 = new CategoryBuilder(db).withParent(a).withTitle("A1").create();
         new CategoryBuilder(db).withParent(a1).withTitle("AA1")
                 .withAttributes(
-                        AttributeBuilder.withDb(db.em).createTextAttribute("attr1"),
-                        AttributeBuilder.withDb(db.em).createNumberAttribute("attr2")
+                        AttributeBuilder.withDb(db).createTextAttribute("attr1"),
+                        AttributeBuilder.withDb(db).createNumberAttribute("attr2")
                 ).create();
         new CategoryBuilder(db).withParent(a).withTitle("A2").create();
         new CategoryBuilder(db).withTitle("B").income().create();

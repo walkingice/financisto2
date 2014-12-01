@@ -61,17 +61,17 @@ public abstract class Report {
 		return name;
 	}
 
-    public abstract ReportData getReport(DatabaseAdapter db, MyEntityManager em, WhereFilter filter);
+    public abstract ReportData getReport(DatabaseAdapter db, WhereFilter filter);
 
-    public ReportData getReportForChart(DatabaseAdapter db, MyEntityManager em, WhereFilter filter) {
-        return getReport(db, em, filter);
+    public ReportData getReportForChart(DatabaseAdapter db, WhereFilter filter) {
+        return getReport(db, filter);
     }
 
-	protected ReportData queryReport(DatabaseAdapter db, MyEntityManager em, String table, WhereFilter filter) {
+	protected ReportData queryReport(DatabaseAdapter db, String table, WhereFilter filter) {
 		filterTransfers(filter);
 		Cursor c = db.db().query(table, DatabaseHelper.ReportColumns.NORMAL_PROJECTION,
                 filter.getSelection(), filter.getSelectionArgs(), null, null, "_id");
-		ArrayList<GraphUnit> units = getUnitsFromCursor(db, em, c);
+		ArrayList<GraphUnit> units = getUnitsFromCursor(db, c);
         Total total = calculateTotal(units);
         return new ReportData(units, total);
 	}
@@ -82,7 +82,7 @@ public abstract class Report {
 		}
 	}
 
-	protected ArrayList<GraphUnit> getUnitsFromCursor(DatabaseAdapter db, MyEntityManager em, Cursor c) {
+	protected ArrayList<GraphUnit> getUnitsFromCursor(DatabaseAdapter db, Cursor c) {
 		try {
             ExchangeRateProvider rates = db.getHistoryRates();
             ArrayList<GraphUnit> units = new ArrayList<GraphUnit>();
@@ -101,7 +101,7 @@ public abstract class Report {
                 }
                 BigDecimal amount;
                 try {
-                    amount = TransactionsTotalCalculator.getAmountFromCursor(em, c, currency, rates, c.getColumnIndex(ReportColumns.DATETIME));
+                    amount = TransactionsTotalCalculator.getAmountFromCursor(db, c, currency, rates, c.getColumnIndex(ReportColumns.DATETIME));
                 } catch (UnableToCalculateRateException e) {
                     amount = BigDecimal.ZERO;
                     u.error = TotalError.atDateRateError(e.fromCurrency, e.datetime);

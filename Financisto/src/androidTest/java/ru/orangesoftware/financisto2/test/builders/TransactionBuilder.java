@@ -53,21 +53,21 @@ public class TransactionBuilder {
     }
 
     public TransactionBuilder payee(String payee) {
-        t.payeeId = db.insertPayee(payee);
+        t.payeeId = db.insertPayee(payee).id;
         return this;
     }
 
     public TransactionBuilder location(String location) {
         MyLocation myLocation = new MyLocation();
         myLocation.name = location;
-        t.locationId = db.em.saveLocation(myLocation);
+        t.locationId = db.saveLocation(myLocation);
         return this;
     }
 
     public TransactionBuilder project(String project) {
         Project myProject = new Project();
         myProject.title = project;
-        t.projectId = db.em.saveOrUpdate(myProject);
+        t.projectId = db.saveOrUpdate(myProject);
         return this;
     }
 

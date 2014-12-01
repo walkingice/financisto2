@@ -23,7 +23,6 @@ import ru.orangesoftware.financisto2.R;
 import ru.orangesoftware.financisto2.activity.AccountActivity_;
 import ru.orangesoftware.financisto2.activity.AccountListActivity;
 import ru.orangesoftware.financisto2.db.DatabaseAdapter;
-import ru.orangesoftware.financisto2.db.MyEntityManager;
 import ru.orangesoftware.financisto2.model.Account;
 import ru.orangesoftware.financisto2.model.AccountType;
 import ru.orangesoftware.financisto2.model.CardIssuer;
@@ -37,24 +36,22 @@ public class AccountInfoDialog {
     private final AccountListActivity parentActivity;
     private final long accountId;
     private final DatabaseAdapter db;
-    private final MyEntityManager em;
     private final NodeInflater inflater;
     private final LayoutInflater layoutInflater;
     private final Utils u;
 
     public AccountInfoDialog(AccountListActivity parentActivity, long accountId,
-                             DatabaseAdapter db, MyEntityManager em, NodeInflater inflater) {
+                             DatabaseAdapter db, NodeInflater inflater) {
         this.parentActivity = parentActivity;
         this.accountId = accountId;
         this.db = db;
-        this.em = em;
         this.inflater = inflater;
         this.layoutInflater = (LayoutInflater) parentActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.u = new Utils(parentActivity);
     }
 
     public void show() {
-        Account a = em.getAccount(accountId);
+        Account a = db.getAccount(accountId);
         if (a == null) {
             Toast t = Toast.makeText(parentActivity, R.string.no_account, Toast.LENGTH_LONG);
             t.show();

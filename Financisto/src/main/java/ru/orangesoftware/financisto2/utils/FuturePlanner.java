@@ -10,7 +10,6 @@ package ru.orangesoftware.financisto2.utils;
 
 import android.database.Cursor;
 
-import ru.orangesoftware.financisto2.db.MyEntityManager;
 import ru.orangesoftware.financisto2.db.TransactionsTotalCalculator;
 import ru.orangesoftware.financisto2.filter.WhereFilter;
 import ru.orangesoftware.financisto2.db.DatabaseAdapter;
@@ -27,8 +26,8 @@ import java.util.List;
  */
 public class FuturePlanner extends AbstractPlanner {
 
-    public FuturePlanner(DatabaseAdapter db, MyEntityManager em, WhereFilter filter, Date now) {
-        super(db, em, filter, now);
+    public FuturePlanner(DatabaseAdapter db, WhereFilter filter, Date now) {
+        super(db, filter, now);
     }
 
     @Override
@@ -55,7 +54,7 @@ public class FuturePlanner extends AbstractPlanner {
     @Override
     protected Total[] calculateTotals(List<TransactionInfo> transactions) {
         Total[] totals = new Total[1];
-        totals[0] = TransactionsTotalCalculator.calculateTotalFromListInHomeCurrency(db, em, transactions);
+        totals[0] = TransactionsTotalCalculator.calculateTotalFromListInHomeCurrency(db, transactions);
         return totals;
     }
 

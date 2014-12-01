@@ -38,8 +38,8 @@ public class AccountBlotterTest extends AbstractDbTest {
     @Override
     public void setUp() throws Exception {
         super.setUp();
-        a1 = AccountBuilder.createDefault(em);
-        a2 = AccountBuilder.createDefault(em);
+        a1 = AccountBuilder.createDefault(db);
+        a2 = AccountBuilder.createDefault(db);
         categoriesMap = CategoryBuilder.createDefaultHierarchy(db);
     }
 
@@ -155,13 +155,13 @@ public class AccountBlotterTest extends AbstractDbTest {
         WhereFilter filter = enhanceFilterForAccountBlotter(WhereFilter.empty());
         filter.btw(BlotterFilter.DATETIME, String.valueOf(start.atMidnight().asLong()), String.valueOf(end.atDayEnd().asLong()));
         filter.eq(BlotterFilter.FROM_ACCOUNT_ID, String.valueOf(a1.id));
-        TransactionsTotalCalculator calculator = new TransactionsTotalCalculator(db, em, filter);
+        TransactionsTotalCalculator calculator = new TransactionsTotalCalculator(db, filter);
         assertEquals(total, calculator.getAccountTotal().balance);
     }
 
     private void assertTotals(long...totalAmounts) {
         WhereFilter filter = WhereFilter.empty();
-        TransactionsTotalCalculator calculator = new TransactionsTotalCalculator(db, em, filter);
+        TransactionsTotalCalculator calculator = new TransactionsTotalCalculator(db, filter);
         Total[] totals = calculator.getTransactionsBalance();
         assertEquals(totalAmounts.length, totals.length);
         for (int i=0; i<totalAmounts.length; i++) {

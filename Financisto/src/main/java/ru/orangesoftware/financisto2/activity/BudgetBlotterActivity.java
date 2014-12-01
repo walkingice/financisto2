@@ -34,7 +34,7 @@ public class BudgetBlotterActivity extends BlotterActivity {
 	@Override
 	protected void internalOnCreate(Bundle savedInstanceState) {
 		categories = MyEntity.asMap(db.getCategoriesList(true));
-		projects = MyEntity.asMap(em.getActiveProjectsList(true));
+		projects = MyEntity.asMap(db.getActiveProjectsList(true));
 		super.internalOnCreate(savedInstanceState);
 		bFilter.setVisibility(View.GONE);
 	}
@@ -51,7 +51,7 @@ public class BudgetBlotterActivity extends BlotterActivity {
 	}
 	
 	private Cursor getBlotterForBudget(long budgetId) {
-		Budget b = em.load(Budget.class, budgetId);
+		Budget b = db.load(Budget.class, budgetId);
 		String where = Budget.createWhere(b, categories, projects);
 		return db.getBlotterWithSplits(where);
 	}
@@ -65,7 +65,7 @@ public class BudgetBlotterActivity extends BlotterActivity {
                 try {
                     try {
                         long budgetId = blotterFilter.getBudgetId();
-                        Budget b = em.load(Budget.class, budgetId);
+                        Budget b = db.load(Budget.class, budgetId);
                         Total total = new Total(b.getBudgetCurrency());
                         total.balance = db.fetchBudgetBalance(categories, projects, b);
                         return total;

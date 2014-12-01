@@ -47,6 +47,7 @@ import ru.orangesoftware.financisto2.utils.MyPreferences.AccountSortOrder;
 import ru.orangesoftware.financisto2.utils.MyPreferences.LocationsSortOrder;
 import ru.orangesoftware.financisto2.utils.RecurUtils;
 import ru.orangesoftware.financisto2.utils.RecurUtils.Recur;
+import ru.orangesoftware.financisto2.utils.Utils;
 import ru.orangesoftware.orb.EntityManager;
 import ru.orangesoftware.orb.Expression;
 import ru.orangesoftware.orb.Expressions;
@@ -61,12 +62,11 @@ import static ru.orangesoftware.financisto2.db.DatabaseHelper.CURRENCY_TABLE;
 import static ru.orangesoftware.financisto2.db.DatabaseHelper.TRANSACTION_ATTRIBUTE_TABLE;
 import static ru.orangesoftware.financisto2.utils.StringUtil.capitalize;
 
-@EBean(scope = EBean.Scope.Singleton)
-public class MyEntityManager extends EntityManager {
+class MyEntityManager extends EntityManager {
 
     public final Context context;
 
-    @VisibleForTesting public MyEntityManager(Context context) {
+    MyEntityManager(Context context) {
         this.context = context;
     }
 
@@ -542,13 +542,17 @@ public class MyEntityManager extends EntityManager {
     }
 
     public Payee insertPayee(String payee) {
-        Payee p = getPayee(payee);
-        if (p == null) {
-            p = new Payee();
-            p.title = payee;
-            p.id = saveOrUpdate(p);
+        if (Utils.isEmpty(payee)) {
+            return Payee.EMPTY;
+        } else {
+            Payee p = getPayee(payee);
+            if (p == null) {
+                p = new Payee();
+                p.title = payee;
+                p.id = saveOrUpdate(p);
+            }
+            return p;
         }
-        return p;
     }
 
     public Payee getPayee(String payee) {

@@ -62,7 +62,7 @@ public class DatabaseBackupTest extends AbstractImportExportTest {
 
     private void restoreDatabase(String fileName) throws IOException {
         Context context = getContext();
-        DatabaseImport databaseImport = DatabaseImport.createFromFileBackup(context, db, em, fileName);
+        DatabaseImport databaseImport = DatabaseImport.createFromFileBackup(context, db, fileName);
         databaseImport.importDatabase();
     }
 
@@ -93,7 +93,7 @@ public class DatabaseBackupTest extends AbstractImportExportTest {
     }
 
     private void assertAccounts() {
-        List<Account> accounts = em.getAllAccountsList();
+        List<Account> accounts = db.getAllAccountsList();
         assertEquals(1, accounts.size());
         assertEquals("My Cash Account", accounts.get(0).title);
         assertEquals("AAA BBB:CCC", accounts.get(0).note);

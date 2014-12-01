@@ -45,7 +45,7 @@ public abstract class EntityManager {
 
     @Bean
 	public DatabaseHelper dbHelper;
-	
+
 	public SQLiteDatabase db() {
 		return dbHelper.getWritableDatabase();
 	}
@@ -266,8 +266,8 @@ public abstract class EntityManager {
 		for (FieldInfo fI: ed.fields) {
 			if (fI.columnName=="remote_key") {				
 				Cursor cursor = db().query(ed.tableName,
-						new String[] { "remote_key"}, ed.idField.columnName + "=?",
-						new String[] { String.valueOf(id) }, null, null, null, null);
+                        new String[]{"remote_key"}, ed.idField.columnName + "=?",
+                        new String[]{String.valueOf(id)}, null, null, null, null);
 			    if (cursor != null) {
 			    	cursor.moveToFirst();
 			    	ContentValues row = new ContentValues();			    	
@@ -280,7 +280,7 @@ public abstract class EntityManager {
 			}
 		}		
 		
-		return db().delete(ed.tableName, ed.idField.columnName+"=?", new String[]{id.toString()});
+		return db().delete(ed.tableName, ed.idField.columnName + "=?", new String[]{id.toString()});
 	}
 
 	public <T> Query<T> createQuery(Class<T> clazz) {

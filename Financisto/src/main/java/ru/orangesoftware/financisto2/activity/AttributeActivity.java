@@ -28,7 +28,7 @@ import org.androidannotations.annotations.ViewById;
 
 import ru.orangesoftware.financisto2.R;
 import ru.orangesoftware.financisto2.db.DatabaseHelper.AttributeColumns;
-import ru.orangesoftware.financisto2.db.MyEntityManager;
+import ru.orangesoftware.financisto2.db.DatabaseAdapter;
 import ru.orangesoftware.financisto2.model.Attribute;
 import ru.orangesoftware.financisto2.utils.PinProtection;
 import ru.orangesoftware.financisto2.utils.Utils;
@@ -37,7 +37,7 @@ import ru.orangesoftware.financisto2.utils.Utils;
 public class AttributeActivity extends Activity implements OnItemSelectedListener {
 
     @Bean
-    protected MyEntityManager em;
+    protected DatabaseAdapter db;
 
     @ViewById(R.id.type)
     protected Spinner typeSpinner;
@@ -60,7 +60,7 @@ public class AttributeActivity extends Activity implements OnItemSelectedListene
     protected void afterViews() {
         typeSpinner.setOnItemSelectedListener(this);
         if (attributeId != -1) {
-            attribute = em.get(Attribute.class, attributeId);
+            attribute = db.get(Attribute.class, attributeId);
             editAttribute();
         }
     }
@@ -69,7 +69,7 @@ public class AttributeActivity extends Activity implements OnItemSelectedListene
     protected void onSave() {
         updateAttributeFromUI();
         if (Utils.checkEditText(nameTextView, "name", true, 256)) {
-            long id = em.saveOrUpdate(attribute);
+            long id = db.saveOrUpdate(attribute);
             Intent intent = new Intent();
             intent.putExtra(AttributeColumns.ID, id);
             setResult(RESULT_OK, intent);

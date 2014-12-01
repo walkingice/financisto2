@@ -85,7 +85,7 @@ public class CategoryActivity extends AbstractActivity {
     protected void afterViews() {
 
         if (categoryId != -1) {
-            category = db.getCategory(categoryId);
+            category = db.getCategoryWithParent(categoryId);
         }
 
         fetchAttributes();
@@ -118,7 +118,7 @@ public class CategoryActivity extends AbstractActivity {
     }
 
     private void fetchAttributes() {
-        attributes = em.getAllAttributes();
+        attributes = db.getAllAttributes();
         attributeAdapter = new MyEntityAdapter<Attribute>(this, android.R.layout.simple_spinner_dropdown_item, attributes);
     }
 
@@ -270,7 +270,7 @@ public class CategoryActivity extends AbstractActivity {
                 selectParentCategory(selectedId);
                 break;
             case R.id.new_attribute:
-                Attribute a = em.get(Attribute.class, selectedId);
+                Attribute a = db.get(Attribute.class, selectedId);
                 addAttribute(a);
                 break;
         }
@@ -287,7 +287,7 @@ public class CategoryActivity extends AbstractActivity {
     }
 
     private void selectParentCategory(long parentId) {
-        Category c = em.getCategory(parentId);
+        Category c = db.getCategory(parentId);
         if (c != null) {
             category.parent = c;
             parentCategoryText.setText(c.title);
@@ -303,7 +303,7 @@ public class CategoryActivity extends AbstractActivity {
                 case NEW_ATTRIBUTE_REQUEST: {
                     long attributeId = data.getLongExtra(AttributeColumns.ID, -1);
                     if (attributeId != -1) {
-                        Attribute a = em.get(Attribute.class, attributeId);
+                        Attribute a = db.get(Attribute.class, attributeId);
                         addAttribute(a);
                     }
                 }
@@ -311,7 +311,7 @@ public class CategoryActivity extends AbstractActivity {
                 case EDIT_ATTRIBUTE_REQUEST: {
                     long attributeId = data.getLongExtra(AttributeColumns.ID, -1);
                     if (attributeId != -1) {
-                        Attribute a = em.get(Attribute.class, attributeId);
+                        Attribute a = db.get(Attribute.class, attributeId);
                         fetchAttributes();
                         updateAttribute(attributesLayout, a);
                         updateAttribute(parentAttributesLayout, a);

@@ -21,9 +21,9 @@ public class AccountTotalTest extends AbstractDbTest {
     @Override
     public void setUp() throws Exception {
         super.setUp();
-        a1 = AccountBuilder.createDefault(em);
-        a2 = AccountBuilder.createDefault(em);
-        a3 = AccountBuilder.createDefault(em);
+        a1 = AccountBuilder.createDefault(db);
+        a2 = AccountBuilder.createDefault(db);
+        a3 = AccountBuilder.createDefault(db);
         categoriesMap = CategoryBuilder.createDefaultHierarchy(db);
     }
 
@@ -250,7 +250,7 @@ public class AccountTotalTest extends AbstractDbTest {
                 .create();
         assertAccountTotal(a1, 1500);
 
-        List<Transaction> splits = em.getSplitsForTransaction(t.id);
+        List<Transaction> splits = db.getSplitsForTransaction(t.id);
         assertEquals(2, splits.size());
 
         t.fromAmount = 800;
@@ -310,7 +310,7 @@ public class AccountTotalTest extends AbstractDbTest {
         assertAccountTotal(a1, 500);
         assertAccountTotal(a2, 2200);
 
-        List<Transaction> splits = em.getSplitsForTransaction(t.id);
+        List<Transaction> splits = db.getSplitsForTransaction(t.id);
         t.fromAmount = -400;
         splits.get(0).fromAmount = -400;
         splits.get(0).toAmount = 100;

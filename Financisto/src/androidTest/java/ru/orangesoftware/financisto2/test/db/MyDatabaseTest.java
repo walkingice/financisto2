@@ -22,7 +22,7 @@ public class MyDatabaseTest extends AbstractDbTest {
     @Override
     public void setUp() throws Exception {
         super.setUp();
-        a1 = AccountBuilder.createDefault(em);
+        a1 = AccountBuilder.createDefault(db);
         categoriesMap = CategoryBuilder.createDefaultHierarchy(db);
     }
 
@@ -30,9 +30,9 @@ public class MyDatabaseTest extends AbstractDbTest {
         // given
         String payee = "Payee1";
         // when
-        Payee p1 = em.insertPayee(payee);
-        Payee p2 = em.insertPayee(payee);
-        List<Payee> payees = em.getAllPayeeList();
+        Payee p1 = db.insertPayee(payee);
+        Payee p2 = db.insertPayee(payee);
+        List<Payee> payees = db.getAllPayeeList();
         // then
         assertEquals("Ids should be the same!", p1.id, p2.id);
         assertEquals("List should be of size 1!", 1, payees.size());
@@ -79,7 +79,7 @@ public class MyDatabaseTest extends AbstractDbTest {
                 .withStatus(TransactionStatus.CL)
                 .create();
         // then
-        List<Transaction> splits = em.getSplitsForTransaction(t.id);
+        List<Transaction> splits = db.getSplitsForTransaction(t.id);
         for (Transaction split : splits) {
             assertEquals(t.status, split.status);
         }
@@ -95,7 +95,7 @@ public class MyDatabaseTest extends AbstractDbTest {
         t.status = TransactionStatus.CL;
         db.insertOrUpdate(t);
         // then
-        List<Transaction> splits = em.getSplitsForTransaction(t.id);
+        List<Transaction> splits = db.getSplitsForTransaction(t.id);
         for (Transaction split : splits) {
             assertEquals(t.status, split.status);
         }

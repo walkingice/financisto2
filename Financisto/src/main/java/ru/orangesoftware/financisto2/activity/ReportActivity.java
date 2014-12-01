@@ -31,8 +31,6 @@ import org.achartengine.renderer.SimpleSeriesRenderer;
 import ru.orangesoftware.financisto2.R;
 import ru.orangesoftware.financisto2.adapter.ReportAdapter;
 import ru.orangesoftware.financisto2.db.DatabaseAdapter_;
-import ru.orangesoftware.financisto2.db.MyEntityManager;
-import ru.orangesoftware.financisto2.db.MyEntityManager_;
 import ru.orangesoftware.financisto2.filter.WhereFilter;
 import ru.orangesoftware.financisto2.filter.Criteria;
 import ru.orangesoftware.financisto2.db.DatabaseAdapter;
@@ -57,7 +55,7 @@ public class ReportActivity extends ListActivity implements RefreshSupportedActi
     public static final String FILTER_INCOME_EXPENSE = "FILTER_INCOME_EXPENSE";
     
 	private DatabaseAdapter db;
-    private MyEntityManager em;
+
 	private ImageButton bFilter;
     private ImageButton bToggle;
     private Report currentReport;
@@ -75,7 +73,6 @@ public class ReportActivity extends ListActivity implements RefreshSupportedActi
 		setContentView(R.layout.report);
 
         db = DatabaseAdapter_.getInstance_(this);
-        em = MyEntityManager_.getInstance_(this);
 
 		bFilter = (ImageButton)findViewById(R.id.bFilter);
 		bFilter.setOnClickListener(new OnClickListener(){
@@ -109,7 +106,7 @@ public class ReportActivity extends ListActivity implements RefreshSupportedActi
 
 		Intent intent = getIntent();
 		if (intent != null) {
-            currentReport = ReportsListActivity.createReport(this, em, intent.getExtras());
+            currentReport = ReportsListActivity.createReport(this, db, intent.getExtras());
 			filter = WhereFilter.fromIntent(intent);
             if (intent.hasExtra(FILTER_INCOME_EXPENSE)) {
                 incomeExpenseState = IncomeExpense.valueOf(intent.getStringExtra(FILTER_INCOME_EXPENSE));
@@ -309,7 +306,7 @@ public class ReportActivity extends ListActivity implements RefreshSupportedActi
         @Override
         protected ReportData doInBackground(Void...voids) {
             report.setIncomeExpense(incomeExpense);
-            return report.getReport(db, em, WhereFilter.copyOf(filter));
+            return report.getReport(db, WhereFilter.copyOf(filter));
         }
 
         @Override
@@ -341,7 +338,7 @@ public class ReportActivity extends ListActivity implements RefreshSupportedActi
             renderer.setLabelsTextSize(getResources().getDimension(R.dimen.report_labels_text_size));
             renderer.setLegendTextSize(getResources().getDimension(R.dimen.report_legend_text_size));
             renderer.setMargins(new int[] { 0, 0, 0, 0 });
-            ReportData report = currentReport.getReportForChart(db, em, WhereFilter.copyOf(filter));
+            ReportData report = currentReport.getReportForChart(db, WhereFilter.copyOf(filter));
             CategorySeries series = new CategorySeries("AAA");
             long total = Math.abs(report.total.amount)+Math.abs(report.total.balance);
             int[] colors = generateColors(2*report.units.size());

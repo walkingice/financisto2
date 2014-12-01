@@ -41,7 +41,6 @@ import ru.orangesoftware.financisto2.backup.DatabaseExport;
 import ru.orangesoftware.financisto2.backup.DatabaseImport;
 import ru.orangesoftware.financisto2.bus.GreenRobotBus;
 import ru.orangesoftware.financisto2.db.DatabaseAdapter;
-import ru.orangesoftware.financisto2.db.MyEntityManager;
 import ru.orangesoftware.financisto2.export.Export;
 import ru.orangesoftware.financisto2.export.ImportExportException;
 import ru.orangesoftware.financisto2.utils.MyPreferences;
@@ -63,9 +62,6 @@ public class GoogleDriveClient {
 
     @Bean
     DatabaseAdapter db;
-
-    @Bean
-    MyEntityManager em;
 
     private GoogleApiClient googleApiClient;
 
@@ -160,7 +156,7 @@ public class GoogleDriveClient {
                 if (contentsResult.getStatus().isSuccess()) {
                     Contents contents = contentsResult.getContents();
                     try {
-                        DatabaseImport.createFromGoogleDriveBackup(context, db, em, contents).importDatabase();
+                        DatabaseImport.createFromGoogleDriveBackup(context, db, contents).importDatabase();
                         bus.post(new DriveRestoreSuccess());
                     } finally {
                         contents.close();

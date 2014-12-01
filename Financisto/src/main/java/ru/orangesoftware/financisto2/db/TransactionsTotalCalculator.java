@@ -52,12 +52,10 @@ public class TransactionsTotalCalculator {
     };
 
     private final DatabaseAdapter db;
-    private final MyEntityManager em;
     private final WhereFilter filter;
 
-    public TransactionsTotalCalculator(DatabaseAdapter db, MyEntityManager em, WhereFilter filter) {
+    public TransactionsTotalCalculator(DatabaseAdapter db, WhereFilter filter) {
         this.db = db;
-        this.em = em;
         this.filter = filter;
     }
 
@@ -75,7 +73,7 @@ public class TransactionsTotalCalculator {
             while (c.moveToNext()) {
                 long currencyId = c.getLong(0);
                 long balance = c.getLong(1);
-                Currency currency = CurrencyCache.getCurrency(em, currencyId);
+                Currency currency = CurrencyCache.getCurrency(db, currencyId);
                 Total total = new Total(currency);
                 total.balance = balance;
                 totals.add(total);
@@ -92,7 +90,7 @@ public class TransactionsTotalCalculator {
     }
 
     public Total getBlotterBalanceInHomeCurrency() {
-        Currency homeCurrency = em.getHomeCurrency();
+        Currency homeCurrency = db.getHomeCurrency();
         return getBlotterBalance(homeCurrency);
     }
 
@@ -119,7 +117,7 @@ public class TransactionsTotalCalculator {
                 null, null, null);
         try {
             try {
-                long balance = calculateTotalFromCursor(db, em, c, toCurrency);
+                long balance = calculateTotalFromCursor(db, c, toCurrency);
                 Total total = new Total(toCurrency);
                 total.balance = balance;
                 return total;
@@ -131,31 +129,31 @@ public class TransactionsTotalCalculator {
         }
     }
 
-    private static long calculateTotalFromCursor(DatabaseAdapter db, MyEntityManager em, Cursor c, Currency toCurrency) throws UnableToCalculateRateException {
+    private static long calculateTotalFromCursor(DatabaseAdapter db, Cursor c, Currency toCurrency) throws UnableToCalculateRateException {
         ExchangeRateProvider rates = db.getHistoryRates();
         BigDecimal balance = BigDecimal.ZERO;
         while (c.moveToNext()) {
-            balance = balance.add(getAmountFromCursor(em, c, toCurrency, rates, 0));
+            balance = balance.add(getAmountFromCursor(db, c, toCurrency, rates, 0));
         }
         return balance.longValue();
     }
 
-    public static Total calculateTotalFromListInHomeCurrency(DatabaseAdapter db, MyEntityManager em, List<TransactionInfo> list) {
+    public static Total calculateTotalFromListInHomeCurrency(DatabaseAdapter db, List<TransactionInfo> list) {
         try {
-            Currency toCurrency = em.getHomeCurrency();
-            long[] balance = calculateTotalFromList(db, em, list, toCurrency);
+            Currency toCurrency = db.getHomeCurrency();
+            long[] balance = calculateTotalFromList(db, list, toCurrency);
             return Total.asIncomeExpense(toCurrency, balance[0], balance[1]);
         } catch (UnableToCalculateRateException e) {
             return new Total(e.toCurrency, TotalError.atDateRateError(e.fromCurrency, e.datetime));
         }
     }
 
-    public static long[] calculateTotalFromList(DatabaseAdapter db, MyEntityManager em, List<TransactionInfo> list, Currency toCurrency) throws UnableToCalculateRateException {
+    public static long[] calculateTotalFromList(DatabaseAdapter db, List<TransactionInfo> list, Currency toCurrency) throws UnableToCalculateRateException {
         ExchangeRateProvider rates = db.getHistoryRates();
         BigDecimal income = BigDecimal.ZERO;
         BigDecimal expenses = BigDecimal.ZERO;
         for (TransactionInfo t : list) {
-            BigDecimal amount = getAmountFromTransaction(em, t, toCurrency, rates);
+            BigDecimal amount = getAmountFromTransaction(db, t, toCurrency, rates);
             if (amount.signum() > 0) {
                 income = income.add(amount);
             } else {
@@ -165,7 +163,7 @@ public class TransactionsTotalCalculator {
         return new long[]{income.longValue(),expenses.longValue()};
     }
 
-    public static BigDecimal getAmountFromCursor(MyEntityManager em, Cursor c, Currency toCurrency, ExchangeRateProvider rates, int index) throws UnableToCalculateRateException {
+    public static BigDecimal getAmountFromCursor(DatabaseAdapter db, Cursor c, Currency toCurrency, ExchangeRateProvider rates, int index) throws UnableToCalculateRateException {
         long datetime = c.getLong(index++);
         long fromCurrencyId = c.getLong(index++);
         long fromAmount = c.getLong(index++);
@@ -173,10 +171,10 @@ public class TransactionsTotalCalculator {
         long toAmount = c.getLong(index++);
         long originalCurrencyId = c.getLong(index++);
         long originalAmount = c.getLong(index);
-        return getConvertedAmount(em, toCurrency, rates, datetime, fromCurrencyId, fromAmount, toCurrencyId, toAmount, originalCurrencyId, originalAmount);
+        return getConvertedAmount(db, toCurrency, rates, datetime, fromCurrencyId, fromAmount, toCurrencyId, toAmount, originalCurrencyId, originalAmount);
     }
 
-    public static BigDecimal getAmountFromTransaction(MyEntityManager em, TransactionInfo ti, Currency toCurrency, ExchangeRateProvider rates)
+    public static BigDecimal getAmountFromTransaction(DatabaseAdapter db, TransactionInfo ti, Currency toCurrency, ExchangeRateProvider rates)
             throws UnableToCalculateRateException {
         long datetime = ti.dateTime;
         long fromCurrencyId = ti.fromAccount.currency.id;
@@ -185,10 +183,10 @@ public class TransactionsTotalCalculator {
         long toAmount = ti.toAmount;
         long originalCurrencyId = ti.originalCurrency != null ? ti.originalCurrency.id : 0;
         long originalAmount = ti.originalFromAmount;
-        return getConvertedAmount(em, toCurrency, rates, datetime, fromCurrencyId, fromAmount, toCurrencyId, toAmount, originalCurrencyId, originalAmount);
+        return getConvertedAmount(db, toCurrency, rates, datetime, fromCurrencyId, fromAmount, toCurrencyId, toAmount, originalCurrencyId, originalAmount);
     }
 
-    private static BigDecimal getConvertedAmount(MyEntityManager em, Currency toCurrency, ExchangeRateProvider rates, long datetime,
+    private static BigDecimal getConvertedAmount(DatabaseAdapter db, Currency toCurrency, ExchangeRateProvider rates, long datetime,
                                                  long fromCurrencyId, long fromAmount,
                                                  long toCurrencyId, long toAmount,
                                                  long originalCurrencyId, long originalAmount) throws UnableToCalculateRateException {
@@ -199,7 +197,7 @@ public class TransactionsTotalCalculator {
         } else if (originalCurrencyId > 0 && originalCurrencyId == toCurrency.id) {
             return BigDecimal.valueOf(originalAmount);
         } else {
-            Currency fromCurrency = CurrencyCache.getCurrency(em, fromCurrencyId);
+            Currency fromCurrency = CurrencyCache.getCurrency(db, fromCurrencyId);
             ExchangeRate exchangeRate = rates.getRate(fromCurrency, toCurrency, datetime);
             if (exchangeRate == ExchangeRate.NA) {
                 throw new UnableToCalculateRateException(fromCurrency, toCurrency, datetime);

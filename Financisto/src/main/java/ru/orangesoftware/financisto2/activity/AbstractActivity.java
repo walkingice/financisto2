@@ -24,7 +24,6 @@ import java.util.List;
 
 import ru.orangesoftware.financisto2.bus.GreenRobotBus;
 import ru.orangesoftware.financisto2.db.DatabaseAdapter;
-import ru.orangesoftware.financisto2.db.MyEntityManager;
 import ru.orangesoftware.financisto2.model.MultiChoiceItem;
 import ru.orangesoftware.financisto2.utils.PinProtection;
 import ru.orangesoftware.financisto2.view.NodeInflater;
@@ -34,9 +33,6 @@ public abstract class AbstractActivity extends Activity implements ActivityLayou
 
     @Bean
 	protected DatabaseAdapter db;
-
-    @Bean
-	protected MyEntityManager em;
 
     @Bean
     GreenRobotBus bus;

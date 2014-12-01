@@ -145,7 +145,7 @@ public class AccountActivity extends AbstractActivity {
 		paymentDayNode = x.addEditNode(layout, R.string.payment_day, paymentDayText);
 		setVisibility(paymentDayNode, View.GONE);		
 
-		currencyCursor = em.getAllCurrencies("name");
+		currencyCursor = db.getAllCurrencies("name");
 		startManagingCursor(currencyCursor);		
 		currencyAdapter = TransactionUtils.createCurrencyAdapter(this, currencyCursor);
 
@@ -158,7 +158,7 @@ public class AccountActivity extends AbstractActivity {
 		setVisibility(limitAmountView, View.GONE);
 
         if (accountId != -1) {
-            this.account = em.getAccount(accountId);
+            this.account = db.getAccount(accountId);
             if (this.account == null) {
                 this.account = new Account();
             }
@@ -233,7 +233,7 @@ public class AccountActivity extends AbstractActivity {
         account.limitAmount = -Math.abs(limitInput.getAmount());
         account.note = text(noteText);
 
-        long accountId = em.saveAccount(account);
+        long accountId = db.saveAccount(account);
         long amount = amountInput.getAmount();
         if (amount != 0) {
             Transaction t = new Transaction();
@@ -283,7 +283,7 @@ public class AccountActivity extends AbstractActivity {
 	}
 
     private void addNewCurrency() {
-        new CurrencySelector(this, em, new CurrencySelector.OnCurrencyCreatedListener() {
+        new CurrencySelector(this, db, new CurrencySelector.OnCurrencyCreatedListener() {
             @Override
             public void onCreated(long currencyId) {
                 if (currencyId == 0) {
@@ -365,7 +365,7 @@ public class AccountActivity extends AbstractActivity {
     }
 
 	private void selectCurrency(long currencyId) {
-        Currency c = em.get(Currency.class, currencyId);
+        Currency c = db.get(Currency.class, currencyId);
 		if (c != null) {
 			selectCurrency(c);
 		}

@@ -28,7 +28,6 @@ import java.util.zip.GZIPInputStream;
 import ru.orangesoftware.financisto2.db.Database;
 import ru.orangesoftware.financisto2.db.DatabaseAdapter;
 import ru.orangesoftware.financisto2.db.DatabaseSchemaEvolution;
-import ru.orangesoftware.financisto2.db.MyEntityManager;
 import ru.orangesoftware.financisto2.export.Export;
 import ru.orangesoftware.financisto2.export.dropbox.Dropbox;
 
@@ -37,29 +36,29 @@ public class DatabaseImport extends FullDatabaseImport {
 	private final DatabaseSchemaEvolution schemaEvolution;
     private final InputStream backupStream;
 
-    public static DatabaseImport createFromFileBackup(Context context, DatabaseAdapter db, MyEntityManager em, String backupFile) throws FileNotFoundException {
+    public static DatabaseImport createFromFileBackup(Context context, DatabaseAdapter db, String backupFile) throws FileNotFoundException {
         File backupPath = Export.getBackupFolder(context);
         File file = new File(backupPath, backupFile);
         FileInputStream inputStream = new FileInputStream(file);
-        return new DatabaseImport(context, db, em, inputStream);
+        return new DatabaseImport(context, db, inputStream);
     }
 
-    public static DatabaseImport createFromGoogleDriveBackup(Context context, DatabaseAdapter db, MyEntityManager em, Contents driveFileContents)
+    public static DatabaseImport createFromGoogleDriveBackup(Context context, DatabaseAdapter db, Contents driveFileContents)
             throws IOException {
         InputStream inputStream = driveFileContents.getInputStream();
         InputStream in = new GZIPInputStream(inputStream);
-        return new DatabaseImport(context, db, em, in);
+        return new DatabaseImport(context, db, in);
     }
 
-    public static DatabaseImport createFromDropboxBackup(Context context, DatabaseAdapter db, MyEntityManager em, Dropbox dropbox, String backupFile)
+    public static DatabaseImport createFromDropboxBackup(Context context, DatabaseAdapter db, Dropbox dropbox, String backupFile)
             throws Exception {
         InputStream inputStream = dropbox.getFileAsStream(backupFile);
         InputStream in = new GZIPInputStream(inputStream);
-        return new DatabaseImport(context, db, em, in);
+        return new DatabaseImport(context, db, in);
     }
 
-    private DatabaseImport(Context context, DatabaseAdapter db, MyEntityManager em, InputStream backupStream) {
-        super(context, db, em);
+    private DatabaseImport(Context context, DatabaseAdapter db, InputStream backupStream) {
+        super(context, db);
         this.schemaEvolution = new DatabaseSchemaEvolution(context, Database.DATABASE_NAME, null, Database.DATABASE_VERSION);
         this.backupStream = backupStream;
 	}
@@ -97,7 +96,7 @@ public class DatabaseImport extends FullDatabaseImport {
             if (line.startsWith("$")) {
                 if ("$$".equals(line)) {
                     if (tableName != null && values.size() > 0) {
-                        db.insert(tableName, null, values);
+                        sqlDb.insert(tableName, null, values);
                         tableName = null;
                         insideEntity = false;
                     }
