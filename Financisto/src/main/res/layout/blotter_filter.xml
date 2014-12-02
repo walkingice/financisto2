@@ -4,7 +4,7 @@
   are made available under the terms of the GNU Public License v2.0
   which accompanies this distribution, and is available at
   http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
-  
+
   Contributors:
       Denis Solonenko - initial API and implementation
 -->
@@ -27,30 +27,6 @@
 
     </ScrollView>
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        style="@style/ButtonBar"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
+    <include layout="@layout/ok_cancel_filter_buttons" />
 
-        <Button
-            android:id="@+id/bCancel"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/cancel" />
-
-        <ImageButton
-            android:id="@+id/bNoFilter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_menu_filter_clear"
-            android:text="@string/no_filter" />
-
-        <Button
-            android:id="@+id/bOK"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/ok" />
-    </LinearLayout>
 </LinearLayout>

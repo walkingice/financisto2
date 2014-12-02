@@ -13,6 +13,14 @@ public class GreenRobotBus {
         bus.post(event);
     }
 
+    public void postSticky(Object event) {
+        bus.postSticky(event);
+    }
+
+    public <T> T removeSticky(Class<T> eventClass) {
+        return bus.removeStickyEvent(eventClass);
+    }
+
     public void register(Object subscriber) {
         if (!bus.isRegistered(subscriber)) {
             bus.register(subscriber);

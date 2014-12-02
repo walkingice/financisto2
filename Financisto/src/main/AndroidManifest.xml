@@ -272,12 +272,12 @@
             android:label="@string/attribute"
             android:theme="@android:style/Theme.Holo.Light.Dialog" />
         <activity
-            android:name="ru.orangesoftware.financisto2.activity.DateFilterActivity"
+            android:name="ru.orangesoftware.financisto2.activity.DateFilterActivity_"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/filter"
             android:theme="@android:style/Theme.Holo.Light.Dialog" />
         <activity
-            android:name="ru.orangesoftware.financisto2.activity.BlotterFilterActivity"
+            android:name="ru.orangesoftware.financisto2.activity.BlotterFilterActivity_"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/filter"
             android:theme="@android:style/Theme.Holo.Light.Dialog" />

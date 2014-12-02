@@ -18,6 +18,8 @@ import java.util.List;
 import android.widget.*;
 import ru.orangesoftware.financisto2.R;
 import ru.orangesoftware.financisto2.blotter.BlotterFilter;
+import ru.orangesoftware.financisto2.bus.RemoveBlotterFilter;
+import ru.orangesoftware.financisto2.bus.GreenRobotBus;
 import ru.orangesoftware.financisto2.filter.SingleCategoryCriteria;
 import ru.orangesoftware.financisto2.filter.WhereFilter;
 import ru.orangesoftware.financisto2.filter.Criteria;
@@ -30,16 +32,25 @@ import ru.orangesoftware.financisto2.utils.TransactionUtils;
 import ru.orangesoftware.financisto2.datetime.Period;
 import android.content.Intent;
 import android.database.Cursor;
-import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
-import android.view.View.OnClickListener;
 
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Bean;
+import org.androidannotations.annotations.Click;
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.ViewById;
+import org.androidannotations.annotations.WindowFeature;
 
+@EActivity(R.layout.blotter_filter)
+@WindowFeature(Window.FEATURE_NO_TITLE)
 public class BlotterFilterActivity extends AbstractActivity {	
 	
     public static final String IS_ACCOUNT_FILTER = "IS_ACCOUNT_FILTER";
 	private static final TransactionStatus[] statuses = TransactionStatus.values();
+
+    @Bean
+    public GreenRobotBus bus;
 
 	private WhereFilter filter = WhereFilter.empty();
 	
@@ -60,17 +71,16 @@ public class BlotterFilterActivity extends AbstractActivity {
     private long accountId;
     private boolean isAccountFilter;
 
-    @Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		setContentView(R.layout.blotter_filter);
-		
+    @ViewById(R.id.layout)
+    LinearLayout layout;
+
+    @AfterViews
+	protected void init() {
+
 		df = DateUtils.getShortDateFormat(this);
 		sortBlotterEntries = getResources().getStringArray(R.array.sort_blotter_entries);
         filterValueNotFound = getString(R.string.filter_value_not_found);
 
-		LinearLayout layout = (LinearLayout)findViewById(R.id.layout);
 		period = x.addFilterNodeMinus(layout, R.id.period, R.id.period_clear, R.string.period, R.string.no_filter);
 		account = x.addFilterNodeMinus(layout, R.id.account, R.id.account_clear, R.string.account, R.string.no_filter);
 		currency = x.addFilterNodeMinus(layout, R.id.currency, R.id.currency_clear, R.string.currency, R.string.no_filter);
@@ -81,43 +91,6 @@ public class BlotterFilterActivity extends AbstractActivity {
 		status = x.addFilterNodeMinus(layout, R.id.status, R.id.status_clear, R.string.transaction_status, R.string.no_filter);
 		sortOrder = x.addFilterNodeMinus(layout, R.id.sort_order, R.id.sort_order_clear, R.string.sort_order, sortBlotterEntries[0]);
 
-		Button bOk = (Button)findViewById(R.id.bOK);
-		bOk.setOnClickListener(new OnClickListener(){
-			@Override
-			public void onClick(View v) {
-				Intent data = new Intent();
-				filter.toIntent(data);
-				setResult(RESULT_OK, data);
-				finish();
-			}
-		});
-		
-		Button bCancel = (Button)findViewById(R.id.bCancel);
-		bCancel.setOnClickListener(new OnClickListener(){
-			@Override
-			public void onClick(View v) {
-				setResult(RESULT_CANCELED);
-				finish();
-			}
-		});
-		
-		ImageButton bNoFilter = (ImageButton)findViewById(R.id.bNoFilter);
-		bNoFilter.setOnClickListener(new OnClickListener(){
-			@Override
-			public void onClick(View v) {
-                if (isAccountFilter()) {
-                    Intent data = new Intent();
-                    Criteria.eq(BlotterFilter.FROM_ACCOUNT_ID, String.valueOf(accountId))
-                        .toIntent(filter.getTitle(), data);
-                    setResult(RESULT_OK, data);
-                    finish();
-                } else {
-				    setResult(RESULT_FIRST_USER);
-				    finish();
-                }
-			}
-		});		
-		
 		Intent intent = getIntent();
 		if (intent != null) {
 			filter = WhereFilter.fromIntent(intent);
@@ -135,6 +108,27 @@ public class BlotterFilterActivity extends AbstractActivity {
 		}
 		
 	}
+
+    @Click(R.id.bOK)
+    protected void onOk() {
+        bus.postSticky(filter);
+        finish();
+    }
+
+    @Click(R.id.bCancel)
+    protected void onCancel() {
+        finish();
+    }
+
+    @Click(R.id.bNoFilter)
+    protected void onNoFilter() {
+        if (isAccountFilter()) {
+            bus.postSticky(WhereFilter.empty().eq(BlotterFilter.FROM_ACCOUNT_ID, String.valueOf(accountId)));
+        } else {
+            bus.postSticky(new RemoveBlotterFilter());
+        }
+        finish();
+    }
 
     private boolean isAccountFilter() {
         return isAccountFilter && accountId > 0;
@@ -281,7 +275,7 @@ public class BlotterFilterActivity extends AbstractActivity {
 	protected void onClick(View v, int id) {
 		switch (id) {
 		case R.id.period:
-			Intent intent = new Intent(this, DateFilterActivity.class);
+			Intent intent = DateFilterActivity_.intent(this).get();
 			filter.toIntent(intent);
 			startActivityForResult(intent, 1);
 			break;
