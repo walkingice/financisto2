@@ -3,7 +3,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.14.1'
+        classpath 'com.android.tools.build:gradle:1.0.0'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.4'
     }
 }
@@ -21,6 +21,11 @@ android {
     compileSdkVersion 19
     buildToolsVersion '21.1.1'
 
+//    compileOptions {
+//        sourceCompatibility JavaVersion.VERSION_1_7
+//        targetCompatibility JavaVersion.VERSION_1_7
+//    }
+
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 19
@@ -30,7 +35,7 @@ android {
 
     buildTypes {
         release {
-            runProguard false
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }
@@ -43,10 +48,28 @@ android {
     }
 }
 
+def googlePlayVersion = '6.5.87'
+
 dependencies {
-    compile 'com.android.support:support-v4:21.0.0'
-    compile 'com.google.android.gms:play-services:4.4.52'
+    compile 'com.android.support:support-v4:21.0.3'
     compile 'com.google.code.gson:gson:2.3'
+
+    compile "com.google.android.gms:play-services-base:$googlePlayVersion"
+    //compile "com.google.android.gms:play-services-ads:$googlePlayVersion"
+    //compile "com.google.android.gms:play-services-appindexing:$googlePlayVersion"
+    //compile "com.google.android.gms:play-services-maps:$googlePlayVersion"
+    //compile "com.google.android.gms:play-services-location:$googlePlayVersion"
+    //compile "com.google.android.gms:play-services-fitness:$googlePlayVersion"
+    //compile "com.google.android.gms:play-services-panorama:$googlePlayVersion"
+    compile "com.google.android.gms:play-services-drive:$googlePlayVersion"
+    //compile "com.google.android.gms:play-services-games:$googlePlayVersion"
+    //compile "com.google.android.gms:play-services-wallet:$googlePlayVersion"
+    //compile "com.google.android.gms:play-services-identity:$googlePlayVersion"
+    //compile "com.google.android.gms:play-services-cast:$googlePlayVersion"
+    compile "com.google.android.gms:play-services-plus:$googlePlayVersion"
+    //compile "com.google.android.gms:play-services-appstate:$googlePlayVersion"
+    //compile "com.google.android.gms:play-services-wearable:$googlePlayVersion"
+    //compile "com.google.android.gms:play-services-all-wear:$googlePlayVersion"
 
     apt "org.androidannotations:androidannotations:3.2"
     compile "org.androidannotations:androidannotations-api:3.2"
@@ -61,63 +84,7 @@ dependencies {
 
 apt {
     arguments {
-        androidManifestFile variant.processResources.manifestFile
+        androidManifestFile variant.outputs[0].processResources.manifestFile
         resourcePackageName 'ru.orangesoftware.financisto2'
-    }
-}
-
-def toCamelCase(String string) {
-    String result = ""
-    string.findAll("[^\\W]+") { String word ->
-        result += word.capitalize()
-    }
-    return result
-}
-
-afterEvaluate { project ->
-    Configuration runtimeConfiguration = project.configurations.getByName('compile')
-    ResolutionResult resolution = runtimeConfiguration.incoming.resolutionResult
-    // Forces resolve of configuration
-    ModuleVersionIdentifier module = resolution.getAllComponents().find { it.moduleVersion.name.equals("play-services") }.moduleVersion
-
-    String prepareTaskName = "prepare${toCamelCase("${module.group} ${module.name} ${module.version}")}Library"
-    File playServiceRootFolder = project.tasks.find { it.name.equals(prepareTaskName) }.explodedDir
-
-    Task stripPlayServices = project.tasks.create(name: 'stripPlayServices', group: "Strip") {
-        inputs.files new File(playServiceRootFolder, "classes.jar")
-        outputs.dir playServiceRootFolder
-        description 'Strip useless packages from Google Play Services library to avoid reaching dex limit'
-
-        doLast {
-            copy {
-                from(file(new File(playServiceRootFolder, "classes.jar")))
-                into(file(playServiceRootFolder))
-                rename { fileName ->
-                    fileName = "classes_orig.jar"
-                }
-            }
-            tasks.create(name: "stripPlayServices" + module.version, type: Jar) {
-                destinationDir = playServiceRootFolder
-                archiveName = "classes.jar"
-                from(zipTree(new File(playServiceRootFolder, "classes_orig.jar"))) {
-                    exclude "com/google/ads/**"
-                    exclude "com/google/android/gms/analytics/**"
-                    exclude "com/google/android/gms/games/**"
-                    //exclude "com/google/android/gms/maps/**"
-                    exclude "com/google/android/gms/panorama/**"
-                    exclude "com/google/android/gms/plus/**"
-                    //exclude "com/google/android/gms/drive/**"
-                    exclude "com/google/android/gms/ads/**"
-                    exclude "com/google/android/gms/wallet/**"
-                    exclude "com/google/android/gms/wearable/**"                }
-            }.execute()
-            delete {
-                file(new File(playServiceRootFolder, "classes_orig.jar"))
-            }
-        }
-    }
-
-    project.tasks.findAll { it.name.startsWith('prepare') && it.name.endsWith('Dependencies') }.each { Task task ->
-        task.dependsOn stripPlayServices
     }
 }
