@@ -31,11 +31,15 @@
 
     <ImageView
         android:id="@+id/right_top"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:src="@drawable/ic_blotter_income" />
+        android:src="@drawable/ic_blotter_income"
+        android:layout_alignTop="@+id/top"
+        android:layout_alignBottom="@+id/top"
+        android:adjustViewBounds="false"
+        android:scaleType="fitEnd" />
 
     <TextView
         android:id="@+id/top"
