@@ -148,9 +148,9 @@ public class BlotterListAdapter extends ResourceCursorAdapter {
             long toAmount = cursor.getLong(BlotterColumns.to_amount.ordinal());
             long fromBalance = cursor.getLong(BlotterColumns.from_account_balance.ordinal());
             long toBalance = cursor.getLong(BlotterColumns.to_account_balance.ordinal());
-            u.setTransferAmountText(v.rightView, fromCurrency, fromAmount, toCurrency, toAmount);
-            if (v.rightCenterView != null) {
-                u.setTransferBalanceText(v.rightCenterView, fromCurrency, fromBalance, toCurrency, toBalance);
+            u.setTransferAmountText(v.rightCenterView, fromCurrency, fromAmount, toCurrency, toAmount);
+            if (v.rightView != null) {
+                u.setTransferBalanceText(v.rightView, fromCurrency, fromBalance, toCurrency, toBalance);
             }
             v.iconView.setImageDrawable(icBlotterTransfer);
             v.iconView.setColorFilter(u.transferColor);
@@ -166,9 +166,9 @@ public class BlotterListAdapter extends ResourceCursorAdapter {
             if (originalCurrencyId > 0) {
                 Currency originalCurrency = CurrencyCache.getCurrency(db, originalCurrencyId);
                 long originalAmount = cursor.getLong(BlotterColumns.original_from_amount.ordinal());
-                u.setAmountText(sb, v.rightView, originalCurrency, originalAmount, fromCurrency, amount, true);
+                u.setAmountText(sb, v.rightCenterView, originalCurrency, originalAmount, fromCurrency, amount, true);
             } else {
-                u.setAmountText(sb, v.rightView, fromCurrency, amount, true);
+                u.setAmountText(sb, v.rightCenterView, fromCurrency, amount, true);
             }
             long categoryId = cursor.getLong(BlotterColumns.category_id.ordinal());
             if (isSplit(categoryId)) {
@@ -192,9 +192,9 @@ public class BlotterListAdapter extends ResourceCursorAdapter {
                     v.iconView.setColorFilter(u.negativeColor);
                 }
             }
-            if (v.rightCenterView != null) {
+            if (v.rightView != null) {
                 long balance = cursor.getLong(BlotterColumns.from_account_balance.ordinal());
-                v.rightCenterView.setText(Utils.amountToString(fromCurrency, balance, false));
+                v.rightView.setText(Utils.amountToString(fromCurrency, balance, false));
             }
         }
         if (isTemplate == 1) {
@@ -218,7 +218,7 @@ public class BlotterListAdapter extends ResourceCursorAdapter {
                 }
             }
         }
-        removeRightCenterViewIfNeeded(v);
+        removeRunningBalanceViewIfNeeded(v);
         if (v.checkBox != null) {
             final long id = cursor.getLong(BlotterColumns._id.ordinal());
             v.checkBox.setOnClickListener(new OnClickListener() {
@@ -260,9 +260,9 @@ public class BlotterListAdapter extends ResourceCursorAdapter {
         return location;
     }
 
-    protected void removeRightCenterViewIfNeeded(BlotterViewHolder v) {
-        if (v.rightCenterView != null && !isShowRunningBalance()) {
-            v.rightCenterView.setVisibility(View.GONE);
+    protected void removeRunningBalanceViewIfNeeded(BlotterViewHolder v) {
+        if (v.rightView != null && !isShowRunningBalance()) {
+            v.rightView.setVisibility(View.GONE);
             v.iconView.setPadding(0, topPadding, 0, 0);
         }
     }

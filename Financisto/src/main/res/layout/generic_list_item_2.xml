@@ -68,7 +68,8 @@
             android:layout_weight="1"
             android:singleLine="true"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Center" />
+            android:text="Center"
+            android:ellipsize="end" />
 
         <TextView
             android:id="@+id/right_center"
@@ -78,7 +79,7 @@
             android:paddingLeft="5dp"
             android:singleLine="true"
             android:text="right_center"
-            style="@style/TextAppearance.BalanceAmount" />
+            android:textAppearance="?android:attr/textAppearanceMedium" />
     </LinearLayout>
 
     <LinearLayout
@@ -104,7 +105,7 @@
             android:paddingLeft="5dp"
             android:singleLine="true"
             android:text="right"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+            style="@style/TextAppearance.BalanceAmount" />
     </LinearLayout>
 
     <ProgressBar
