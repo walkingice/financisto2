@@ -8,8 +8,13 @@
 
 package ru.orangesoftware.financisto2.model;
 
+import android.content.Context;
+import android.support.v4.util.LongSparseArray;
+
+import ru.orangesoftware.financisto2.db.CategoryRepository;
 import ru.orangesoftware.financisto2.db.DatabaseAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
@@ -24,21 +29,23 @@ public class CategoryTreeNavigator {
     public static final long INCOME_CATEGORY_ID = -101;
     public static final long EXPENSE_CATEGORY_ID = -102;
 
-    private final DatabaseAdapter db;
-    private final Stack<CategoryTree<Category>> categoriesStack = new Stack<CategoryTree<Category>>();
+    private final Stack<List<Category>> categoriesStack = new Stack<List<Category>>();
 
-    public CategoryTree<Category> categories;
+    Category noCategory;
+    Category splitCategory;
+
+    public List<Category> categories;
     public long selectedCategoryId = 0;
 
-    public CategoryTreeNavigator(DatabaseAdapter db) {
-        this.db = db;
-        this.categories = db.getCategoriesTree(false);
-        Category noCategory = db.getCategory(Category.NO_CATEGORY_ID);
+    public CategoryTreeNavigator(Context context, CategoryRepository repository) {
+        this.categories = repository.loadCategories().getRoot().children;
+        this.noCategory = Category.noCategory(context);
+        this.splitCategory = Category.splitCategory(context);
         tagCategories(noCategory);
     }
 
     public void selectCategory(long selectedCategoryId) {
-        Map<Long, Category> map = categories.asMap();
+        LongSparseArray<Category> map = CategoryTree.asDeepMap(categories);
         Category selectedCategory = map.get(selectedCategoryId);
         if (selectedCategory != null) {
             Stack<Long> path = new Stack<Long>();
@@ -55,20 +62,20 @@ public class CategoryTreeNavigator {
     }
 
     public void tagCategories(Category parent) {
-        if (categories.size() > 0 && categories.getAt(0).id != parent.id) {
+        if (categories.size() > 0 && categories.get(0).id != parent.id) {
             Category copy = new Category();
             copy.id = parent.id;
             copy.title = parent.title;
             if (parent.isIncome()) {
                 copy.makeThisCategoryIncome();
             }
-            categories.insertAtTop(copy);
+            categories.add(0, copy);
         }
         StringBuilder sb = new StringBuilder();
         for (Category c : categories) {
             if (c.tag == null && c.hasChildren()) {
                 sb.setLength(0);
-                CategoryTree<Category> children = c.children;
+                List<Category> children = c.children;
                 for (Category child : children) {
                     if (sb.length() > 0) {
                         sb.append(",");
@@ -124,16 +131,15 @@ public class CategoryTreeNavigator {
     }
     
     public List<Category> getSelectedRoots() {
-        return categories.getRoots();
+        return categories;
     }
 
     public void addSplitCategoryToTheTop() {
-        Category splitCategory = db.getCategory(Category.SPLIT_CATEGORY_ID);
-        categories.insertAtTop(splitCategory);
+        categories.add(0, splitCategory);
     }
 
     public void separateIncomeAndExpense() {
-        CategoryTree<Category> newCategories = new CategoryTree<Category>();
+        List<Category> newCategories = new ArrayList<Category>();
         Category income = new Category();
         income.id = INCOME_CATEGORY_ID;
         income.makeThisCategoryIncome();

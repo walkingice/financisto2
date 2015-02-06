@@ -39,6 +39,7 @@ import ru.orangesoftware.financisto2.db.DatabaseHelper.AttributeColumns;
 import ru.orangesoftware.financisto2.db.DatabaseHelper.CategoryColumns;
 import ru.orangesoftware.financisto2.model.Attribute;
 import ru.orangesoftware.financisto2.model.Category;
+import ru.orangesoftware.financisto2.model.MyEntity;
 import ru.orangesoftware.financisto2.utils.EnumUtils;
 import ru.orangesoftware.financisto2.utils.LocalizableEnum;
 
@@ -64,7 +65,7 @@ public class CategoryActivity extends AbstractActivity {
     private TextView parentCategoryText;
     private TextView categoryTypeText;
 
-    private Cursor categoryCursor;
+    private List<Category> categories;
     private CategoryListAdapter categoryAdapter;
 
     @ViewById(R.id.scroll)
@@ -85,17 +86,17 @@ public class CategoryActivity extends AbstractActivity {
     protected void afterViews() {
 
         if (categoryId != -1) {
-            category = db.getCategoryWithParent(categoryId);
+            category = db.getCategory(categoryId);
         }
 
         fetchAttributes();
 
         if (category.id == -1) {
-            categoryCursor = db.getCategories(true);
+            categories = categoryRepository.loadCategories().asFlatList();
         } else {
-            categoryCursor = db.getCategoriesWithoutSubtree(category.id);
+            categories = categoryRepository.loadCategories().asFlatListWithoutSubtree(category.id);
         }
-        startManagingCursor(categoryCursor);
+        categories.add(0, Category.noCategory(this));
 
         LinearLayout layout = (LinearLayout) findViewById(R.id.layout);
         parentCategoryText = x.addListNode(layout, R.id.category, R.string.parent, R.string.select_category);
@@ -111,8 +112,7 @@ public class CategoryActivity extends AbstractActivity {
         parentAttributesLayout = (LinearLayout) x.addTitleNodeNoDivider(layout, R.string.parent_attributes).findViewById(R.id.layout);
         addParentAttributes();
 
-        categoryAdapter = new CategoryListAdapter(
-                db, this, android.R.layout.simple_spinner_dropdown_item, categoryCursor);
+        categoryAdapter = new CategoryListAdapter(db, this, android.R.layout.simple_spinner_dropdown_item, categories);
 
         editCategory();
     }
@@ -136,9 +136,9 @@ public class CategoryActivity extends AbstractActivity {
                     attributes.add((Attribute) o);
                 }
             }
-            long id = db.insertOrUpdate(category, attributes);
+            categoryRepository.saveCategory(category);
             Intent data = new Intent();
-            data.putExtra(CategoryColumns._id.name(), id);
+            data.putExtra(CategoryColumns._id.name(), category.id);
             setResult(RESULT_OK, data);
             finish();
         }
@@ -232,8 +232,8 @@ public class CategoryActivity extends AbstractActivity {
     protected void onClick(View v, int id) {
         switch (id) {
             case R.id.category:
-                x.select(this, R.id.category, R.string.parent, categoryCursor, categoryAdapter,
-                        CategoryColumns._id.name(), category.getParentId());
+                int selectedPosition = MyEntity.indexOf(categories, category.getParentId());
+                x.selectItemId(this, R.id.category, R.string.parent, categoryAdapter, selectedPosition);
                 break;
             case R.id.category_type:
                 if (allowTypeChange) {
@@ -290,6 +290,7 @@ public class CategoryActivity extends AbstractActivity {
         Category c = db.getCategory(parentId);
         if (c != null) {
             category.parent = c;
+            category.parentId = parentId;
             parentCategoryText.setText(c.title);
         }
         updateIncomeExpenseType();

@@ -168,9 +168,9 @@ class MyEntityManager extends EntityManager {
         }
     }
 
-    public Map<Long, MyLocation> getAllLocationsByIdMap(boolean includeNoLocation) {
+    public LongSparseArray<MyLocation> getAllLocationsByIdMap(boolean includeNoLocation) {
         List<MyLocation> locations = getAllLocationsList(includeNoLocation);
-        Map<Long, MyLocation> map = new HashMap<Long, MyLocation>();
+        LongSparseArray<MyLocation> map = new LongSparseArray<MyLocation>();
         for (MyLocation location : locations) {
             map.put(location.id, location);
         }
@@ -307,8 +307,8 @@ class MyEntityManager extends EntityManager {
         return list;
     }
 
-    public Map<Long, Account> getAllAccountsMap() {
-        Map<Long, Account> accountsMap = new HashMap<Long, Account>();
+    public LongSparseArray<Account> getAllAccountsMap() {
+        LongSparseArray<Account> accountsMap = new LongSparseArray<Account>();
         List<Account> list = getAllAccountsList(false);
         for (Account account : list) {
             accountsMap.put(account.id, account);
@@ -409,7 +409,7 @@ class MyEntityManager extends EntityManager {
         return entitiesAsTitleMap(getAllProjectsList(includeNoProject));
     }
 
-    public Map<Long, Project> getAllProjectsByIdMap(boolean includeNoProject) {
+    public LongSparseArray<Project> getAllProjectsByIdMap(boolean includeNoProject) {
         return entitiesAsIdMap(getAllProjectsList(includeNoProject));
     }
 
@@ -533,10 +533,6 @@ class MyEntityManager extends EntityManager {
         return (ArrayList<TransactionInfo>) q.list();
     }
 
-    public Category getCategory(long id) {
-        return get(Category.class, id);
-    }
-
     public ArrayList<Category> getAllCategoriesList(boolean includeNoCategory) {
         return getAllEntitiesList(Category.class, includeNoCategory);
     }
@@ -574,7 +570,7 @@ class MyEntityManager extends EntityManager {
         return entitiesAsTitleMap(getAllPayeeList());
     }
 
-    public Map<Long, Payee> getAllPayeeByIdMap() {
+    public LongSparseArray<Payee> getAllPayeeByIdMap() {
         return entitiesAsIdMap(getAllPayeeList());
     }
 
@@ -642,8 +638,8 @@ class MyEntityManager extends EntityManager {
         return map;
     }
 
-    private static <T extends MyEntity> Map<Long, T> entitiesAsIdMap(List<T> entities) {
-        Map<Long, T> map = new HashMap<Long, T>();
+    private static <T extends MyEntity> LongSparseArray<T> entitiesAsIdMap(List<T> entities) {
+        LongSparseArray<T> map = new LongSparseArray<T>();
         for (T e : entities) {
             map.put(e.id, e);
         }

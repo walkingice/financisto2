@@ -12,20 +12,18 @@ package ru.orangesoftware.financisto2.activity;
 
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.util.LongSparseArray;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListAdapter;
 import ru.orangesoftware.financisto2.adapter.TransactionsListAdapter;
 import ru.orangesoftware.financisto2.blotter.TotalCalculationTask;
 import ru.orangesoftware.financisto2.model.*;
-import ru.orangesoftware.financisto2.utils.CurrencyCache;
-
-import java.util.Map;
 
 public class BudgetBlotterActivity extends BlotterActivity {
 	
-	private Map<Long, Category> categories;
-	private Map<Long, Project> projects;
+	private LongSparseArray<Category> categories;
+	private LongSparseArray<Project> projects;
 	
     public BudgetBlotterActivity() {
 		super();
@@ -33,7 +31,7 @@ public class BudgetBlotterActivity extends BlotterActivity {
         
 	@Override
 	protected void internalOnCreate(Bundle savedInstanceState) {
-		categories = MyEntity.asMap(db.getCategoriesList(true));
+		categories = categoryRepository.loadCategories().asIdMap();
 		projects = MyEntity.asMap(db.getActiveProjectsList(true));
 		super.internalOnCreate(savedInstanceState);
 		bFilter.setVisibility(View.GONE);

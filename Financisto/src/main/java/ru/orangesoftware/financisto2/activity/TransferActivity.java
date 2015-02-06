@@ -51,7 +51,9 @@ public class TransferActivity extends AbstractTransactionActivity {
 	}
 
     protected void fetchCategories() {
-        categorySelector.fetchCategories(false);
+        categorySelector = new CategorySelector(this, x, false);
+        categorySelector.setListener(this);
+        categorySelector.fetchCategories();
         categorySelector.doNotShowSplitCategory();
     }
 

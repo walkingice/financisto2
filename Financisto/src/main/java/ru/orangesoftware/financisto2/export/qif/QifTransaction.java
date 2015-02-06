@@ -1,6 +1,8 @@
 package ru.orangesoftware.financisto2.export.qif;
 
 import android.database.Cursor;
+import android.support.v4.util.LongSparseArray;
+
 import ru.orangesoftware.financisto2.model.Account;
 import ru.orangesoftware.financisto2.model.Category;
 import ru.orangesoftware.financisto2.model.Transaction;
@@ -35,7 +37,7 @@ public class QifTransaction {
     public boolean isSplit = false;
     public List<QifTransaction> splits;
 
-    public static QifTransaction fromBlotterCursor(Cursor c, Map<Long, Category> categoriesMap) {
+    public static QifTransaction fromBlotterCursor(Cursor c, LongSparseArray<Category> categoriesMap) {
         QifTransaction t = new QifTransaction();
         t.id = c.getLong(BlotterColumns._id.ordinal());
         t.date = new Date(c.getLong(BlotterColumns.datetime.ordinal()));
@@ -56,7 +58,7 @@ public class QifTransaction {
         return t;
     }
 
-    private static Category getCategoryFromCursor(Cursor c, Map<Long, Category> categoriesMap) {
+    private static Category getCategoryFromCursor(Cursor c, LongSparseArray<Category> categoriesMap) {
         long categoryId = c.getLong(BlotterColumns.category_id.ordinal());
         return categoriesMap.get(categoryId);
     }
@@ -184,7 +186,7 @@ public class QifTransaction {
         splits.add(split);
     }
 
-    public static QifTransaction fromTransaction(Transaction transaction, Map<Long, Category> categoriesMap, Map<Long, Account> accountsMap) {
+    public static QifTransaction fromTransaction(Transaction transaction, LongSparseArray<Category> categoriesMap, LongSparseArray<Account> accountsMap) {
         QifTransaction qifTransaction = new QifTransaction();
         qifTransaction.amount = transaction.fromAmount;
         qifTransaction.memo = transaction.note;

@@ -40,11 +40,11 @@ public class TransactionTest extends AbstractDbTest {
         Currency c2 = CurrencyBuilder.withDb(db).name("SGD").title("Singapore Dollar").symbol("S$").create();
         a1 = AccountBuilder.createDefault(db, c1);
         a2 = AccountBuilder.createDefault(db, c2);
-        categories = CategoryBuilder.createDefaultHierarchy(db);
+        categories = CategoryBuilder.createDefaultHierarchy(categoryRepository);
     }
 
     public void test_should_create_splits() {
-        Transaction t = TransactionBuilder.withDb(db).account(a1).amount(200).payee("P1").category(CategoryBuilder.split(db))
+        Transaction t = TransactionBuilder.withDb(db).account(a1).amount(200).payee("P1").category(Category.splitCategory(context))
                 .withSplit(categories.get("A1"), 60)
                 .withSplit(categories.get("A2"), 40)
                 .withTransferSplit(a2, 100, 50)
@@ -117,7 +117,7 @@ public class TransactionTest extends AbstractDbTest {
     }
 
     public void test_should_duplicate_splits() {
-        Transaction t = TransactionBuilder.withDb(db).account(a1).amount(-150).category(CategoryBuilder.split(db))
+        Transaction t = TransactionBuilder.withDb(db).account(a1).amount(-150).category(Category.splitCategory(context))
                 .withSplit(categories.get("A1"), -60)
                 .withSplit(categories.get("A2"), -40)
                 .withTransferSplit(a2, -50, 40)
@@ -146,7 +146,7 @@ public class TransactionTest extends AbstractDbTest {
     }
 
     public void test_should_update_splits() {
-        Transaction t = TransactionBuilder.withDb(db).account(a1).amount(-150).category(CategoryBuilder.split(db))
+        Transaction t = TransactionBuilder.withDb(db).account(a1).amount(-150).category(Category.splitCategory(context))
                 .withSplit(categories.get("A1"), -60)
                 .withSplit(categories.get("A2"), -40)
                 .withTransferSplit(a2, -50, 40)
@@ -165,7 +165,7 @@ public class TransactionTest extends AbstractDbTest {
     }
 
     public void test_should_delete_splits() {
-        Transaction t = TransactionBuilder.withDb(db).account(a1).amount(-150).category(CategoryBuilder.split(db))
+        Transaction t = TransactionBuilder.withDb(db).account(a1).amount(-150).category(Category.splitCategory(context))
                 .withSplit(categories.get("A1"), -60)
                 .withSplit(categories.get("A2"), -40)
                 .withTransferSplit(a2, -50, 40)
@@ -224,7 +224,7 @@ public class TransactionTest extends AbstractDbTest {
     }
 
     public void test_should_update_original_amount_for_splits() {
-        Transaction t = TransactionBuilder.withDb(db).account(a1).category(CategoryBuilder.split(db))
+        Transaction t = TransactionBuilder.withDb(db).account(a1).category(Category.splitCategory(context))
                 .amount(120).originalAmount(a2.currency, 100)
                 .withSplit(categories.get("A1"), 60)
                 .withSplit(categories.get("A2"), 40)

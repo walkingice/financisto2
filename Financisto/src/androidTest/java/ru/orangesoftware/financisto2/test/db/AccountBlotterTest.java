@@ -40,7 +40,7 @@ public class AccountBlotterTest extends AbstractDbTest {
         super.setUp();
         a1 = AccountBuilder.createDefault(db);
         a2 = AccountBuilder.createDefault(db);
-        categoriesMap = CategoryBuilder.createDefaultHierarchy(db);
+        categoriesMap = CategoryBuilder.createDefaultHierarchy(categoryRepository);
     }
 
     public void test_should_include_transfer_splits_into_blotter_for_account() {

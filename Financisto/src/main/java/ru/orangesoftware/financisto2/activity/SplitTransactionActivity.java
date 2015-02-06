@@ -52,10 +52,10 @@ public class SplitTransactionActivity extends AbstractSplitActivity implements C
 
     @Override
     protected void fetchData() {
-        categorySelector = new CategorySelector(this, x);
+        categorySelector = new CategorySelector(this, x, false);
         categorySelector.setListener(this);
         categorySelector.doNotShowSplitCategory();
-        categorySelector.fetchCategories(false);
+        categorySelector.fetchCategories();
     }
 
     @Override

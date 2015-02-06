@@ -56,7 +56,7 @@ public class SubCategoryReport extends Report {
         final ExchangeRateProvider rates = db.getHistoryRates();
         try {
             final int leftColumnIndex = c.getColumnIndex(DatabaseHelper.SubCategoryReportColumns.LEFT);
-            CategoryTree<CategoryAmount> amounts = CategoryTree.createFromCursor(c, new NodeCreator<CategoryAmount>(){
+            CategoryTree amounts = null;/* CategoryTree.createFromCursor(c, new NodeCreator<CategoryAmount>(){
                 @Override
                 public CategoryAmount createNode(Cursor c) {
                     BigDecimal amount;
@@ -67,7 +67,7 @@ public class SubCategoryReport extends Report {
                     }
                     return new CategoryAmount(c, leftColumnIndex, amount);
                 }
-            });
+            });*/
 
             ArrayList<GraphUnitTree> roots = createTree(amounts, 0);
             ArrayList<GraphUnit> units = new ArrayList<GraphUnit>();
@@ -89,11 +89,11 @@ public class SubCategoryReport extends Report {
         return data;
     }
 
-    private ArrayList<GraphUnitTree> createTree(CategoryTree<CategoryAmount> amounts, int level) {
+    private ArrayList<GraphUnitTree> createTree(CategoryTree amounts, int level) {
 		ArrayList<GraphUnitTree> roots = new ArrayList<GraphUnitTree>();
 		GraphUnitTree u = null;
 		long lastId = -1;
-		for (CategoryAmount a : amounts) {
+		/*for (CategoryAmount a : amounts) {
 			if (u == null || lastId != a.id) {
 				u = new GraphUnitTree(a.id, a.title, currency, getStyle(level));
 				roots.add(u);
@@ -104,7 +104,7 @@ public class SubCategoryReport extends Report {
 				u.setChildren(createTree(a.children, level+1));
 				u = null;				
 			}
-		}
+		}*/
         Iterator<GraphUnitTree> i = roots.iterator();
         while (i.hasNext()) {
             GraphUnitTree root = i.next();
@@ -142,7 +142,7 @@ public class SubCategoryReport extends Report {
         return SplitsBlotterActivity.class;
     }
 
-	private static class CategoryAmount extends CategoryEntity<CategoryAmount> {
+	private static class CategoryAmount extends Category {
 		
 		private final BigDecimal amount;
         private final int isTransfer;

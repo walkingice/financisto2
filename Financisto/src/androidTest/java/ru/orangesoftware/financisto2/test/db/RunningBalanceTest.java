@@ -33,7 +33,7 @@ public class RunningBalanceTest extends AbstractDbTest {
         a1 = AccountBuilder.createDefault(db);
         a2 = AccountBuilder.createDefault(db);
         a3 = AccountBuilder.createDefault(db);
-        categoriesMap = CategoryBuilder.createDefaultHierarchy(db);
+        categoriesMap = CategoryBuilder.createDefaultHierarchy(categoryRepository);
     }
 
     public void test_should_update_running_balance_for_single_account() {

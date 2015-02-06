@@ -14,6 +14,7 @@ import android.os.Handler;
 import android.util.Log;
 import ru.orangesoftware.financisto2.R;
 import ru.orangesoftware.financisto2.activity.MainActivity;
+import ru.orangesoftware.financisto2.db.CategoryRepository;
 import ru.orangesoftware.financisto2.db.DatabaseAdapter;
 import ru.orangesoftware.financisto2.export.ImportExportAsyncTask;
 import ru.orangesoftware.financisto2.export.ImportExportAsyncTaskListener;
@@ -41,9 +42,9 @@ public class QifImportTask extends ImportExportAsyncTask {
     }
 
     @Override
-    protected Object work(Context context, DatabaseAdapter db, String... params) throws Exception {
+    protected Object work(Context context, DatabaseAdapter db, CategoryRepository categoryRepository, String... params) throws Exception {
         try {
-            QifImport qifImport = new QifImport(context, db, options);
+            QifImport qifImport = new QifImport(context, db, categoryRepository, options);
             qifImport.importDatabase();
             return null;
         } catch (Exception e) {

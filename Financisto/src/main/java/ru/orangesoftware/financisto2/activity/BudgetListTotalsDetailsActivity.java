@@ -42,7 +42,7 @@ public class BudgetListTotalsDetailsActivity extends AbstractTotalsDetailsActivi
     @Override
     protected void prepareInBackground() {
         List<Budget> budgets = db.getAllBudgets(filter);
-        calculator = new BudgetsTotalCalculator(db, budgets);
+        calculator = new BudgetsTotalCalculator(db, categoryRepository, budgets);
         calculator.updateBudgets(null);
     }
 

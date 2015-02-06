@@ -33,7 +33,7 @@ public class UIEventHandler {
         this.context = context;
     }
 
-    public void onEventBackgroundThread(InitialLoad event) {
+    public void onEventMainThread(InitialLoad event) {
         initialLoad();
     }
 

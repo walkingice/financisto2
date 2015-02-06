@@ -41,7 +41,7 @@ public abstract class AbstractReportTest extends AbstractDbTest {
         a1 = AccountBuilder.createDefault(db, c1);
         a2 = AccountBuilder.createDefault(db, c1);
         a3 = AccountBuilder.createDefault(db, c2);
-        categories = CategoryBuilder.createDefaultHierarchy(db);
+        categories = CategoryBuilder.createDefaultHierarchy(categoryRepository);
         report = createReport();
         CurrencyCache.initialize(db);
     }

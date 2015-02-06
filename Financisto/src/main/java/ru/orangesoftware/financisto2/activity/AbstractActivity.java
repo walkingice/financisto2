@@ -23,6 +23,7 @@ import org.androidannotations.annotations.EActivity;
 import java.util.List;
 
 import ru.orangesoftware.financisto2.bus.GreenRobotBus;
+import ru.orangesoftware.financisto2.db.CategoryRepository;
 import ru.orangesoftware.financisto2.db.DatabaseAdapter;
 import ru.orangesoftware.financisto2.model.MultiChoiceItem;
 import ru.orangesoftware.financisto2.utils.PinProtection;
@@ -33,6 +34,9 @@ public abstract class AbstractActivity extends Activity implements ActivityLayou
 
     @Bean
 	protected DatabaseAdapter db;
+
+    @Bean
+    protected CategoryRepository categoryRepository;
 
     @Bean
     GreenRobotBus bus;

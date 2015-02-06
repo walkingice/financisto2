@@ -251,7 +251,7 @@ public class BudgetListActivity extends AbstractListActivity {
 		@Override
 		protected Total doInBackground(Void... params) {
 			try {
-                BudgetsTotalCalculator c = new BudgetsTotalCalculator(db, budgets);
+                BudgetsTotalCalculator c = new BudgetsTotalCalculator(db, categoryRepository, budgets);
                 c.updateBudgets(handler);
                 return c.calculateTotalInHomeCurrency();
 			} catch (Exception ex) {

@@ -50,7 +50,7 @@ public class TransactionsTotalCalculatorTest extends AbstractDbTest {
     public void setUp() throws Exception {
         super.setUp();
 
-        Map<String, Category> categories = CategoryBuilder.createDefaultHierarchy(db);
+        Map<String, Category> categories = CategoryBuilder.createDefaultHierarchy(categoryRepository);
 
         c1 = CurrencyBuilder.withDb(db).name("USD").title("Dollar").symbol("$").makeDefault().create();
         c2 = CurrencyBuilder.withDb(db).name("EUR").title("Euro").symbol("€").create();

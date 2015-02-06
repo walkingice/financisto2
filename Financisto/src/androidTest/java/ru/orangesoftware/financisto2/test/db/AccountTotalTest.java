@@ -24,7 +24,7 @@ public class AccountTotalTest extends AbstractDbTest {
         a1 = AccountBuilder.createDefault(db);
         a2 = AccountBuilder.createDefault(db);
         a3 = AccountBuilder.createDefault(db);
-        categoriesMap = CategoryBuilder.createDefaultHierarchy(db);
+        categoriesMap = CategoryBuilder.createDefaultHierarchy(categoryRepository);
     }
 
     public void test_should_update_account_total_when_credit_transaction_is_added() {

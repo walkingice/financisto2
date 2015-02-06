@@ -11,6 +11,7 @@ package ru.orangesoftware.financisto2.export.qif;
 import android.content.Context;
 import android.util.Log;
 import ru.orangesoftware.financisto2.backup.FullDatabaseImport;
+import ru.orangesoftware.financisto2.db.CategoryRepository;
 import ru.orangesoftware.financisto2.db.DatabaseAdapter;
 import ru.orangesoftware.financisto2.export.CategoryCache;
 import ru.orangesoftware.financisto2.model.*;
@@ -35,8 +36,8 @@ public class QifImport extends FullDatabaseImport {
     private final Map<String, Long> projectToId = new HashMap<String, Long>();
     private final CategoryCache categoryCache = new CategoryCache();
 
-    public QifImport(Context context, DatabaseAdapter db, QifImportOptions options) {
-        super(context, db);
+    public QifImport(Context context, DatabaseAdapter db, CategoryRepository categoryRepository, QifImportOptions options) {
+        super(context, db, categoryRepository);
         this.options = options;
     }
 
@@ -78,7 +79,7 @@ public class QifImport extends FullDatabaseImport {
         insertProjects(parser.classes);
         long t2 = System.currentTimeMillis();
         Log.i("Financisto", "QIF Import: Inserting projects done in "+ TimeUnit.MILLISECONDS.toSeconds(t2-t1)+"s");
-        categoryCache.insertCategories(db, parser.categories);
+        categoryCache.insertCategories(categoryRepository, parser.categories);
         long t3 = System.currentTimeMillis();
         Log.i("Financisto", "QIF Import: Inserting categories done in "+ TimeUnit.MILLISECONDS.toSeconds(t3-t2)+"s");
         insertAccounts(parser.accounts);

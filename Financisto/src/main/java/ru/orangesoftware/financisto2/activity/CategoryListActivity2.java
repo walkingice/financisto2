@@ -38,6 +38,7 @@ import ru.orangesoftware.financisto2.adapter.CategoryListAdapter2;
 import ru.orangesoftware.financisto2.bus.DeleteEntity;
 import ru.orangesoftware.financisto2.bus.EditEntity;
 import ru.orangesoftware.financisto2.bus.GreenRobotBus;
+import ru.orangesoftware.financisto2.db.CategoryRepository;
 import ru.orangesoftware.financisto2.db.DatabaseAdapter;
 import ru.orangesoftware.financisto2.model.Category;
 import ru.orangesoftware.financisto2.model.CategoryTree;
@@ -53,9 +54,12 @@ public class CategoryListActivity2 extends ListActivity {
     protected DatabaseAdapter db;
 
     @Bean
+    protected CategoryRepository categoryRepository;
+
+    @Bean
     protected GreenRobotBus bus;
 
-    private CategoryTree<Category> categories;
+    private CategoryTree tree;
 	private Map<Long, String> attributes;
 
     @Override
@@ -97,7 +101,7 @@ public class CategoryListActivity2 extends ListActivity {
 
     public void reload() {
         long t0 = System.currentTimeMillis();
-        categories = db.getCategoriesTree(false);
+        tree = categoryRepository.loadCategories();
         attributes = db.getAttributesMapping();
         updateAdapter();
         long t1 = System.currentTimeMillis();
@@ -107,10 +111,10 @@ public class CategoryListActivity2 extends ListActivity {
     private void updateAdapter() {
         CategoryListAdapter2 adapter = (CategoryListAdapter2) getListAdapter();
         if (adapter == null) {
-            adapter = new CategoryListAdapter2(this, bus, categories, attributes);
+            adapter = new CategoryListAdapter2(this, bus, tree, attributes);
             setListAdapter(adapter);
         } else {
-            adapter.setCategories(categories);
+            adapter.setCategories(tree);
             adapter.setAttributes(attributes);
             notifyDataSetChanged();
         }
@@ -121,12 +125,11 @@ public class CategoryListActivity2 extends ListActivity {
 		Category c = db.getCategory(event.id);
 		new AlertDialog.Builder(this)
 			.setTitle(c.getTitle())
-			.setIcon(android.R.drawable.ic_dialog_alert)
 			.setMessage(R.string.delete_category_dialog)
 			.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener(){
 				@Override
 				public void onClick(DialogInterface arg0, int arg1) {
-					db.deleteCategory(event.id);
+                    categoryRepository.deleteCategoryById(event.id);
 					reload();
 				}				
 			})
@@ -143,38 +146,33 @@ public class CategoryListActivity2 extends ListActivity {
 	protected void viewItem(final Category c) {
 		final ArrayList<PositionAction> actions = new ArrayList<PositionAction>();
 		Category p = c.parent;
-		CategoryTree<Category> treeUnderAction;
+		final Category categoryUnderAction;
 		if (p == null) {
-			treeUnderAction = this.categories;
+			categoryUnderAction = tree.getRoot();
 		} else {
-			treeUnderAction = p.children;
+			categoryUnderAction = p;
 		}
-		final int pos = treeUnderAction.indexOf(c);
+		final int pos = categoryUnderAction.childIndex(c);
 		if (pos > 0) {
 			actions.add(top);
 			actions.add(up);
 		}
-		if (pos < treeUnderAction.size() - 1) {
+		if (pos < categoryUnderAction.childrenCount() - 1) {
 			actions.add(down);
 			actions.add(bottom);
 		}
-        CategoryTree<Category> childrenUnderAction = null;
 		if (c.hasChildren()) {
 			actions.add(sortByTitle);
-            childrenUnderAction = c.children;
 		}
 		final ListAdapter a = new CategoryPositionListAdapter(actions);
-		final CategoryTree<Category> tree = treeUnderAction;
-        final CategoryTree<Category> children = childrenUnderAction;
 		new AlertDialog.Builder(this)
 			.setTitle(c.getTitle())
 			.setAdapter(a, new DialogInterface.OnClickListener(){
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					PositionAction action = actions.get(which);
-					if (action.execute(tree, children, pos)) {
-                        categories.reIndex();
-						db.updateCategoryTree(categories);
+					if (action.execute(categoryUnderAction, pos)) {
+                        categoryRepository.saveCategories(tree);
 						notifyDataSetChanged();
 					}
 				}
@@ -184,16 +182,14 @@ public class CategoryListActivity2 extends ListActivity {
 
     @OptionsItem(R.id.menu_integrity_fix)
     protected void reIndex() {
-        db.restoreNoCategory();
         reload();
     }
 
     @OptionsItem(R.id.menu_sort)
     protected void sortByTitle() {
-        if (categories.sortByTitle()) {
-            db.updateCategoryTree(categories);
-            reload();
-        }
+        tree.getRoot().sortByTitle();
+        categoryRepository.saveCategories(tree);
+        reload();
     }
 
     protected void notifyDataSetChanged() {
@@ -217,42 +213,43 @@ public class CategoryListActivity2 extends ListActivity {
 			this.title = title;
 		}
 
-        public abstract boolean execute(CategoryTree<Category> tree, CategoryTree<Category> children, int pos);
+        public abstract boolean execute(Category category, int pos);
 
     }
 	
-	private final PositionAction top = new PositionAction(R.drawable.ic_btn_round_top, R.string.position_move_top){
+	private final PositionAction top = new PositionAction(R.drawable.ic_action_move_to_top, R.string.position_move_top){
 		@Override
-		public boolean execute(CategoryTree<Category> tree, CategoryTree<Category> children, int pos) {
-			return tree.moveCategoryToTheTop(pos);
+		public boolean execute(Category category, int pos) {
+			return category.moveChildToTheTop(pos);
 		}
 	};
 	
-	private final PositionAction up = new PositionAction(R.drawable.ic_btn_round_up, R.string.position_move_up){
+	private final PositionAction up = new PositionAction(R.drawable.ic_action_move_up, R.string.position_move_up){
 		@Override
-		public boolean execute(CategoryTree<Category> tree, CategoryTree<Category> children, int pos) {
-			return tree.moveCategoryUp(pos);
+		public boolean execute(Category category, int pos) {
+			return category.moveChildUp(pos);
 		}
 	};
 	
-	private final PositionAction down = new PositionAction(R.drawable.ic_btn_round_down, R.string.position_move_down){
+	private final PositionAction down = new PositionAction(R.drawable.ic_action_move_down, R.string.position_move_down){
 		@Override
-		public boolean execute(CategoryTree<Category> tree, CategoryTree<Category> children, int pos) {
-			return tree.moveCategoryDown(pos);
+		public boolean execute(Category category, int pos) {
+			return category.moveChildDown(pos);
 		}
 	};
 	
-	private final PositionAction bottom = new PositionAction(R.drawable.ic_btn_round_bottom, R.string.position_move_bottom){
+	private final PositionAction bottom = new PositionAction(R.drawable.ic_action_move_to_bottom, R.string.position_move_bottom){
 		@Override
-		public boolean execute(CategoryTree<Category> tree, CategoryTree<Category> children, int pos) {
-			return tree.moveCategoryToTheBottom(pos);
+		public boolean execute(Category category, int pos) {
+			return category.moveChildToTheBottom(pos);
 		}
 	};
 	
-	private final PositionAction sortByTitle = new PositionAction(R.drawable.ic_btn_round_sort_by_title, R.string.sort_by_title){
+	private final PositionAction sortByTitle = new PositionAction(R.drawable.ic_action_sort_by_title, R.string.sort_by_title){
 		@Override
-		public boolean execute(CategoryTree<Category> tree, CategoryTree<Category> children, int pos) {
-            return children != null && children.sortByTitle();
+		public boolean execute(Category category, int pos) {
+            category.sortByTitle();
+            return true;
         }
 	};
 

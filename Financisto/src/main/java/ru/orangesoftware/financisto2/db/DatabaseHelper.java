@@ -190,8 +190,7 @@ public class DatabaseHelper extends DatabaseSchemaEvolution {
         right,
         type,
         last_location_id,
-        last_project_id,
-        sort_order;
+        last_project_id;
 
         public static String[] NORMAL_PROJECTION = asStringArray(CategoryViewColumns.values());
     }

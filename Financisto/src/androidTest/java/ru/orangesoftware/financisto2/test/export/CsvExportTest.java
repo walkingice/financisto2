@@ -39,7 +39,7 @@ public class CsvExportTest extends AbstractExportTest<CsvExport, CsvExportOption
         super.setUp();
         a1 = createFirstAccount();
         a2 = createSecondAccount();
-        categoriesMap = CategoryBuilder.createDefaultHierarchy(db);
+        categoriesMap = CategoryBuilder.createDefaultHierarchy(categoryRepository);
         CurrencyCache.initialize(db);
     }
 
@@ -123,7 +123,7 @@ public class CsvExportTest extends AbstractExportTest<CsvExport, CsvExportOption
 
     @Override
     protected CsvExport createExport(CsvExportOptions options) {
-        return new CsvExport(getContext(), db, options);
+        return new CsvExport(getContext(), db, categoryRepository, options);
     }
 
 }

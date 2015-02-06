@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import ru.orangesoftware.financisto2.db.CategoryRepository;
 import ru.orangesoftware.financisto2.db.DatabaseAdapter;
 import ru.orangesoftware.financisto2.service.RecurrenceScheduler;
 import ru.orangesoftware.financisto2.service.RecurrenceScheduler_;
@@ -27,11 +28,13 @@ public abstract class FullDatabaseImport {
 
 	protected final Context context;
 	protected final DatabaseAdapter db;
+    protected final CategoryRepository categoryRepository;
 	protected final SQLiteDatabase sqlDb;
 
-	public FullDatabaseImport(Context context, DatabaseAdapter dbAdapter) {
+	public FullDatabaseImport(Context context, DatabaseAdapter dbAdapter, CategoryRepository categoryRepository) {
 		this.context = context;
 		this.db = dbAdapter;
+        this.categoryRepository = categoryRepository;
         this.sqlDb = dbAdapter.db();
     }
 

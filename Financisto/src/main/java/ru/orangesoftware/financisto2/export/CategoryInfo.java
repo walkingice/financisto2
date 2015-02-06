@@ -22,7 +22,7 @@ public class CategoryInfo {
     public static String buildName(Category c) {
         StringBuilder sb = new StringBuilder();
         sb.append(c.title);
-        for (Category p = c.parent; p != null; p = p.parent) {
+        for (Category p = c.parent; p != null && p.id > 0; p = p.parent) {
             sb.insert(0, SEPARATOR);
             sb.insert(0, p.title);
         }

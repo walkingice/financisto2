@@ -59,7 +59,7 @@ public class CategorySelectorActivity extends AbstractListActivity {
     @Override
     protected void internalOnCreate(Bundle savedInstanceState) {
         attributes = db.getAttributesMapping();
-        navigator = new CategoryTreeNavigator(db);
+        navigator = new CategoryTreeNavigator(this, categoryRepository);
         if (MyPreferences.isSeparateIncomeExpense(this)) {
             navigator.separateIncomeAndExpense();
         }
@@ -131,9 +131,9 @@ public class CategorySelectorActivity extends AbstractListActivity {
 
     private class CategoryAdapter extends BaseAdapter {
 
-        private final CategoryTree<Category> categories;
+        private final List<Category> categories;
 
-        private CategoryAdapter(CategoryTree<Category> categories) {
+        private CategoryAdapter(List<Category> categories) {
             this.categories = categories;
         }
 
@@ -144,7 +144,7 @@ public class CategorySelectorActivity extends AbstractListActivity {
 
         @Override
         public Category getItem(int i) {
-            return categories.getAt(i);
+            return categories.get(i);
         }
 
         @Override

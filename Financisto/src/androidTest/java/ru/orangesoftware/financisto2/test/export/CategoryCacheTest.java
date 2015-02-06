@@ -55,7 +55,7 @@ public class CategoryCacheTest extends AbstractImportExportTest {
         list.add(new CategoryInfo("P1:cc2", true));
 
         //when
-        cache.insertCategories(db, list);
+        cache.insertCategories(categoryRepository, list);
 
         //then
         assertNotNull(cache.findCategory("P1"));
@@ -63,30 +63,26 @@ public class CategoryCacheTest extends AbstractImportExportTest {
         assertNotNull(cache.findCategory("P1:cc1:c2"));
         assertNotNull(cache.findCategory("P2:x1"));
 
-        Category noCategory = db.getCategory(Category.NO_CATEGORY_ID);
-        assertEquals(0, noCategory.left);
-        assertEquals(15, noCategory.right);
-
         //then
-        CategoryTree<Category> categories = db.getCategoriesTree(false);
-        assertNotNull(categories);
-        assertEquals(2, categories.size());
+        CategoryTree tree = categoryRepository.loadCategories();
+        assertNotNull(tree);
+        assertEquals(2, tree.getRoot().childrenCount());
 
-        Category c = categories.getAt(0);
+        Category c = tree.rootAt(0);
         assertCategory("P1", true, c);
         assertEquals(2, c.children.size());
 
-        assertCategory("cc1", true, c.children.getAt(0));
-        assertEquals(2, c.children.getAt(0).children.size());
+        assertCategory("cc1", true, c.childAt(0));
+        assertEquals(2, c.childAt(0).children.size());
 
-        assertCategory("cc2", true, c.children.getAt(1));
-        assertFalse(c.children.getAt(1).hasChildren());
+        assertCategory("cc2", true, c.childAt(1));
+        assertFalse(c.childAt(1).hasChildren());
 
-        c = categories.getAt(1);
+        c = tree.rootAt(1);
         assertCategory("P2", false, c);
         assertEquals(1, c.children.size());
 
-        assertCategory("x1", false, c.children.getAt(0));
+        assertCategory("x1", false, c.childAt(0));
     }
 
     public void test_should_load_existing_categories() throws Exception {
@@ -98,9 +94,9 @@ public class CategoryCacheTest extends AbstractImportExportTest {
          * - A2
          * B
          */
-        Map<String, Category> existingCategories = CategoryBuilder.createDefaultHierarchy(db);
+        Map<String, Category> existingCategories = CategoryBuilder.createDefaultHierarchy(categoryRepository);
         //when
-        cache.loadExistingCategories(db);
+        cache.loadExistingCategories(categoryRepository);
         //then
         assertEquals(existingCategories.get("A").id, cache.findCategory("A").id);
         assertEquals(existingCategories.get("A1").id, cache.findCategory("A:A1").id);
@@ -111,10 +107,10 @@ public class CategoryCacheTest extends AbstractImportExportTest {
 
     public void test_should_merge_existing_and_new_categories() throws Exception {
         //given existing
-        CategoryBuilder.createDefaultHierarchy(db);
+        CategoryBuilder.createDefaultHierarchy(categoryRepository);
 
         //when
-        cache.loadExistingCategories(db);
+        cache.loadExistingCategories(categoryRepository);
         Set<CategoryInfo> list = new HashSet<CategoryInfo>();
         list.add(new CategoryInfo("A:A1", true));
         list.add(new CategoryInfo("B", true));
@@ -122,7 +118,7 @@ public class CategoryCacheTest extends AbstractImportExportTest {
         list.add(new CategoryInfo("A:A2:AB1", false));
         list.add(new CategoryInfo("C", false));
         list.add(new CategoryInfo("D:D1", true));
-        cache.insertCategories(db, list);
+        cache.insertCategories(categoryRepository, list);
 
         //then
         /**
@@ -137,14 +133,9 @@ public class CategoryCacheTest extends AbstractImportExportTest {
          * D            17-20
          * - D1         18-19
          */
-        CategoryTree<Category> categories = db.getCategoriesTree(false);
-        assertNotNull(categories);
-        assertEquals(4, categories.size());
-
-        Category noCategory = db.getCategory(Category.NO_CATEGORY_ID);
-        assertEquals(0, noCategory.left);
-        assertEquals(21, noCategory.right);
-
+        CategoryTree tree = categoryRepository.loadCategories();
+        assertNotNull(tree);
+        assertEquals(4, tree.getRoot().childrenCount());
     }
 
 }

@@ -13,6 +13,7 @@ import android.content.Context;
 import ru.orangesoftware.financisto2.R;
 import ru.orangesoftware.financisto2.activity.MainActivity;
 import ru.orangesoftware.financisto2.backup.DatabaseImport;
+import ru.orangesoftware.financisto2.db.CategoryRepository;
 import ru.orangesoftware.financisto2.db.DatabaseAdapter;
 
 /**
@@ -27,8 +28,8 @@ public class BackupImportTask extends ImportExportAsyncTask {
     }
 
     @Override
-    protected Object work(Context context, DatabaseAdapter db, String... params) throws Exception {
-        DatabaseImport.createFromFileBackup(context, db, params[0]).importDatabase();
+    protected Object work(Context context, DatabaseAdapter db, CategoryRepository categoryRepository, String... params) throws Exception {
+        DatabaseImport.createFromFileBackup(context, db, categoryRepository, params[0]).importDatabase();
         return true;
     }
 

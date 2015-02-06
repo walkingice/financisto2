@@ -22,11 +22,14 @@ import java.util.List;
 import java.util.Map;
 
 import ru.orangesoftware.financisto2.R;
+import ru.orangesoftware.financisto2.db.CategoryRepository;
+import ru.orangesoftware.financisto2.db.CategoryRepository_;
 import ru.orangesoftware.financisto2.db.DatabaseAdapter;
 import ru.orangesoftware.financisto2.db.DatabaseAdapter_;
 import ru.orangesoftware.financisto2.db.DatabaseHelper;
 import ru.orangesoftware.financisto2.model.Attribute;
 import ru.orangesoftware.financisto2.model.Category;
+import ru.orangesoftware.financisto2.model.MyEntity;
 import ru.orangesoftware.financisto2.model.Transaction;
 import ru.orangesoftware.financisto2.model.TransactionAttribute;
 import ru.orangesoftware.financisto2.utils.TransactionUtils;
@@ -37,21 +40,25 @@ public class CategorySelector {
 
     private final Activity activity;
     private final DatabaseAdapter db;
+    private final CategoryRepository categoryRepository;
     private final ActivityLayout x;
 
     private TextView categoryText;
-    private Cursor categoryCursor;
+    private List<Category> categories;
     private ListAdapter categoryAdapter;
     private LinearLayout attributesLayout;
 
     private long selectedCategoryId = 0;
     private CategorySelectorListener listener;
     private boolean showSplitCategory = true;
+    boolean fetchAllCategories = true;
 
-    public CategorySelector(Activity activity, ActivityLayout x) {
+    public CategorySelector(Activity activity, ActivityLayout x, boolean fetchAllCategories) {
         this.activity = activity;
         this.db = DatabaseAdapter_.getInstance_(activity);
+        this.categoryRepository = CategoryRepository_.getInstance_(activity);
         this.x = x;
+        this.fetchAllCategories = fetchAllCategories;
     }
 
     public void setListener(CategorySelectorListener listener) {
@@ -62,14 +69,13 @@ public class CategorySelector {
         this.showSplitCategory = false;
     }
 
-    public void fetchCategories(boolean fetchAllCategories) {
+    public void fetchCategories() {
+        categories = categoryRepository.loadCategories().asFlatList();
+        categories.add(0, Category.noCategory(activity));
         if (fetchAllCategories) {
-            categoryCursor = db.getAllCategories();
-        } else {
-            categoryCursor = db.getCategories(true);
+            categories.add(0, Category.splitCategory(activity));
         }
-        activity.startManagingCursor(categoryCursor);
-        categoryAdapter = TransactionUtils.createCategoryAdapter(db, activity, categoryCursor);
+        categoryAdapter = TransactionUtils.createCategoryAdapter(db, activity, categories);
     }
 
     public void createNode(LinearLayout layout, boolean showSplitButton) {
@@ -89,8 +95,8 @@ public class CategorySelector {
         switch (id) {
             case R.id.category: {
                 if (!CategorySelectorActivity.pickCategory(activity, selectedCategoryId, showSplitCategory)) {
-                    x.select(activity, R.id.category, R.string.category, categoryCursor, categoryAdapter,
-                            DatabaseHelper.CategoryViewColumns._id.name(), selectedCategoryId);
+                    int selectedPosition = MyEntity.indexOf(categories, selectedCategoryId);
+                    x.selectItemId(activity, R.id.category, R.string.category, categoryAdapter, selectedPosition);
                 }
                 break;
             }
@@ -175,7 +181,7 @@ public class CategorySelector {
         if (resultCode == Activity.RESULT_OK) {
             switch (requestCode) {
                 case R.id.category_add: {
-                    categoryCursor.requery();
+                    fetchCategories();
                     long categoryId = data.getLongExtra(DatabaseHelper.CategoryColumns._id.name(), -1);
                     if (categoryId != -1) {
                         selectCategory(categoryId);

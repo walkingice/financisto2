@@ -13,7 +13,11 @@ package ru.orangesoftware.financisto2.export.qif;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.support.v4.util.LongSparseArray;
+
 import ru.orangesoftware.financisto2.blotter.BlotterFilter;
+import ru.orangesoftware.financisto2.db.CategoryRepository;
+import ru.orangesoftware.financisto2.db.CategoryRepository_;
 import ru.orangesoftware.financisto2.filter.WhereFilter;
 import ru.orangesoftware.financisto2.db.DatabaseAdapter;
 import ru.orangesoftware.financisto2.export.Export;
@@ -27,22 +31,23 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class QifExport extends Export {
 
     private final DatabaseAdapter db;
+    private final CategoryRepository categoryRepository;
     private final QifExportOptions options;
-    private final CategoryTree<Category> categories;
-    private final Map<Long, Category> categoriesMap;
-    private final Map<Long, Account> accountsMap;
+    private final CategoryTree categoryTree;
+    private final LongSparseArray<Category> categoriesMap;
+    private final LongSparseArray<Account> accountsMap;
 
-    public QifExport(Context context, DatabaseAdapter db, QifExportOptions options) {
+    public QifExport(Context context, DatabaseAdapter db, CategoryRepository categoryRepository, QifExportOptions options) {
         super(context, false);
         this.db = db;
+        this.categoryRepository =  categoryRepository;
         this.options = options;
-        this.categories = db.getCategoriesTree(false);
-        this.categoriesMap = categories.asMap();
+        this.categoryTree = categoryRepository.loadCategories();
+        this.categoriesMap = categoryTree.asIdMap();
         this.accountsMap = db.getAllAccountsMap();
     }
 
@@ -59,9 +64,9 @@ public class QifExport extends Export {
     }
 
     private void writeCategories(QifBufferedWriter qifWriter) throws IOException {
-        if (!categories.isEmpty()) {
+        if (categoryTree.getRoot().hasChildren()) {
             qifWriter.writeCategoriesHeader();
-            for (Category c : categories) {
+            for (Category c : categoryTree.getRoot().children) {
                 writeCategory(qifWriter, c);
             }
         }
@@ -128,7 +133,7 @@ public class QifExport extends Export {
         }
     }
 
-    private List<QifTransaction> fromTransactions(List<Transaction> transactions, Map<Long, Category> categoriesMap, Map<Long, Account> accountsMap) {
+    private List<QifTransaction> fromTransactions(List<Transaction> transactions, LongSparseArray<Category> categoriesMap, LongSparseArray<Account> accountsMap) {
         List<QifTransaction> qifTransactions = new ArrayList<QifTransaction>(transactions.size());
         for (Transaction transaction : transactions) {
             QifTransaction qifTransaction = QifTransaction.fromTransaction(transaction, categoriesMap, accountsMap);

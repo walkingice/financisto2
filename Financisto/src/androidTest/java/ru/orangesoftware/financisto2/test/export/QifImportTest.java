@@ -93,25 +93,25 @@ public class QifImportTest extends AbstractDbTest {
         doImport(p);
 
         //then
-        CategoryTree<Category> categories = db.getCategoriesTree(false);
+        CategoryTree categories = categoryRepository.loadCategories();
         assertNotNull(categories);
-        assertEquals(2, categories.size());
+        assertEquals(2, categories.getRoot().childrenCount());
 
-        Category c = categories.getAt(0);
+        Category c = categories.rootAt(0);
         assertCategory("P1", true, c);
         assertEquals(2, c.children.size());
 
-        assertCategory("cc1", true, c.children.getAt(0));
-        assertEquals(2, c.children.getAt(0).children.size());
+        assertCategory("cc1", true, c.childAt(0));
+        assertEquals(2, c.childAt(0).children.size());
 
-        assertCategory("cc2", true, c.children.getAt(1));
-        assertFalse(c.children.getAt(1).hasChildren());
+        assertCategory("cc2", true, c.childAt(1));
+        assertFalse(c.childAt(1).hasChildren());
 
-        c = categories.getAt(1);
+        c = categories.rootAt(1);
         assertCategory("P2", false, c);
         assertEquals(1, c.children.size());
 
-        assertCategory("x1", false, c.children.getAt(0));
+        assertCategory("x1", false, c.childAt(0));
     }
 
     public void test_should_import_classes_as_projects() throws Exception {
@@ -420,7 +420,7 @@ public class QifImportTest extends AbstractDbTest {
 
     private void doImport(QifParser p) {
         QifImportOptions options = new QifImportOptions("", EU_FORMAT, Currency.EMPTY);
-        qifImport = new QifImport(getContext(), db, options);
+        qifImport = new QifImport(getContext(), db, categoryRepository, options);
         qifImport.doImport(p);
     }
 

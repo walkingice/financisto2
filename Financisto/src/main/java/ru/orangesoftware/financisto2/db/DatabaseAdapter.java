@@ -19,7 +19,6 @@ import android.database.sqlite.SQLiteException;
 import android.support.v4.util.LongSparseArray;
 import android.util.Log;
 
-import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
 
 import java.math.BigDecimal;
@@ -45,7 +44,6 @@ import ru.orangesoftware.financisto2.model.Attribute;
 import ru.orangesoftware.financisto2.model.Budget;
 import ru.orangesoftware.financisto2.model.Category;
 import ru.orangesoftware.financisto2.model.CategoryTree;
-import ru.orangesoftware.financisto2.model.CategoryTree.NodeCreator;
 import ru.orangesoftware.financisto2.model.Currency;
 import ru.orangesoftware.financisto2.model.Payee;
 import ru.orangesoftware.financisto2.model.Project;
@@ -61,7 +59,7 @@ import ru.orangesoftware.financisto2.rates.ExchangeRateProvider;
 import ru.orangesoftware.financisto2.rates.ExchangeRatesCollection;
 import ru.orangesoftware.financisto2.rates.HistoryExchangeRates;
 import ru.orangesoftware.financisto2.rates.LatestExchangeRates;
-import ru.orangesoftware.financisto2.utils.Utils;
+import ru.orangesoftware.orb.Expressions;
 
 import static ru.orangesoftware.financisto2.db.DatabaseHelper.ACCOUNT_TABLE;
 import static ru.orangesoftware.financisto2.db.DatabaseHelper.AccountColumns;
@@ -601,25 +599,25 @@ public class DatabaseAdapter extends MyEntityManager {
     // CATEGORY
     // ===================================================================
 
-    public long insertOrUpdate(Category category, List<Attribute> attributes) {
-        SQLiteDatabase db = db();
-        db.beginTransaction();
-        try {
-            long id;
-            if (category.id == -1) {
-                id = insertCategory(category);
-            } else {
-                updateCategory(category);
-                id = category.id;
-            }
-            addAttributes(id, attributes);
-            category.id = id;
-            db.setTransactionSuccessful();
-            return id;
-        } finally {
-            db.endTransaction();
-        }
-    }
+//    public long insertOrUpdate(Category category, List<Attribute> attributes) {
+//        SQLiteDatabase db = db();
+//        db.beginTransaction();
+//        try {
+//            long id;
+//            if (category.id == -1) {
+//                id = insertCategory(category);
+//            } else {
+//                updateCategory(category);
+//                id = category.id;
+//            }
+//            addAttributes(id, attributes);
+//            category.id = id;
+//            db.setTransactionSuccessful();
+//            return id;
+//        } finally {
+//            db.endTransaction();
+//        }
+//    }
 
     private void addAttributes(long categoryId, List<Attribute> attributes) {
         SQLiteDatabase db = db();
@@ -634,406 +632,382 @@ public class DatabaseAdapter extends MyEntityManager {
         }
     }
 
-    private long insertCategory(Category category) {
-        CategoryTree<Category> tree = getCategoriesTree(false);
-        long parentId = category.getParentId();
-        if (parentId == Category.NO_CATEGORY_ID) {
-            if (!tree.isEmpty()) {
-                return insertAsLast(category, tree);
-            }
-        } else {
-            Map<Long, Category> map = tree.asMap();
-            Category parent = map.get(parentId);
-            if (parent != null && parent.hasChildren()) {
-                CategoryTree<Category> children = parent.children;
-                return insertAsLast(category, children);
-            }
-        }
-        return insertChildCategory(parentId, category);
-    }
+//    private long insertCategory(Category category) {
+//        CategoryTree tree = getCategoriesTree(false);
+//        long parentId = category.getParentId();
+//        if (parentId == Category.NO_CATEGORY_ID) {
+////            if (!tree.isEmpty()) {
+////                return insertAsLast(category, tree);
+////            }
+//        } else {
+//            LongSparseArray<Category> map = tree.asIdMap();
+//            Category parent = map.get(parentId);
+//            if (parent != null && parent.hasChildren()) {
+//                //CategoryTree children = parent.children;
+//                //return insertAsLast(category, children);
+//            }
+//        }
+//        return insertChildCategory(parentId, category);
+//    }
 
-    private long insertAsLast(Category category, CategoryTree<Category> tree) {
-        long mateId = tree.getAt(tree.size() - 1).id;
-        return insertMateCategory(mateId, category);
-    }
+//    private long insertAsLast(Category category, CategoryTree tree) {
+////        long mateId = tree.getAt(tree.size() - 1).id;
+////        return insertMateCategory(mateId, category);
+//        return 0;
+//    }
 
-    private long updateCategory(Category category) {
-        Category oldCategory = getCategoryWithParent(category.id);
-        if (oldCategory.getParentId() == category.getParentId()) {
-            updateCategory(category.id, category.title, category.type);
-            updateChildCategoriesType(category.type, category.left, category.right);
-        } else {
-            moveCategory(category);
-        }
-        return category.id;
-    }
+//    private long updateCategory(Category category) {
+//        Category oldCategory = getCategory(category.id);
+//        if (oldCategory.getParentId() == category.getParentId()) {
+//            updateCategory(category.id, category.title, category.type);
+//            updateChildCategoriesType(category.type, category.left, category.right);
+//        } else {
+//            moveCategory(category);
+//        }
+//        return category.id;
+//    }
 
-    private void moveCategory(Category category) {
-        CategoryTree<Category> tree = getCategoriesTree(false);
-        Map<Long, Category> map = tree.asMap();
-        Category oldCategory = map.get(category.id);
-        if (oldCategory != null) {
-            Category oldParent = map.get(oldCategory.getParentId());
-            if (oldParent != null) {
-                oldParent.removeChild(oldCategory);
-            } else {
-                tree.remove(oldCategory);
-            }
-            Category newParent = map.get(category.getParentId());
-            int newCategoryType = category.type;
-            if (newParent != null) {
-                newParent.addChild(oldCategory);
-                newCategoryType = newParent.type;
-            } else {
-                tree.add(oldCategory);
-            }
-            tree.reIndex();
-            updateCategoryTreeInTransaction(tree);
-            updateCategory(category.id, category.title, newCategoryType);
-            updateChildCategoriesType(newCategoryType, oldCategory.left, oldCategory.right);
-        }
-    }
+//    private void moveCategory(Category category) {
+//        CategoryTree tree = getCategoriesTree(false);
+//        LongSparseArray<Category> map = tree.asIdMap();
+//        Category oldCategory = map.get(category.id);
+//        if (oldCategory != null) {
+//            Category oldParent = map.get(oldCategory.getParentId());
+//            if (oldParent != null) {
+//                oldParent.removeChild(oldCategory);
+//            } else {
+//                //tree.remove(oldCategory);
+//            }
+//            Category newParent = map.get(category.getParentId());
+//            int newCategoryType = category.type;
+//            if (newParent != null) {
+//                newParent.addChild(oldCategory);
+//                newCategoryType = newParent.type;
+//            } else {
+//                //tree.add(oldCategory);
+//            }
+//            tree.reIndex();
+//            updateCategoryTreeInTransaction(tree);
+//            updateCategory(category.id, category.title, newCategoryType);
+//            updateChildCategoriesType(newCategoryType, oldCategory.left, oldCategory.right);
+//        }
+//    }
 
 
-    private static final String GET_PARENT_SQL = "(SELECT "
-            + "parent." + CategoryColumns._id + " AS " + CategoryColumns._id
-            + " FROM "
-            + CATEGORY_TABLE + " AS node" + ","
-            + CATEGORY_TABLE + " AS parent "
-            + " WHERE "
-            + " node." + CategoryColumns.left + " BETWEEN parent." + CategoryColumns.left + " AND parent." + CategoryColumns.right
-            + " AND node." + CategoryColumns._id + "=?"
-            + " AND parent." + CategoryColumns._id + "!=?"
-            + " ORDER BY parent." + CategoryColumns.left + " DESC)";
-
-    public Category getCategoryWithParent(long id) {
-        SQLiteDatabase db = db();
-        Cursor c = db.query(V_CATEGORY, CategoryViewColumns.NORMAL_PROJECTION,
-                CategoryViewColumns._id + "=?", new String[]{String.valueOf(id)}, null, null, null);
-        try {
-            if (c.moveToNext()) {
-                Category cat = new Category();
-                cat.id = id;
-                cat.title = c.getString(CategoryViewColumns.title.ordinal());
-                cat.level = c.getInt(CategoryViewColumns.level.ordinal());
-                cat.left = c.getInt(CategoryViewColumns.left.ordinal());
-                cat.right = c.getInt(CategoryViewColumns.right.ordinal());
-                cat.type = c.getInt(CategoryViewColumns.type.ordinal());
-                String s = String.valueOf(id);
-                Cursor c2 = db.query(GET_PARENT_SQL, new String[]{CategoryColumns._id.name()}, null, new String[]{s, s},
-                        null, null, null, "1");
-                try {
-                    if (c2.moveToFirst()) {
-                        cat.parent = new Category(c2.getLong(0));
-                    }
-                } finally {
-                    c2.close();
+    public Category getCategory(long id) {
+        if (id == Category.NO_CATEGORY_ID) return Category.noCategory(context);
+        if (id == Category.SPLIT_CATEGORY_ID) return Category.splitCategory(context);
+        Category category = getCategoryNoParent(id);
+        if (category != null) {
+            if (category.parentId > 0)  {
+                Category parent = getCategoryNoParent(category.parentId);
+                if (parent != null) {
+                    category.parent = parent;
+                } else {
+                    category.parent = new Category(category.parentId);
                 }
-                return cat;
-            } else {
-                return new Category(-1);
-            }
-        } finally {
-            c.close();
+            };
+            return category;
         }
+        return new Category(-1);
+    }
+
+    protected Category getCategoryNoParent(long id) {
+        return get(Category.class, id);
     }
 
     public Category getCategoryByLeft(long left) {
-        SQLiteDatabase db = db();
-        Cursor c = db.query(V_CATEGORY, CategoryViewColumns.NORMAL_PROJECTION,
-                CategoryViewColumns.left + "=?", new String[]{String.valueOf(left)}, null, null, null);
-        try {
-            if (c.moveToNext()) {
-                return Category.formCursor(c);
-            } else {
-                return new Category(-1);
-            }
-        } finally {
-            c.close();
+        Category category = createQuery(Category.class).where(Expressions.eq("left", left)).uniqueResult();
+        if (category != null) {
+            return category;
+        } else {
+            return new Category(-1);
         }
     }
 
-    public CategoryTree<Category> getCategoriesTree(boolean includeNoCategory) {
-        Cursor c = getCategories(includeNoCategory);
-        try {
-            return CategoryTree.createFromCursor(c, new NodeCreator<Category>() {
-                @Override
-                public Category createNode(Cursor c) {
-                    return Category.formCursor(c);
-                }
-            });
-        } finally {
-            c.close();
-        }
-    }
+//    public CategoryTree getCategoriesTree(boolean includeNoCategory) {
+//        return null;
+////        Cursor c = getCategories(includeNoCategory);
+////        try {
+////            return CategoryTree.createFromCursor(c, new NodeCreator<Category>() {
+////                @Override
+////                public Category createNode(Cursor c) {
+////                    return Category.formCursor(c);
+////                }
+////            });
+////        } finally {
+////            c.close();
+////        }
+//    }
 
-    public CategoryTree<Category> getAllCategoriesTree() {
-        Cursor c = getAllCategories();
-        try {
-            return CategoryTree.createFromCursor(c, new NodeCreator<Category>() {
-                @Override
-                public Category createNode(Cursor c) {
-                    return Category.formCursor(c);
-                }
-            });
-        } finally {
-            c.close();
-        }
-    }
+//    public CategoryTree getAllCategoriesTree() {
+//        return null;
+////        Cursor c = getAllCategories();
+////        try {
+////            return CategoryTree.createFromCursor(c, new NodeCreator<Category>() {
+////                @Override
+////                public Category createNode(Cursor c) {
+////                    return Category.formCursor(c);
+////                }
+////            });
+////        } finally {
+////            c.close();
+////        }
+//    }
 
-    public Map<Long, Category> getAllCategoriesMap() {
-        return getAllCategoriesTree().asMap();
-    }
-
-    public List<Category> getCategoriesList(boolean includeNoCategory) {
-        Cursor c = getCategories(includeNoCategory);
-        return categoriesAsList(c);
-    }
-
-    public Cursor getAllCategories() {
-        return db().query(V_CATEGORY, CategoryViewColumns.NORMAL_PROJECTION,
-                null, null, null, null, null);
-    }
-
-    public List<Category> getAllCategoriesList() {
-        Cursor c = getAllCategories();
-        return categoriesAsList(c);
-    }
-
-    private List<Category> categoriesAsList(Cursor c) {
-        ArrayList<Category> list = new ArrayList<Category>();
-        try {
-            while (c.moveToNext()) {
-                Category category = Category.formCursor(c);
-                list.add(category);
-            }
-        } finally {
-            c.close();
-        }
-        return list;
-    }
-
-    public Cursor getCategories(boolean includeNoCategory) {
-        return db().query(V_CATEGORY, CategoryViewColumns.NORMAL_PROJECTION,
-                includeNoCategory ? CategoryViewColumns._id + ">=0" : CategoryViewColumns._id + ">0", null, null, null, null);
-    }
-
-    public Cursor getCategoriesWithoutSubtree(long id) {
-        SQLiteDatabase db = db();
-        long left = 0, right = 0;
-        Cursor c = db.query(CATEGORY_TABLE, new String[]{CategoryColumns.left.name(), CategoryColumns.right.name()},
-                CategoryColumns._id + "=?", new String[]{String.valueOf(id)}, null, null, null);
-        try {
-            if (c.moveToFirst()) {
-                left = c.getLong(0);
-                right = c.getLong(1);
-            }
-        } finally {
-            c.close();
-        }
-        return db.query(V_CATEGORY, CategoryViewColumns.NORMAL_PROJECTION,
-                "(NOT (" + CategoryViewColumns.left + ">=? AND " + CategoryColumns.right + "<=?)) AND " + CategoryViewColumns._id + ">=0",
-                new String[]{String.valueOf(left), String.valueOf(right)}, null, null, null);
-    }
-
-    public List<Category> getCategoriesWithoutSubtreeAsList(long categoryId) {
-        List<Category> list = new ArrayList<Category>();
-        Cursor c = getCategoriesWithoutSubtree(categoryId);
-        try {
-            while (c.moveToNext()) {
-                Category category = Category.formCursor(c);
-                list.add(category);
-            }
-            return list;
-        } finally {
-            c.close();
-        }
-    }
-
-    private static final String INSERT_CATEGORY_UPDATE_RIGHT = "UPDATE " + CATEGORY_TABLE + " SET " + CategoryColumns.right + "=" + CategoryColumns.right + "+2 WHERE " + CategoryColumns.right + ">?";
-    private static final String INSERT_CATEGORY_UPDATE_LEFT = "UPDATE " + CATEGORY_TABLE + " SET " + CategoryColumns.left + "=" + CategoryColumns.left + "+2 WHERE " + CategoryColumns.left + ">?";
-
-    public long insertChildCategory(long parentId, Category category) {
-        //DECLARE v_leftkey INT UNSIGNED DEFAULT 0;
-        //SELECT l INTO v_leftkey FROM `nset` WHERE `id` = ParentID;
-        //UPDATE `nset` SET `r` = `r` + 2 WHERE `r` > v_leftkey;
-        //UPDATE `nset` SET `l` = `l` + 2 WHERE `l` > v_leftkey;
-        //INSERT INTO `nset` (`name`, `l`, `r`) VALUES (NodeName, v_leftkey + 1, v_leftkey + 2);
-        int type = getActualCategoryType(parentId, category);
-        return insertCategory(CategoryColumns.left.name(), parentId, category.title, type);
-    }
-
-    public long insertMateCategory(long categoryId, Category category) {
-        //DECLARE v_rightkey INT UNSIGNED DEFAULT 0;
-        //SELECT `r` INTO v_rightkey FROM `nset` WHERE `id` = MateID;
-        //UPDATE `	nset` SET `r` = `r` + 2 WHERE `r` > v_rightkey;
-        //UPDATE `nset` SET `l` = `l` + 2 WHERE `l` > v_rightkey;
-        //INSERT `nset` (`name`, `l`, `r`) VALUES (NodeName, v_rightkey + 1, v_rightkey + 2);
-        Category mate = getCategoryWithParent(categoryId);
-        long parentId = mate.getParentId();
-        int type = getActualCategoryType(parentId, category);
-        return insertCategory(CategoryColumns.right.name(), categoryId, category.title, type);
-    }
-
-    private int getActualCategoryType(long parentId, Category category) {
-        int type = category.type;
-        if (parentId > 0) {
-            Category parent = getCategoryWithParent(parentId);
-            type = parent.type;
-        }
-        return type;
-    }
-
-    private long insertCategory(String field, long categoryId, String title, int type) {
-        int num = 0;
-        SQLiteDatabase db = db();
-        Cursor c = db.query(CATEGORY_TABLE, new String[]{field},
-                CategoryColumns._id + "=?", new String[]{String.valueOf(categoryId)}, null, null, null);
-        try {
-            if (c.moveToFirst()) {
-                num = c.getInt(0);
-            }
-        } finally {
-            c.close();
-        }
-        String[] args = new String[]{String.valueOf(num)};
-        db.execSQL(INSERT_CATEGORY_UPDATE_RIGHT, args);
-        db.execSQL(INSERT_CATEGORY_UPDATE_LEFT, args);
-        ContentValues values = new ContentValues();
-        values.put(CategoryColumns.title.name(), title);
-        int left = num + 1;
-        int right = num + 2;
-        values.put(CategoryColumns.left.name(), left);
-        values.put(CategoryColumns.right.name(), right);
-        values.put(CategoryColumns.type.name(), type);
-        long id = db.insert(CATEGORY_TABLE, null, values);
-        updateChildCategoriesType(type, left, right);
-        return id;
-    }
-
-    private static final String CATEGORY_UPDATE_CHILDREN_TYPES = "UPDATE " + CATEGORY_TABLE + " SET " + CategoryColumns.type + "=? WHERE " + CategoryColumns.left + ">? AND " + CategoryColumns.right + "<?";
-
-    private void updateChildCategoriesType(int type, int left, int right) {
-        db().execSQL(CATEGORY_UPDATE_CHILDREN_TYPES, new Object[]{type, left, right});
-    }
-
-    private static final String DELETE_CATEGORY_UPDATE1 = "UPDATE " + TRANSACTION_TABLE
-            + " SET " + TransactionColumns.category_id + "=0 WHERE "
-            + TransactionColumns.category_id + " IN ("
-            + "SELECT " + CategoryColumns._id + " FROM " + CATEGORY_TABLE + " WHERE "
-            + CategoryColumns.left + " BETWEEN ? AND ?)";
-    private static final String DELETE_CATEGORY_UPDATE2 = "UPDATE " + CATEGORY_TABLE
-            + " SET " + CategoryColumns.left + "=(CASE WHEN " + CategoryColumns.left + ">%s THEN "
-            + CategoryColumns.left + "-%s ELSE " + CategoryColumns.left + " END),"
-            + CategoryColumns.right + "=" + CategoryColumns.right + "-%s"
-            + " WHERE " + CategoryColumns.right + ">%s";
-
-    public void deleteCategory(long categoryId) {
-        //DECLARE v_leftkey, v_rightkey, v_width INT DEFAULT 0;
-        //
-        //SELECT
-        //	`l`, `r`, `r` - `l` + 1 INTO v_leftkey, v_rightkey, v_width
-        //FROM `nset`
-        //WHERE
-        //	`id` = NodeID;
-        //
-        //DELETE FROM `nset` WHERE `l` BETWEEN v_leftkey AND v_rightkey;
-        //
-        //UPDATE `nset`
-        //SET
-        //	`l` = IF(`l` > v_leftkey, `l` - v_width, `l`),
-        //	`r` = `r` - v_width
-        //WHERE
-        //	`r` > v_rightkey;
-        SQLiteDatabase db = db();
-        int left = 0, right = 0;
-        Cursor c = db.query(CATEGORY_TABLE, new String[]{CategoryColumns.left.name(), CategoryColumns.right.name()},
-                CategoryColumns._id + "=?", new String[]{String.valueOf(categoryId)}, null, null, null);
-        try {
-            if (c.moveToFirst()) {
-                left = c.getInt(0);
-                right = c.getInt(1);
-            }
-        } finally {
-            c.close();
-        }
-        db.beginTransaction();
-        try {
-            Category category = load(Category.class, categoryId);
-            writeDeleteLog(CATEGORY_TABLE, category.remoteKey);
-            int width = right - left + 1;
-            String[] args = new String[]{String.valueOf(left), String.valueOf(right)};
-            db.execSQL(DELETE_CATEGORY_UPDATE1, args);
-            db.delete(CATEGORY_TABLE, CategoryColumns.left + " BETWEEN ? AND ?", args);
-            db.execSQL(String.format(DELETE_CATEGORY_UPDATE2, left, width, width, right));
-            db.setTransactionSuccessful();
-        } finally {
-            db.endTransaction();
-        }
-    }
-
-    private void updateCategory(long id, String title, int type) {
-        ContentValues values = new ContentValues();
-        values.put(CategoryColumns.title.name(), title);
-        values.put(CategoryColumns.type.name(), type);
-        values.remove("updated_on");
-        values.put(CategoryColumns.updated_on.name(), System.currentTimeMillis());
-        db().update(CATEGORY_TABLE, values, CategoryColumns._id + "=?", new String[]{String.valueOf(id)});
-    }
-
-    public void insertCategoryTreeInTransaction(CategoryTree<Category> tree) {
-        db().delete("category", "_id > 0", null);
-        insertCategoryInTransaction(tree);
-        updateCategoryTreeInTransaction(tree);
-    }
-
-    private void insertCategoryInTransaction(CategoryTree<Category> tree) {
-        for (Category category : tree) {
-            reInsertCategory(category);
-            if (category.hasChildren()) {
-                insertCategoryInTransaction(category.children);
-            }
-        }
-    }
-
-    public void updateCategoryTree(CategoryTree<Category> tree) {
-        SQLiteDatabase db = db();
-        db.beginTransaction();
-        try {
-            updateCategoryTreeInTransaction(tree);
-            db.setTransactionSuccessful();
-        } finally {
-            db.endTransaction();
-        }
-    }
-
-    private static final String WHERE_CATEGORY_ID = CategoryColumns._id + "=?";
-
-    private void updateCategoryTreeInTransaction(CategoryTree<Category> tree) {
-        int left = 1;
-        int right = 2;
-        ContentValues values = new ContentValues();
-        String[] sid = new String[1];
-        for (Category c : tree) {
-            values.put(CategoryColumns.left.name(), c.left);
-            values.put(CategoryColumns.right.name(), c.right);
-            sid[0] = String.valueOf(c.id);
-            db().update(CATEGORY_TABLE, values, WHERE_CATEGORY_ID, sid);
-            if (c.hasChildren()) {
-                updateCategoryTreeInTransaction(c.children);
-            }
-            if (c.left < left) {
-                left = c.left;
-            }
-            if (c.right > right) {
-                right = c.right;
-            }
-        }
-        values.put(CategoryColumns.left.name(), left - 1);
-        values.put(CategoryColumns.right.name(), right + 1);
-        sid[0] = String.valueOf(Category.NO_CATEGORY_ID);
-        db().update(CATEGORY_TABLE, values, WHERE_CATEGORY_ID, sid);
-    }
+//    public LongSparseArray<Category> getAllCategoriesMap() {
+//        return getAllCategoriesTree().asIdMap();
+//    }
+//
+//    public List<Category> getCategoriesList(boolean includeNoCategory) {
+//        Cursor c = getCategories(includeNoCategory);
+//        return categoriesAsList(c);
+//    }
+//
+//    public Cursor getAllCategories() {
+//        return db().query(V_CATEGORY, CategoryViewColumns.NORMAL_PROJECTION,
+//                null, null, null, null, null);
+//    }
+//
+//    public List<Category> getAllCategoriesList() {
+//        Cursor c = getAllCategories();
+//        return categoriesAsList(c);
+//    }
+//
+//    private List<Category> categoriesAsList(Cursor c) {
+//        ArrayList<Category> list = new ArrayList<Category>();
+//        try {
+//            while (c.moveToNext()) {
+//                Category category = Category.formCursor(c);
+//                list.add(category);
+//            }
+//        } finally {
+//            c.close();
+//        }
+//        return list;
+//    }
+//
+//    public Cursor getCategories(boolean includeNoCategory) {
+//        return db().query(V_CATEGORY, CategoryViewColumns.NORMAL_PROJECTION,
+//                includeNoCategory ? CategoryViewColumns._id + ">=0" : CategoryViewColumns._id + ">0", null, null, null, null);
+//    }
+//
+//    public Cursor getCategoriesWithoutSubtree(long id) {
+//        SQLiteDatabase db = db();
+//        long left = 0, right = 0;
+//        Cursor c = db.query(CATEGORY_TABLE, new String[]{CategoryColumns.left.name(), CategoryColumns.right.name()},
+//                CategoryColumns._id + "=?", new String[]{String.valueOf(id)}, null, null, null);
+//        try {
+//            if (c.moveToFirst()) {
+//                left = c.getLong(0);
+//                right = c.getLong(1);
+//            }
+//        } finally {
+//            c.close();
+//        }
+//        return db.query(V_CATEGORY, CategoryViewColumns.NORMAL_PROJECTION,
+//                "(NOT (" + CategoryViewColumns.left + ">=? AND " + CategoryColumns.right + "<=?)) AND " + CategoryViewColumns._id + ">=0",
+//                new String[]{String.valueOf(left), String.valueOf(right)}, null, null, null);
+//    }
+//
+//    public List<Category> getCategoriesWithoutSubtreeAsList(long categoryId) {
+//        List<Category> list = new ArrayList<Category>();
+//        Cursor c = getCategoriesWithoutSubtree(categoryId);
+//        try {
+//            while (c.moveToNext()) {
+//                Category category = Category.formCursor(c);
+//                list.add(category);
+//            }
+//            return list;
+//        } finally {
+//            c.close();
+//        }
+//    }
+//
+//    private static final String INSERT_CATEGORY_UPDATE_RIGHT = "UPDATE " + CATEGORY_TABLE + " SET " + CategoryColumns.right + "=" + CategoryColumns.right + "+2 WHERE " + CategoryColumns.right + ">?";
+//    private static final String INSERT_CATEGORY_UPDATE_LEFT = "UPDATE " + CATEGORY_TABLE + " SET " + CategoryColumns.left + "=" + CategoryColumns.left + "+2 WHERE " + CategoryColumns.left + ">?";
+//
+//    public long insertChildCategory(long parentId, Category category) {
+//        //DECLARE v_leftkey INT UNSIGNED DEFAULT 0;
+//        //SELECT l INTO v_leftkey FROM `nset` WHERE `id` = ParentID;
+//        //UPDATE `nset` SET `r` = `r` + 2 WHERE `r` > v_leftkey;
+//        //UPDATE `nset` SET `l` = `l` + 2 WHERE `l` > v_leftkey;
+//        //INSERT INTO `nset` (`name`, `l`, `r`) VALUES (NodeName, v_leftkey + 1, v_leftkey + 2);
+//        int type = getActualCategoryType(parentId, category);
+//        return insertCategory(CategoryColumns.left.name(), parentId, category.title, type);
+//    }
+//
+//    public long insertMateCategory(long categoryId, Category category) {
+//        //DECLARE v_rightkey INT UNSIGNED DEFAULT 0;
+//        //SELECT `r` INTO v_rightkey FROM `nset` WHERE `id` = MateID;
+//        //UPDATE `	nset` SET `r` = `r` + 2 WHERE `r` > v_rightkey;
+//        //UPDATE `nset` SET `l` = `l` + 2 WHERE `l` > v_rightkey;
+//        //INSERT `nset` (`name`, `l`, `r`) VALUES (NodeName, v_rightkey + 1, v_rightkey + 2);
+//        Category mate = getCategory(categoryId);
+//        long parentId = mate.getParentId();
+//        int type = getActualCategoryType(parentId, category);
+//        return insertCategory(CategoryColumns.right.name(), categoryId, category.title, type);
+//    }
+//
+//    private int getActualCategoryType(long parentId, Category category) {
+//        int type = category.type;
+//        if (parentId > 0) {
+//            Category parent = getCategory(parentId);
+//            type = parent.type;
+//        }
+//        return type;
+//    }
+//
+//    private long insertCategory(String field, long categoryId, String title, int type) {
+//        int num = 0;
+//        SQLiteDatabase db = db();
+//        Cursor c = db.query(CATEGORY_TABLE, new String[]{field},
+//                CategoryColumns._id + "=?", new String[]{String.valueOf(categoryId)}, null, null, null);
+//        try {
+//            if (c.moveToFirst()) {
+//                num = c.getInt(0);
+//            }
+//        } finally {
+//            c.close();
+//        }
+//        String[] args = new String[]{String.valueOf(num)};
+//        db.execSQL(INSERT_CATEGORY_UPDATE_RIGHT, args);
+//        db.execSQL(INSERT_CATEGORY_UPDATE_LEFT, args);
+//        ContentValues values = new ContentValues();
+//        values.put(CategoryColumns.title.name(), title);
+//        int left = num + 1;
+//        int right = num + 2;
+//        values.put(CategoryColumns.left.name(), left);
+//        values.put(CategoryColumns.right.name(), right);
+//        values.put(CategoryColumns.type.name(), type);
+//        long id = db.insert(CATEGORY_TABLE, null, values);
+//        updateChildCategoriesType(type, left, right);
+//        return id;
+//    }
+//
+//    private static final String CATEGORY_UPDATE_CHILDREN_TYPES = "UPDATE " + CATEGORY_TABLE + " SET " + CategoryColumns.type + "=? WHERE " + CategoryColumns.left + ">? AND " + CategoryColumns.right + "<?";
+//
+//    private void updateChildCategoriesType(int type, int left, int right) {
+//        db().execSQL(CATEGORY_UPDATE_CHILDREN_TYPES, new Object[]{type, left, right});
+//    }
+//
+//    private static final String DELETE_CATEGORY_UPDATE1 = "UPDATE " + TRANSACTION_TABLE
+//            + " SET " + TransactionColumns.category_id + "=0 WHERE "
+//            + TransactionColumns.category_id + " IN ("
+//            + "SELECT " + CategoryColumns._id + " FROM " + CATEGORY_TABLE + " WHERE "
+//            + CategoryColumns.left + " BETWEEN ? AND ?)";
+//    private static final String DELETE_CATEGORY_UPDATE2 = "UPDATE " + CATEGORY_TABLE
+//            + " SET " + CategoryColumns.left + "=(CASE WHEN " + CategoryColumns.left + ">%s THEN "
+//            + CategoryColumns.left + "-%s ELSE " + CategoryColumns.left + " END),"
+//            + CategoryColumns.right + "=" + CategoryColumns.right + "-%s"
+//            + " WHERE " + CategoryColumns.right + ">%s";
+//
+//    public void deleteCategory(long categoryId) {
+//        //DECLARE v_leftkey, v_rightkey, v_width INT DEFAULT 0;
+//        //
+//        //SELECT
+//        //	`l`, `r`, `r` - `l` + 1 INTO v_leftkey, v_rightkey, v_width
+//        //FROM `nset`
+//        //WHERE
+//        //	`id` = NodeID;
+//        //
+//        //DELETE FROM `nset` WHERE `l` BETWEEN v_leftkey AND v_rightkey;
+//        //
+//        //UPDATE `nset`
+//        //SET
+//        //	`l` = IF(`l` > v_leftkey, `l` - v_width, `l`),
+//        //	`r` = `r` - v_width
+//        //WHERE
+//        //	`r` > v_rightkey;
+//        SQLiteDatabase db = db();
+//        int left = 0, right = 0;
+//        Cursor c = db.query(CATEGORY_TABLE, new String[]{CategoryColumns.left.name(), CategoryColumns.right.name()},
+//                CategoryColumns._id + "=?", new String[]{String.valueOf(categoryId)}, null, null, null);
+//        try {
+//            if (c.moveToFirst()) {
+//                left = c.getInt(0);
+//                right = c.getInt(1);
+//            }
+//        } finally {
+//            c.close();
+//        }
+//        db.beginTransaction();
+//        try {
+//            Category category = load(Category.class, categoryId);
+//            writeDeleteLog(CATEGORY_TABLE, category.remoteKey);
+//            int width = right - left + 1;
+//            String[] args = new String[]{String.valueOf(left), String.valueOf(right)};
+//            db.execSQL(DELETE_CATEGORY_UPDATE1, args);
+//            db.delete(CATEGORY_TABLE, CategoryColumns.left + " BETWEEN ? AND ?", args);
+//            db.execSQL(String.format(DELETE_CATEGORY_UPDATE2, left, width, width, right));
+//            db.setTransactionSuccessful();
+//        } finally {
+//            db.endTransaction();
+//        }
+//    }
+//
+//    private void updateCategory(long id, String title, int type) {
+//        ContentValues values = new ContentValues();
+//        values.put(CategoryColumns.title.name(), title);
+//        values.put(CategoryColumns.type.name(), type);
+//        values.remove("updated_on");
+//        values.put(CategoryColumns.updated_on.name(), System.currentTimeMillis());
+//        db().update(CATEGORY_TABLE, values, CategoryColumns._id + "=?", new String[]{String.valueOf(id)});
+//    }
+//
+//    public void insertCategoryTreeInTransaction(CategoryTree tree) {
+//        db().delete("category", "_id > 0", null);
+//        insertCategoryInTransaction(tree);
+//        updateCategoryTreeInTransaction(tree);
+//    }
+//
+//    private void insertCategoryInTransaction(CategoryTree tree) {
+////        for (Category category : tree) {
+////            reInsertCategory(category);
+////            if (category.hasChildren()) {
+////                insertCategoryInTransaction(category.children);
+////            }
+////        }
+//    }
+//
+//    public void updateCategoryTree(CategoryTree tree) {
+//        SQLiteDatabase db = db();
+//        db.beginTransaction();
+//        try {
+//            updateCategoryTreeInTransaction(tree);
+//            db.setTransactionSuccessful();
+//        } finally {
+//            db.endTransaction();
+//        }
+//    }
+//
+//    private static final String WHERE_CATEGORY_ID = CategoryColumns._id + "=?";
+//
+//    private void updateCategoryTreeInTransaction(CategoryTree tree) {
+//        int left = 1;
+//        int right = 2;
+//        ContentValues values = new ContentValues();
+//        String[] sid = new String[1];
+////        for (Category c : tree) {
+////            values.put(CategoryColumns.left.name(), c.left);
+////            values.put(CategoryColumns.right.name(), c.right);
+////            sid[0] = String.valueOf(c.id);
+////            db().update(CATEGORY_TABLE, values, WHERE_CATEGORY_ID, sid);
+////            if (c.hasChildren()) {
+////                updateCategoryTreeInTransaction(c.children);
+////            }
+////            if (c.left < left) {
+////                left = c.left;
+////            }
+////            if (c.right > right) {
+////                right = c.right;
+////            }
+////        }
+//        values.put(CategoryColumns.left.name(), left - 1);
+//        values.put(CategoryColumns.right.name(), right + 1);
+//        sid[0] = String.valueOf(Category.NO_CATEGORY_ID);
+//        db().update(CATEGORY_TABLE, values, WHERE_CATEGORY_ID, sid);
+//    }
 
     // ===================================================================
     // ATTRIBUTES
@@ -1048,7 +1022,7 @@ public class DatabaseAdapter extends MyEntityManager {
     }
 
     public List<Attribute> getAllAttributesForCategory(long categoryId) {
-        Category category = getCategoryWithParent(categoryId);
+        Category category = getCategory(categoryId);
         LongSparseArray<Attribute> attributesMap = getAllAttributesMap();
         Cursor c = db().query(V_ATTRIBUTES, AttributeViewColumns.NORMAL_PROJECTION,
                 AttributeViewColumns.CATEGORY_LEFT + "<= ? AND " + AttributeViewColumns.CATEGORY_RIGHT + " >= ?",
@@ -1393,7 +1367,7 @@ public class DatabaseAdapter extends MyEntityManager {
 
     private static final String[] SUM_FROM_AMOUNT = new String[]{"sum(from_amount)"};
 
-    public long fetchBudgetBalance(Map<Long, Category> categories, Map<Long, Project> projects, Budget b) {
+    public long fetchBudgetBalance(LongSparseArray<Category> categories, LongSparseArray<Project> projects, Budget b) {
         String where = Budget.createWhere(b, categories, projects);
         Cursor c = db().query(V_BLOTTER_FOR_ACCOUNT_WITH_SPLITS, SUM_FROM_AMOUNT, where, null, null, null, null);
         try {
@@ -1759,15 +1733,15 @@ public class DatabaseAdapter extends MyEntityManager {
         }
     }
 
-    public void restoreNoCategory() {
-        Category c = get(Category.class, Category.NO_CATEGORY_ID);
-        if (c == null) {
-            db().execSQL("INSERT INTO category (_id, title, left, right) VALUES (0, 'No category', 1, 2)");
-        }
-        CategoryTree<Category> tree = getCategoriesTree(false);
-        tree.reIndex();
-        updateCategoryTree(tree);
-    }
+//    public void restoreNoCategory() {
+//        Category c = getCategoryNoParent(Category.NO_CATEGORY_ID);
+//        if (c == null) {
+//            db().execSQL("INSERT INTO category (_id, title, left, right) VALUES (0, 'No category', 1, 2)");
+//        }
+//        CategoryTree tree = getCategoriesTree(false);
+//        tree.reIndex();
+//        updateCategoryTree(tree);
+//    }
 
     public long getLastRunningBalanceForAccount(Account account) {
         return DatabaseUtils.rawFetchLongValue(this, "select balance from running_balance where account_id=? order by datetime desc, transaction_id desc limit 1",

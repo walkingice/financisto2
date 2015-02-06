@@ -17,6 +17,8 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import ru.orangesoftware.financisto2.R;
+import ru.orangesoftware.financisto2.db.CategoryRepository;
+import ru.orangesoftware.financisto2.db.CategoryRepository_;
 import ru.orangesoftware.financisto2.db.DatabaseAdapter;
 import ru.orangesoftware.financisto2.db.DatabaseAdapter_;
 import ru.orangesoftware.financisto2.utils.MyPreferences;
@@ -47,15 +49,16 @@ public abstract class ImportExportAsyncTask extends AsyncTask<String, String, Ob
     @Override
 	protected Object doInBackground(String... params) {
 		DatabaseAdapter db = DatabaseAdapter_.getInstance_(context);
+        CategoryRepository categoryRepository = CategoryRepository_.getInstance_(context);
         try {
-			return work(context, db, params);
+			return work(context, db, categoryRepository, params);
 		} catch(Exception ex){
 			Log.e("Financisto", "Unable to do import/export", ex);
 			return ex;
 		}
 	}
 
-	protected abstract Object work(Context context, DatabaseAdapter db, String...params) throws Exception;
+	protected abstract Object work(Context context, DatabaseAdapter db, CategoryRepository categoryRepository, String...params) throws Exception;
 	
 	protected abstract String getSuccessMessage(Object result);
 

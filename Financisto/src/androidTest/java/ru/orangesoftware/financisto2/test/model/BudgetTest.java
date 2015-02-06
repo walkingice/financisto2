@@ -1,5 +1,7 @@
 package ru.orangesoftware.financisto2.test.model;
 
+import android.support.v4.util.LongSparseArray;
+
 import java.util.Map;
 
 import ru.orangesoftware.financisto2.model.Account;
@@ -25,15 +27,15 @@ public class BudgetTest extends AbstractDbTest {
     Account account;
     Project project;
     Map<String, Category> categoriesMap;
-    Map<Long, Category> categories;
-    Map<Long, Project> projects;
+    LongSparseArray<Category> categories;
+    LongSparseArray<Project> projects;
 
     @Override
     public void setUp() throws Exception {
         super.setUp();
         account = AccountBuilder.createDefault(db);
-        categoriesMap = CategoryBuilder.createDefaultHierarchy(db);
-        categories = MyEntity.asMap(db.getCategoriesList(true));
+        categoriesMap = CategoryBuilder.createDefaultHierarchy(categoryRepository);
+        categories = categoryRepository.loadCategories().asIdMap();
         project = new Project();
         project.title = "P1";
         db.saveOrUpdate(project);
@@ -83,7 +85,7 @@ public class BudgetTest extends AbstractDbTest {
         // yes, should affect budget
         Transaction t = TransactionBuilder.withDb(db).account(account).dateTime(DateTime.date(2011, 4, 1).atNoon())
                 .amount(-100)
-                .category(CategoryBuilder.split(db))
+                .category(Category.splitCategory(context))
                 .withSplit(categoriesMap.get("A1"), -60)
                 .withSplit(categoriesMap.get("B"), -30)
                 .withSplit(categoriesMap.get("B"), project, -10)

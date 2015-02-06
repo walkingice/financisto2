@@ -12,6 +12,10 @@ package ru.orangesoftware.financisto2.export.csv;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.support.v4.util.LongSparseArray;
+
+import ru.orangesoftware.financisto2.db.CategoryRepository;
+import ru.orangesoftware.financisto2.db.CategoryRepository_;
 import ru.orangesoftware.financisto2.db.DatabaseAdapter;
 import ru.orangesoftware.financisto2.export.Export;
 import ru.orangesoftware.financisto2.model.*;
@@ -23,7 +27,6 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import static ru.orangesoftware.financisto2.datetime.DateUtils.FORMAT_DATE_ISO_8601;
 import static ru.orangesoftware.financisto2.datetime.DateUtils.FORMAT_TIME_ISO_8601;
@@ -40,19 +43,21 @@ public class CsvExport extends Export {
         TRANSFER_OUT.name = "Transfer Out";
     }
 
-	private final DatabaseAdapter db;
+    private final DatabaseAdapter db;
+	private final CategoryRepository categoryRepository;
     private final CsvExportOptions options;
 
-    private Map<Long, Category> categoriesMap;
-    private Map<Long, Account> accountsMap;
-    private Map<Long, Payee> payeeMap;
-    private Map<Long, Project> projectMap;
-    private Map<Long, MyLocation> locationMap;
+    private LongSparseArray<Category> categoriesMap;
+    private LongSparseArray<Account> accountsMap;
+    private LongSparseArray<Payee> payeeMap;
+    private LongSparseArray<Project> projectMap;
+    private LongSparseArray<MyLocation> locationMap;
 
-    public CsvExport(Context context, DatabaseAdapter db, CsvExportOptions options) {
+    public CsvExport(Context context, DatabaseAdapter db, CategoryRepository categoryRepository, CsvExportOptions options) {
         super(context, false);
 		this.db = db;
-		this.options = options;
+        this.categoryRepository = categoryRepository;
+        this.options = options;
 	}
 	
 	@Override
@@ -83,7 +88,7 @@ public class CsvExport extends Export {
 		Csv.Writer w = new Csv.Writer(bw).delimiter(options.fieldSeparator);
 		try {
             accountsMap = db.getAllAccountsMap();
-            categoriesMap = db.getAllCategoriesMap();
+            categoriesMap = categoryRepository.loadCategories().asIdMap();
             payeeMap = db.getAllPayeeByIdMap();
             projectMap = db.getAllProjectsByIdMap(true);
             locationMap = db.getAllLocationsByIdMap(false);
@@ -164,7 +169,7 @@ public class CsvExport extends Export {
 			return "";
 		} else {
             StringBuilder sb = new StringBuilder(category.parent.title);
-			for (Category cat = category.parent.parent; cat != null; cat = cat.parent) {
+			for (Category cat = category.parent.parent; cat != null && cat.id > 0; cat = cat.parent) {
                 sb.insert(0,":").insert(0, cat.title);
 			}
 			return sb.toString();
@@ -180,12 +185,13 @@ public class CsvExport extends Export {
     }
 
 	public Category getCategoryById(long id) {
-        Category category = categoriesMap.get(id);
-        if (category.id == 0) return null;
-        if (category.isSplit()) {
-            category.title = "SPLIT";
+        if (id == 0) return null;
+        if (id == -1) {
+            Category c = new Category(-1);
+            c.title = "SPLIT";
+            return c;
         }
-        return category;
+        return categoriesMap.get(id);
 	}
 
     private Payee getPayee(long payeeId) {

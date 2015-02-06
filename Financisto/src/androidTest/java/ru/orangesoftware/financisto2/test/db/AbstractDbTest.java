@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import ru.orangesoftware.financisto2.db.CategoryRepository;
 import ru.orangesoftware.financisto2.db.DatabaseAdapter;
 import ru.orangesoftware.financisto2.db.DatabaseHelper;
 import ru.orangesoftware.financisto2.db.DatabaseUtils;
@@ -25,13 +26,17 @@ public abstract class AbstractDbTest extends AndroidTestCase {
 
     private DatabaseHelper dbHelper;
     protected DatabaseAdapter db;
+    protected CategoryRepository categoryRepository;
+    protected Context context;
 
     @Override
     public void setUp() throws Exception {
-        Context context = new RenamingDelegatingContext(getContext(), "test-");
+        context = new RenamingDelegatingContext(getContext(), "test-");
         dbHelper = new DatabaseHelper(context);
         db = new DatabaseAdapter(context);
         db.dbHelper = db.dbHelper = dbHelper;
+        categoryRepository = new CategoryRepository(context);
+        categoryRepository.db = db;
     }
 
     @Override

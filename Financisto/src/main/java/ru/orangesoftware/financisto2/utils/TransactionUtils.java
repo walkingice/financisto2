@@ -22,6 +22,7 @@ import ru.orangesoftware.financisto2.adapter.MyEntityAdapter;
 import ru.orangesoftware.financisto2.db.DatabaseAdapter;
 import ru.orangesoftware.financisto2.db.DatabaseHelper.AccountColumns;
 import ru.orangesoftware.financisto2.model.Account;
+import ru.orangesoftware.financisto2.model.Category;
 import ru.orangesoftware.financisto2.model.Currency;
 import ru.orangesoftware.financisto2.model.Payee;
 import ru.orangesoftware.financisto2.model.Project;
@@ -47,12 +48,12 @@ public class TransactionUtils {
 				new String[]{"e_name"}, new int[]{android.R.id.text1});		
 	}
 
-	public static ListAdapter createCategoryAdapter(DatabaseAdapter db, Context context, Cursor categoryCursor) {
-		return new CategoryListAdapter(db, context, android.R.layout.simple_spinner_dropdown_item, categoryCursor);
+	public static ListAdapter createCategoryAdapter(DatabaseAdapter db, Context context, List<Category> categories) {
+		return new CategoryListAdapter(db, context, android.R.layout.simple_spinner_dropdown_item, categories);
 	}
 
-	public static ListAdapter createCategoryMultiChoiceAdapter(DatabaseAdapter db, Context context, Cursor categoryCursor) {
-		return new CategoryListAdapter(db, context, android.R.layout.simple_list_item_multiple_choice, categoryCursor);
+	public static ListAdapter createCategoryMultiChoiceAdapter(DatabaseAdapter db, Context context, List<Category> categories) {
+		return new CategoryListAdapter(db, context, android.R.layout.simple_list_item_multiple_choice, categories);
 	}
 
 	public static ListAdapter createProjectAdapter(Context context, List<Project> projects) {

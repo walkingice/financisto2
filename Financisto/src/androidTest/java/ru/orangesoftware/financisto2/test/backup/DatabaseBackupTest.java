@@ -22,6 +22,7 @@ import java.util.zip.GZIPInputStream;
 
 import ru.orangesoftware.financisto2.backup.DatabaseExport;
 import ru.orangesoftware.financisto2.backup.DatabaseImport;
+import ru.orangesoftware.financisto2.db.CategoryRepository;
 import ru.orangesoftware.financisto2.export.Export;
 import ru.orangesoftware.financisto2.model.Account;
 import ru.orangesoftware.financisto2.test.export.AbstractImportExportTest;
@@ -62,7 +63,7 @@ public class DatabaseBackupTest extends AbstractImportExportTest {
 
     private void restoreDatabase(String fileName) throws IOException {
         Context context = getContext();
-        DatabaseImport databaseImport = DatabaseImport.createFromFileBackup(context, db, fileName);
+        DatabaseImport databaseImport = DatabaseImport.createFromFileBackup(context, db, categoryRepository, fileName);
         databaseImport.importDatabase();
     }
 

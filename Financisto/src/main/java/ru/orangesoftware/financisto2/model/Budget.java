@@ -10,6 +10,8 @@
  ******************************************************************************/
 package ru.orangesoftware.financisto2.model;
 
+import android.support.v4.util.LongSparseArray;
+
 import ru.orangesoftware.financisto2.blotter.BlotterFilter;
 import ru.orangesoftware.financisto2.utils.RecurUtils;
 import ru.orangesoftware.financisto2.utils.RecurUtils.Recur;
@@ -97,7 +99,7 @@ public class Budget {
 		return RecurUtils.createFromExtraString(recur);
 	}
 	
-	public static String createWhere(Budget b, Map<Long, Category> categories, Map<Long, Project> projects) {
+	public static String createWhere(Budget b, LongSparseArray<Category> categories, LongSparseArray<Project> projects) {
 		StringBuilder sb = new StringBuilder();
 		// currency
         if (b.currency != null) {
@@ -135,7 +137,7 @@ public class Budget {
 		return sb.toString();
 	}
 
-	private static String createCategoriesWhere(Budget b, Map<Long, Category> categories) {
+	private static String createCategoriesWhere(Budget b, LongSparseArray<Category> categories) {
 		long[] ids = MyEntity.splitIds(b.categories);
 		if (ids != null) {
 			StringBuilder sb = new StringBuilder();
@@ -161,7 +163,7 @@ public class Budget {
 		return null;
 	}
 
-	private static String createProjectsWhere(Budget b, Map<Long, Project> projects) {
+	private static String createProjectsWhere(Budget b, LongSparseArray<Project> projects) {
 		long[] ids = MyEntity.splitIds(b.projects);
 		if (ids != null) {
 			StringBuilder sb = new StringBuilder();

@@ -34,9 +34,6 @@ public class IntegrityFix {
         db.rebuildRunningBalances();
         long t2 = System.currentTimeMillis();
         Log.i("Financisto", "IntegrityFix: Updating running balances done in " + TimeUnit.MILLISECONDS.toSeconds(t2 - t1) + "s");
-        db.restoreNoCategory();
-        long t3 = System.currentTimeMillis();
-        Log.i("Financisto", "IntegrityFix: Restoring system entities done in " + TimeUnit.MILLISECONDS.toSeconds(t3 - t2) + "s");
     }
 
 }

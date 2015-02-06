@@ -250,12 +250,12 @@ public class ReportFilterActivity extends AbstractActivity {
                 clear(BlotterFilter.FROM_ACCOUNT_CURRENCY_ID, currency);
                 break;
             case R.id.category: {
-                Cursor cursor = db.getCategories(false);
-                startManagingCursor(cursor);
-                ListAdapter adapter = TransactionUtils.createCategoryAdapter(db, this, cursor);
+                List<Category> categories = categoryRepository.loadCategories().asFlatList();
+                ListAdapter adapter = TransactionUtils.createCategoryAdapter(db, this, categories);
                 Criteria c = filter.get(BlotterFilter.CATEGORY_LEFT);
                 long selectedId = c != null ? c.getLongValue1() : -1;
-                x.select(this, R.id.category, R.string.category, cursor, adapter, DatabaseHelper.CategoryViewColumns.left.name(), selectedId);
+                int selectedPos = MyEntity.indexOf(categories, selectedId);
+                x.selectItemId(this, R.id.category, R.string.category, adapter, selectedPos);
             } break;
             case R.id.category_clear:
                 clear(BlotterFilter.CATEGORY_LEFT, category);

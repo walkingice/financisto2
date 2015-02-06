@@ -57,7 +57,7 @@ public class PlannerTest extends AbstractDbTest {
         c2 = CurrencyBuilder.withDb(db).name("SGD").title("Singapore Dollar").symbol("S$").makeDefault().create();
         a1 = AccountBuilder.createDefault(db, c1);
         a2 = AccountBuilder.createDefault(db, c2);
-        categoriesMap = CategoryBuilder.createDefaultHierarchy(db);
+        categoriesMap = CategoryBuilder.createDefaultHierarchy(categoryRepository);
         homeCurrency = db.getHomeCurrency();
         CurrencyCache.initialize(db);
     }

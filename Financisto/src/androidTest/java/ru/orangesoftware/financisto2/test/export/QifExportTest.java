@@ -237,12 +237,12 @@ public class QifExportTest extends AbstractExportTest<QifExport, QifExportOption
 
     public void test_should_export_splits() throws Exception {
         a1 = createFirstAccount();
-        Map<String, Category> categoriesMap = CategoryBuilder.createDefaultHierarchy(db);
+        Map<String, Category> categoriesMap = CategoryBuilder.createDefaultHierarchy(categoryRepository);
         TransactionBuilder.withDb(db).account(a1).amount(-260066).dateTime(DateTime.date(2011, 7, 12))
-                .category(CategoryBuilder.split(db))
+                .category(Category.splitCategory(context))
                 .withSplit(categoriesMap.get("A1"), -110056, "Note on first split")
                 .withSplit(categoriesMap.get("A2"), -100000)
-                .withSplit(CategoryBuilder.noCategory(db), -50010, "Note on third split")
+                .withSplit(Category.noCategory(context), -50010, "Note on third split")
                 .create();
         assertEquals(
                 "!Type:Cat\nNA\nE\n^\nNA:A1\nE\n^\nNA:A1:AA1\nE\n^\nNA:A2\nE\n^\nNB\nI\n^\n"+
@@ -269,7 +269,7 @@ public class QifExportTest extends AbstractExportTest<QifExport, QifExportOption
         a1 = createFirstAccount();
         a2 = createSecondAccount();
         TransactionBuilder.withDb(db).account(a1).amount(-260066).dateTime(DateTime.date(2011, 7, 12))
-                .category(CategoryBuilder.split(db))
+                .category(Category.splitCategory(context))
                 .withTransferSplit(a2, -110056, 50025)
                 .create();
         assertEquals(
@@ -299,12 +299,12 @@ public class QifExportTest extends AbstractExportTest<QifExport, QifExportOption
         a1 = createFirstAccount();
         a2 = createSecondAccount();
         TransactionBuilder.withDb(db).account(a1).amount(-260066).dateTime(DateTime.date(2011, 7, 12))
-                .category(CategoryBuilder.split(db))
+                .category(Category.splitCategory(context))
                 .withTransferSplit(a2, -110056, 50025)
                 .withTransferSplit(a2, -150010, 62000)
                 .create();
         TransactionBuilder.withDb(db).account(a2).amount(-420012).dateTime(DateTime.date(2011, 7, 13))
-                .category(CategoryBuilder.split(db))
+                .category(Category.splitCategory(context))
                 .withTransferSplit(a1, -420012, 123456)
                 .create();
         assertEquals(
@@ -403,7 +403,7 @@ public class QifExportTest extends AbstractExportTest<QifExport, QifExportOption
         Category c = new Category();
         c.title = name;
         c.type = type;
-        c.id = db.insertOrUpdate(c, new ArrayList<Attribute>());
+        categoryRepository.saveCategory(c);
         return c;
     }
 
@@ -411,7 +411,8 @@ public class QifExportTest extends AbstractExportTest<QifExport, QifExportOption
         Category c = new Category();
         c.title = name;
         c.parent = parent;
-        c.id = db.insertOrUpdate(c, new ArrayList<Attribute>());
+        c.parentId = parent.id;
+        categoryRepository.saveCategory(c);
         return c;
     }
 
@@ -442,7 +443,7 @@ public class QifExportTest extends AbstractExportTest<QifExport, QifExportOption
 
     @Override
     protected QifExport createExport(QifExportOptions options) {
-        return new QifExport(getContext(), db, options);
+        return new QifExport(getContext(), db, categoryRepository, options);
     }
 
 }

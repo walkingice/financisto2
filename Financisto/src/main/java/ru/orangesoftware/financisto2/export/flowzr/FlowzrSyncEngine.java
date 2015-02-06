@@ -832,7 +832,7 @@ public class FlowzrSyncEngine  {
 			//updated on + remote key
 			dba.saveOrUpdate(tEntity);
 			//left, right
-			dba.insertOrUpdate(tEntity, attributes);
+			//dba.insertOrUpdate(tEntity, attributes);
 
 			
 			return tEntity;
@@ -1731,7 +1731,7 @@ public class FlowzrSyncEngine  {
 			} else if (tableName.equals(DatabaseHelper.PAYEE_TABLE)) {
 				dba.delete(Payee.class,id);
 			} else  if (tableName.equals(DatabaseHelper.CATEGORY_TABLE)) {
-				dba.deleteCategory(id);
+				//dba.deleteCategory(id);
 			}
 		}
     }

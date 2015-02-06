@@ -20,6 +20,7 @@ import ru.orangesoftware.financisto2.R;
 import ru.orangesoftware.financisto2.blotter.BlotterFilter;
 import ru.orangesoftware.financisto2.bus.RemoveBlotterFilter;
 import ru.orangesoftware.financisto2.bus.GreenRobotBus;
+import ru.orangesoftware.financisto2.db.CategoryRepository;
 import ru.orangesoftware.financisto2.filter.SingleCategoryCriteria;
 import ru.orangesoftware.financisto2.filter.WhereFilter;
 import ru.orangesoftware.financisto2.filter.Criteria;
@@ -51,6 +52,9 @@ public class BlotterFilterActivity extends AbstractActivity {
 
     @Bean
     public GreenRobotBus bus;
+
+    @Bean
+    public CategoryRepository categoryRepository;
 
 	private WhereFilter filter = WhereFilter.empty();
 	
@@ -311,19 +315,12 @@ public class BlotterFilterActivity extends AbstractActivity {
 			clear(BlotterFilter.FROM_ACCOUNT_CURRENCY_ID, currency);
 			break;
 		case R.id.category: {
-			Cursor cursor = db.getCategories(true);
-			startManagingCursor(cursor);
-			ListAdapter adapter = TransactionUtils.createCategoryAdapter(db, this, cursor);
-			Criteria c = filter.get(BlotterFilter.CATEGORY_LEFT);
-            if (c != null) {
-                Category cat = db.getCategoryByLeft(c.getLongValue1());
-                x.select(this, R.id.category, R.string.category, cursor, adapter, CategoryViewColumns._id.name(),
-                        cat.id);
-            } else {
-                c = filter.get(BlotterFilter.CATEGORY_ID);
-                x.select(this, R.id.category, R.string.category, cursor, adapter, CategoryViewColumns._id.name(),
-                        c != null ? c.getLongValue1() : -1);
-            }
+            List<Category> categories = categoryRepository.loadCategories().asFlatList();
+			ListAdapter adapter = TransactionUtils.createCategoryAdapter(db, this, categories);
+            Criteria c = filter.get(BlotterFilter.CATEGORY_ID);
+            long selectedId = c != null ? c.getLongValue1() : -1;
+            int selectedPos = MyEntity.indexOf(categories, selectedId);
+            x.selectItemId(this, R.id.category, R.string.category, adapter, selectedPos);
 		} break;
 		case R.id.category_clear:
             clearCategory();

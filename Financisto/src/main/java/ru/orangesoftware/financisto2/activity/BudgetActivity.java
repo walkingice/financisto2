@@ -77,7 +77,7 @@ public class BudgetActivity extends AbstractActivity {
         accountOptions = createAccountsList();
         accountAdapter = new ArrayAdapter<AccountOption>(this, android.R.layout.simple_spinner_dropdown_item, accountOptions);
 
-		categories = db.getCategoriesList(true);
+		categories = categoryRepository.loadCategories().asFlatList();
 		projects = db.getActiveProjectsList(true);
 		
 		LinearLayout layout = (LinearLayout) findViewById(R.id.list);
@@ -350,7 +350,7 @@ public class BudgetActivity extends AbstractActivity {
 			}
 			switch (requestCode) {
                 case NEW_CATEGORY_REQUEST:
-                    categories = merge(categories, db.getCategoriesList(true));
+                    categories = merge(categories, categoryRepository.loadCategories().asFlatList());
                     break;
                 case NEW_PROJECT_REQUEST:
                     projects = merge(projects, db.getActiveProjectsList(true));

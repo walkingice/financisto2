@@ -16,6 +16,7 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.gms.drive.Contents;
 import com.google.android.gms.drive.Drive;
 import com.google.android.gms.drive.DriveApi;
+import com.google.android.gms.drive.DriveContents;
 import com.google.android.gms.drive.DriveFile;
 import com.google.android.gms.drive.DriveFolder;
 import com.google.android.gms.drive.DriveId;
@@ -40,6 +41,7 @@ import ru.orangesoftware.financisto2.R;
 import ru.orangesoftware.financisto2.backup.DatabaseExport;
 import ru.orangesoftware.financisto2.backup.DatabaseImport;
 import ru.orangesoftware.financisto2.bus.GreenRobotBus;
+import ru.orangesoftware.financisto2.db.CategoryRepository;
 import ru.orangesoftware.financisto2.db.DatabaseAdapter;
 import ru.orangesoftware.financisto2.export.Export;
 import ru.orangesoftware.financisto2.export.ImportExportException;
@@ -62,6 +64,9 @@ public class GoogleDriveClient {
 
     @Bean
     DatabaseAdapter db;
+
+    @Bean
+    CategoryRepository categoryRepository;
 
     private GoogleApiClient googleApiClient;
 
@@ -152,14 +157,14 @@ public class GoogleDriveClient {
             if (connectionResult.isSuccess()) {
                 DriveFolder folder = getDriveFolder(targetFolder);
                 DriveFile file = Drive.DriveApi.getFile(googleApiClient, event.selectedDriveFile.driveId);
-                DriveApi.ContentsResult contentsResult = file.openContents(googleApiClient, DriveFile.MODE_READ_ONLY, null).await();
+                DriveApi.DriveContentsResult contentsResult = file.open(googleApiClient, DriveFile.MODE_READ_ONLY, null).await();
                 if (contentsResult.getStatus().isSuccess()) {
-                    Contents contents = contentsResult.getContents();
+                    DriveContents contents = contentsResult.getDriveContents();
                     try {
-                        DatabaseImport.createFromGoogleDriveBackup(context, db, contents).importDatabase();
+                        DatabaseImport.createFromGoogleDriveBackup(context, db, categoryRepository, contents).importDatabase();
                         bus.post(new DriveRestoreSuccess());
                     } finally {
-                        contents.close();
+                        contents.discard(googleApiClient);
                     }
                 } else {
                     handleFailure(contentsResult.getStatus());
@@ -252,10 +257,10 @@ public class GoogleDriveClient {
                 .setTitle(fileName)
                 .setMimeType(Export.BACKUP_MIME_TYPE).build();
         // Create a file in the root folder
-        DriveApi.ContentsResult contentsResult = Drive.DriveApi.newContents(googleApiClient).await();
+        DriveApi.DriveContentsResult contentsResult = Drive.DriveApi.newDriveContents(googleApiClient).await();
         Status contentsResultStatus = contentsResult.getStatus();
         if (contentsResultStatus.isSuccess()) {
-            Contents contents = contentsResult.getContents();
+            DriveContents contents = contentsResult.getDriveContents();
             contents.getOutputStream().write(bytes);
             DriveFolder.DriveFileResult fileResult = folder.createFile(googleApiClient, changeSet, contents).await();
             return fileResult.getStatus();

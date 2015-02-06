@@ -1,239 +1,222 @@
 package ru.orangesoftware.financisto2.test.model;
 
+import android.support.v4.util.LongSparseArray;
 import android.test.AndroidTestCase;
+
+import java.util.List;
 
 import ru.orangesoftware.financisto2.model.Category;
 import ru.orangesoftware.financisto2.model.CategoryTree;
 
 public class CategoryTreeTest extends AndroidTestCase {
 
-	private CategoryTree<Category> tree;
-	private Category a;
+    CategoryTree tree = new CategoryTree();
 
-    @Override
-	protected void setUp() throws Exception {
-		a = createIncomeCategory(1, 1, 8);
-		a.title = "ZZZ";
-		a.addChild(createCategory(2, 2, 3));
-		a.addChild(createCategory(3, 4, 5));
-		a.addChild(createCategory(4, 6, 7));
-        Category b = createCategory(5, 9, 16);
-		b.title = "YYY";
-        Category b1 = createExpenseCategory(6, 11, 15);
-		b.addChild(b1);
-		b1.addChild(createCategory(7, 11, 12));
-		b1.addChild(createCategory(8, 13, 14));
-        Category c = createIncomeCategory(9, 17, 18);
-		c.title = "XXX";
-		tree = new CategoryTree<Category>();
-		tree.add(a);
-		tree.add(b);
-		tree.add(c);
-	}
-
-    private Category createIncomeCategory(long id, int left, int right) {
-        Category c = createCategory(id, left, right);
-        c.makeThisCategoryIncome();
-        return c;
+    public void test_should_add_new_root_category() {
+        tree.addRoot(createCategory("A"));
+        assertTree(
+                "L0 I1 P0 [ 1, 2] A"
+        );
     }
 
-    private Category createExpenseCategory(long id, int left, int right) {
-        Category c = createCategory(id, left, right);
-        c.makeThisCategoryExpense();
-        return c;
+    public void test_should_add_new_child_category() {
+        Category parent = createCategory("A");
+        Category child = createCategory("a1");
+        parent.addChild(child);
+        tree.addRoot(parent);
+        assertTree(
+                "L0 I1 P0 [ 1, 4] A",
+                "L1 I2 P1 [ 2, 3] - a1"
+        );
+        assertSame(tree.getRoot(), tree.rootAt(0).parent);
+        assertEquals(0, tree.rootAt(0).parentId);
+        assertSame(tree.rootAt(0), tree.rootAt(0).childAt(0).parent);
+        assertEquals(1, tree.rootAt(0).childAt(0).parentId);
+
+        child.addChild(createCategory("aa1"));
+        assertTree(
+                "L0 I1 P0 [ 1, 6] A",
+                "L1 I2 P1 [ 2, 5] - a1",
+                "L2 I3 P2 [ 3, 4] -- aa1"
+        );
+
+        parent.addChild(createCategory("a2"));
+        assertTree(
+                "L0 I1 P0 [ 1, 8] A",
+                "L1 I2 P1 [ 2, 5] - a1",
+                "L2 I3 P2 [ 3, 4] -- aa1",
+                "L1 I4 P1 [ 6, 7] - a2"
+        );
+
+        child.addChild(createCategory("aa2"));
+        assertTree(
+                "L0 I1 P0 [ 1,10] A",
+                "L1 I2 P1 [ 2, 7] - a1",
+                "L2 I3 P2 [ 3, 4] -- aa1",
+                "L2 I5 P2 [ 5, 6] -- aa2",
+                "L1 I4 P1 [ 8, 9] - a2"
+        );
+
+        tree.addRoot(createCategory("B"));
+        assertTree(
+                "L0 I1 P0 [ 1,10] A",
+                "L1 I2 P1 [ 2, 7] - a1",
+                "L2 I3 P2 [ 3, 4] -- aa1",
+                "L2 I5 P2 [ 5, 6] -- aa2",
+                "L1 I4 P1 [ 8, 9] - a2",
+                "L0 I6 P0 [11,12] B"
+        );
     }
 
-	private Category createCategory(long id, int left, int right) {
-		Category c = new Category(id);
-		c.left = left;
-		c.right = right;
-		return c;
-	}
+    /*public void test_should_move_child_category_to_another_parent() {
+        Category parent = createCategory("A");
+        Category child = createCategory("a1");
+        parent.addChild(child);
+        parent.addChild(createCategory("a2"));
+        child.addChild(createCategory("aa1"));
+        child.addChild(createCategory("aa2"));
+        tree.addRoot(parent);
+        tree.addRoot(createCategory("B"));
+        assertTree(
+                "L0 I1 P0 [ 1,10] A",
+                "L1 I2 P1 [ 2, 7] - a1",
+                "L2 I3 P2 [ 3, 4] -- aa1",
+                "L2 I4 P2 [ 5, 6] -- aa2",
+                "L1 I5 P1 [ 8, 9] - a2",
+                "L0 I6 P0 [11,12] B"
+        );
+        Category aa2 = parent.childAt(0).childAt(1);
+        Category a2 = parent.childAt(1);
+        aa2.moveToNewParent(a2);
+        assertTree(
+                "L0 I1 P0 [ 1,10] A",
+                "L1 I2 P1 [ 2, 5] - a1",
+                "L2 I3 P2 [ 3, 4] -- aa1",
+                "L1 I5 P1 [ 6, 9] - a2",
+                "L2 I4 P5 [ 7, 8] -- aa2",
+                "L0 I6 P0 [11,12] B"
+        );
+        a2.moveToNewParent(tree.rootAt(1));
+        assertTree(
+                "L0 I1 P0 [ 1, 6] A",
+                "L1 I2 P1 [ 2, 5] - a1",
+                "L2 I3 P2 [ 3, 4] -- aa1",
+                "L0 I6 P0 [ 7,12] B",
+                "L1 I5 P6 [ 8,11] - a2",
+                "L2 I4 P5 [ 9,10] -- aa2"
+        );
+        Category a1 = tree.asIdMap().get(2);
+        a1.moveToNewParent(tree.getRoot());
+        assertTree(
+                "L0 I1 P0 [ 1, 2] A",
+                "L0 I6 P0 [ 3, 8] B",
+                "L1 I5 P6 [ 4, 7] - a2",
+                "L2 I4 P5 [ 5, 6] -- aa2",
+                "L0 I2 P0 [ 9,12] a1",
+                "L1 I3 P2 [10,11] - aa1"
+        );
+    }*/
 
-    public void testShouldCheckThatAddingChildCategoryAutomaticallyPopulatesCorrectType() {
-        assertTypesOfAllNodes();
+    public void test_should_delete_category() {
+        Category parent = createCategory("A");
+        Category child = createCategory("a1");
+        parent.addChild(child);
+        parent.addChild(createCategory("a2"));
+        child.addChild(createCategory("aa1"));
+        child.addChild(createCategory("aa2"));
+        tree.addRoot(parent);
+        tree.addRoot(createCategory("B"));
+        assertTree(
+                "L0 I1 P0 [ 1,10] A",
+                "L1 I2 P1 [ 2, 7] - a1",
+                "L2 I3 P2 [ 3, 4] -- aa1",
+                "L2 I4 P2 [ 5, 6] -- aa2",
+                "L1 I5 P1 [ 8, 9] - a2",
+                "L0 I6 P0 [11,12] B"
+        );
+
+        parent.removeChild(parent.childAt(0));
+        assertTree(
+                "L0 I1 P0 [ 1, 4] A",
+                "L1 I5 P1 [ 2, 3] - a2",
+                "L0 I6 P0 [ 5, 6] B"
+        );
+
+        tree.removeRoot(tree.rootAt(0));
+        assertTree(
+                "L0 I6 P0 [ 1, 2] B"
+        );
     }
 
-    private void assertTypesOfAllNodes() {
-        for (Category c : tree) {
-            assertTheSameTypeForAllChildren(c);
+    public void test_should_convert_tree_into_map() {
+        Category parent = createCategory("A");
+        Category child = createCategory("a1");
+        parent.addChild(child);
+        parent.addChild(createCategory("a2"));
+        child.addChild(createCategory("aa1"));
+        child.addChild(createCategory("aa2"));
+        tree.addRoot(parent);
+        tree.addRoot(createCategory("B"));
+        assertTree(
+                "L0 I1 P0 [ 1,10] A",
+                "L1 I2 P1 [ 2, 7] - a1",
+                "L2 I3 P2 [ 3, 4] -- aa1",
+                "L2 I4 P2 [ 5, 6] -- aa2",
+                "L1 I5 P1 [ 8, 9] - a2",
+                "L0 I6 P0 [11,12] B"
+        );
+        LongSparseArray<Category> map = tree.asIdMap();
+        assertEquals("A", map.get(1).title);
+        assertEquals("a1", map.get(2).title);
+        assertEquals("aa2", map.get(4).title);
+        assertEquals("B", map.get(6).title);
+    }
+
+    public void test_should_convert_tree_into_flat_list() {
+        Category parent = createCategory("A");
+        Category child = createCategory("a1");
+        parent.addChild(child);
+        parent.addChild(createCategory("a2"));
+        child.addChild(createCategory("aa1"));
+        child.addChild(createCategory("aa2"));
+        tree.addRoot(parent);
+        tree.addRoot(createCategory("B"));
+        assertTree(
+                "L0 I1 P0 [ 1,10] A",
+                "L1 I2 P1 [ 2, 7] - a1",
+                "L2 I3 P2 [ 3, 4] -- aa1",
+                "L2 I4 P2 [ 5, 6] -- aa2",
+                "L1 I5 P1 [ 8, 9] - a2",
+                "L0 I6 P0 [11,12] B"
+        );
+        List<Category> list = tree.asFlatList();
+        assertEquals("A", list.get(0).title);
+        assertEquals("a1", list.get(1).title);
+        assertEquals("aa1", list.get(2).title);
+        assertEquals("aa2", list.get(3).title);
+    }
+
+    private CategoryTree assertTree(String...expectedTree) {
+        StringBuilder sb = new StringBuilder();
+        for (String s : expectedTree) {
+            sb.append("\n").append(s);
         }
+        tree.reIndex();
+        String actualTree = tree.printTree();
+        assertEquals(sb.toString(), actualTree);
+        return tree;
     }
 
-    private void assertTheSameTypeForAllChildren(Category parent) {
-        if (parent.hasChildren()) {
-            for (Category child : parent.children) {
-                assertEquals("Parent and child should be of the same type", parent.type, child.type);
-                assertTheSameTypeForAllChildren(child);
-            }
-        }
+    private Category assertCategoryAtIndex(CategoryTree tree, int i, String title) {
+        Category category = tree.rootAt(i);
+        assertEquals(title, category.title);
+        return category;
     }
 
-    public void testShouldMoveCategoryWithNoChildrenUpCorrectly() {
-		CategoryTree<Category> tree = a.children;
-		assertFalse(tree.moveCategoryUp(tree.size()));
-		assertFalse(tree.moveCategoryUp(-1));
-		assertFalse(tree.moveCategoryUp(0));
-		assertTrue(tree.moveCategoryUp(1));
-		Category a2 = tree.getAt(0);
-		assertEquals(3, a2.id);
-		assertEquals(2, a2.left);
-		assertEquals(3, a2.right);
-		Category a1 = tree.getAt(1);
-		assertEquals(2, a1.id);
-		assertEquals(4, a1.left);
-		assertEquals(5, a1.right);
-        assertTypesOfAllNodes();
-	}
-	
-	public void testShouldMoveCategoryWithNoChildrenDownCorrectly() {
-		CategoryTree<Category> tree = a.children;
-		assertFalse(tree.moveCategoryDown(tree.size()));
-		assertFalse(tree.moveCategoryDown(tree.size()-1));
-		assertFalse(tree.moveCategoryDown(-1));
-		assertTrue(tree.moveCategoryDown(0));
-		Category a2 = tree.getAt(0);
-		assertEquals(3, a2.id);
-		assertEquals(2, a2.left);
-		assertEquals(3, a2.right);
-		Category a1 = tree.getAt(1);
-		assertEquals(2, a1.id);
-		assertEquals(4, a1.left);
-		assertEquals(5, a1.right);
-        assertTypesOfAllNodes();
-	}
-	
-	public void testShouldMoveCategoryWithChildrenUpCorrectly() {
-		CategoryTree<Category> tree = this.tree;
-		assertTrue(tree.moveCategoryUp(1));
-		Category a = tree.getAt(1);
-		assertEquals(1, a.id);
-		assertEquals(9, a.left);
-		assertEquals(16, a.right);	
-		Category b = tree.getAt(0);
-		assertEquals(5, b.id);
-		assertEquals(1, b.left);
-		assertEquals(8, b.right);		
-		Category b1 = b.children.getAt(0);
-		assertEquals(6, b1.id);
-		assertEquals(2, b1.left);
-		assertEquals(7, b1.right);
-		Category a1 = a.children.getAt(0);
-		assertEquals(2, a1.id);
-		assertEquals(10, a1.left);
-		assertEquals(11, a1.right);
-        assertTypesOfAllNodes();
-	}
+    private Category createCategory(String title) {
+        Category category = new Category();
+        category.title = title;
+        return category;
+    }
 
-	public void testShouldMoveCategoryWithChildrenDownCorrectly() {
-		CategoryTree<Category> tree = this.tree;
-		assertTrue(tree.moveCategoryDown(0));
-		Category a = tree.getAt(1);
-		assertEquals(1, a.id);
-		assertEquals(9, a.left);
-		assertEquals(16, a.right);	
-		Category b = tree.getAt(0);
-		assertEquals(5, b.id);
-		assertEquals(1, b.left);
-		assertEquals(8, b.right);		
-		Category b1 = b.children.getAt(0);
-		assertEquals(6, b1.id);
-		assertEquals(2, b1.left);
-		assertEquals(7, b1.right);
-		Category a1 = a.children.getAt(0);
-		assertEquals(2, a1.id);
-		assertEquals(10, a1.left);
-		assertEquals(11, a1.right);
-        assertTypesOfAllNodes();
-	}
-
-	public void testShouldMoveCategoryWithNoChildrenToTopCorrectly() {
-		CategoryTree<Category> tree = a.children;
-		assertFalse(tree.moveCategoryToTheTop(tree.size()));
-		assertFalse(tree.moveCategoryToTheTop(-1));
-		assertFalse(tree.moveCategoryToTheTop(0));
-		assertTrue(tree.moveCategoryToTheTop(2));
-		Category a3 = tree.getAt(0);
-		assertEquals(4, a3.id);
-		assertEquals(2, a3.left);
-		assertEquals(3, a3.right);
-		Category a1 = tree.getAt(1);
-		assertEquals(2, a1.id);
-		assertEquals(4, a1.left);
-		assertEquals(5, a1.right);
-        assertTypesOfAllNodes();
-	}
-
-	public void testShouldMoveCategoryWithNoChildrenToBottomCorrectly() {
-		CategoryTree<Category> tree = a.children;
-		assertFalse(tree.moveCategoryToTheBottom(tree.size()));
-		assertFalse(tree.moveCategoryToTheBottom(tree.size()-1));
-		assertFalse(tree.moveCategoryToTheBottom(-1));
-		assertTrue(tree.moveCategoryToTheBottom(1));
-		Category a3 = tree.getAt(1);
-		assertEquals(4, a3.id);
-		assertEquals(4, a3.left);
-		assertEquals(5, a3.right);
-		Category a2 = tree.getAt(2);
-		assertEquals(3, a2.id);
-		assertEquals(6, a2.left);
-		assertEquals(7, a2.right);
-        assertTypesOfAllNodes();
-	}
-	
-	public void testShouldMoveCategoryWithChildrenToTopCorrectly() {
-		CategoryTree<Category> tree = this.tree;
-		assertTrue(tree.moveCategoryToTheTop(1));
-		Category a = tree.getAt(1);
-		assertEquals(1, a.id);
-		assertEquals(9, a.left);
-		assertEquals(16, a.right);	
-		Category b = tree.getAt(0);
-		assertEquals(5, b.id);
-		assertEquals(1, b.left);
-		assertEquals(8, b.right);		
-		Category b1 = b.children.getAt(0);
-		assertEquals(6, b1.id);
-		assertEquals(2, b1.left);
-		assertEquals(7, b1.right);
-		Category a1 = a.children.getAt(0);
-		assertEquals(2, a1.id);
-		assertEquals(10, a1.left);
-		assertEquals(11, a1.right);
-        assertTypesOfAllNodes();
-	}
-	
-	public void testShouldMoveCategoryWithChildrenToBottomCorrectly() {
-		CategoryTree<Category> tree = this.tree;
-		assertTrue(tree.moveCategoryToTheBottom(0));
-		Category a = tree.getAt(2);
-		assertEquals(1, a.id);
-		assertEquals(11, a.left);
-		assertEquals(18, a.right);	
-		Category b = tree.getAt(0);
-		assertEquals(5, b.id);
-		assertEquals(1, b.left);
-		assertEquals(8, b.right);		
-		Category b1 = b.children.getAt(0);
-		assertEquals(6, b1.id);
-		assertEquals(2, b1.left);
-		assertEquals(7, b1.right);
-		Category a1 = a.children.getAt(0);
-		assertEquals(2, a1.id);
-		assertEquals(12, a1.left);
-		assertEquals(13, a1.right);
-        assertTypesOfAllNodes();
-	}
-	
-	public void testShouldSortByTitle() {
-		CategoryTree<Category> tree = this.tree;
-		assertTrue(tree.sortByTitle());
-		Category c = tree.getAt(0);
-		assertEquals(9, c.id);
-		Category b = tree.getAt(1);
-		assertEquals(5, b.id);
-		Category a = tree.getAt(2);
-		assertEquals(1, a.id);
-        assertTypesOfAllNodes();
-	}
 }

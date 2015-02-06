@@ -2,6 +2,8 @@ package ru.orangesoftware.financisto2.export.csv;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
+
+import ru.orangesoftware.financisto2.db.CategoryRepository;
 import ru.orangesoftware.financisto2.db.DatabaseAdapter;
 import ru.orangesoftware.financisto2.export.CategoryCache;
 import ru.orangesoftware.financisto2.export.CategoryInfo;
@@ -19,14 +21,16 @@ import java.util.*;
 public class CsvImport {
 
     private final DatabaseAdapter db;
+    private final CategoryRepository categoryRepository;
     private final CsvImportOptions options;
     private final Account account;
     private char decimalSeparator;
     private char groupSeparator;
     private ProgressListener progressListener;
 
-    public CsvImport(DatabaseAdapter db, CsvImportOptions options) {
+    public CsvImport(DatabaseAdapter db, CategoryRepository categoryRepository, CsvImportOptions options) {
         this.db = db;
+        this.categoryRepository = categoryRepository;
         this.options = options;
         this.account = db.getAccount(options.selectedAccountId);
         this.decimalSeparator = options.currency.decimalSeparator.charAt(1);
@@ -97,8 +101,8 @@ public class CsvImport {
     public Map<String, Category> collectAndInsertCategories(List<CsvTransaction> transactions) {
         Set<CategoryInfo> categories = collectCategories(transactions);
         CategoryCache cache = new CategoryCache();
-        cache.loadExistingCategories(db);
-        cache.insertCategories(db, categories);
+        cache.loadExistingCategories(categoryRepository);
+        cache.insertCategories(categoryRepository, categories);
         return cache.categoryNameToCategory;
     }
 

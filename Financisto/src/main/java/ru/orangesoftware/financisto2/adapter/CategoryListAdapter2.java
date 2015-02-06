@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 
 import ru.orangesoftware.financisto2.R;
@@ -38,7 +39,7 @@ public class CategoryListAdapter2 extends BaseAdapter {
 	private final LayoutInflater inflater;
     private final GreenRobotBus bus;
 
-	private CategoryTree<Category> categories;
+	private CategoryTree categories;
 	private Map<Long, String> attributes;
 
 	private final ArrayList<Category> list = new ArrayList<Category>();
@@ -51,7 +52,7 @@ public class CategoryListAdapter2 extends BaseAdapter {
 
     private final int levelPadding;
 
-	public CategoryListAdapter2(Context context, GreenRobotBus bus, CategoryTree<Category> categories, Map<Long, String> attributes) {
+	public CategoryListAdapter2(Context context, GreenRobotBus bus, CategoryTree categories, Map<Long, String> attributes) {
 		this.inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.bus = bus;
 		this.categories = categories;
@@ -67,10 +68,10 @@ public class CategoryListAdapter2 extends BaseAdapter {
 	
 	private void recreatePlainList() {
 		list.clear();
-		addCategories(categories);
+		addCategories(categories.getRoot().children);
 	}
 
-	private void addCategories(CategoryTree<Category> categories) {
+	private void addCategories(List<Category> categories) {
 		if (categories == null || categories.isEmpty()) {
 			return;
 		}
@@ -108,7 +109,7 @@ public class CategoryListAdapter2 extends BaseAdapter {
 		}
         final Category c = getItem(position);
 		h.title.setText(Category.getTitle(c.title, c.level));
-        int padding = levelPadding*(c.level-1);
+        int padding = levelPadding*c.level;
 		if (c.hasChildren()) {
 			h.span.setImageDrawable(state.contains(c.id) ? expandedDrawable : collapsedDrawable);
 			h.span.setClickable(true);
@@ -171,18 +172,18 @@ public class CategoryListAdapter2 extends BaseAdapter {
 	}
 
 	public void expandAllCategories() {
-		expandAllCategories(categories);
+		expandAllCategories(categories.getRoot().children);
 		notifyDataSetChanged();
 	}
 	
-	private void expandAllCategories(CategoryTree<Category> categories) {
+	private void expandAllCategories(List<Category> categories) {
 		if (categories == null || categories.isEmpty()) {
 			return;
 		}
 		for (Category c : categories) {
 			state.add(c.id);
 			expandAllCategories(c.children);
-		}		
+		}
 	}
 	
 	@Override
@@ -191,7 +192,7 @@ public class CategoryListAdapter2 extends BaseAdapter {
 		super.notifyDataSetChanged();		
 	}
 
-	public void setCategories(CategoryTree<Category> categories) {
+	public void setCategories(CategoryTree categories) {
 		this.categories = categories;
 		recreatePlainList();
 	}

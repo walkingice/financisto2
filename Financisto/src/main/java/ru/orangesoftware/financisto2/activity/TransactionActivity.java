@@ -184,7 +184,9 @@ public class TransactionActivity extends AbstractTransactionActivity {
 
     @Override
     protected void fetchCategories() {
-        categorySelector.fetchCategories(!isUpdateBalanceMode);
+        categorySelector = new CategorySelector(this, x, !isUpdateBalanceMode);
+        categorySelector.setListener(this);
+        categorySelector.fetchCategories();
     }
 
     @Override

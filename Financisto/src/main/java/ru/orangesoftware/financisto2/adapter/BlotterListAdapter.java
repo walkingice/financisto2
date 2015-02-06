@@ -35,7 +35,7 @@ import java.util.HashMap;
 import ru.orangesoftware.financisto2.R;
 import ru.orangesoftware.financisto2.db.DatabaseHelper.BlotterColumns;
 import ru.orangesoftware.financisto2.db.DatabaseAdapter;
-import ru.orangesoftware.financisto2.model.CategoryEntity;
+import ru.orangesoftware.financisto2.model.Category;
 import ru.orangesoftware.financisto2.model.Currency;
 import ru.orangesoftware.financisto2.model.TransactionStatus;
 import ru.orangesoftware.financisto2.recur.Recurrence;
@@ -176,10 +176,10 @@ public class BlotterListAdapter extends ResourceCursorAdapter {
                 v.iconView.setColorFilter(u.splitColor);
             } else if (amount == 0) {
                 int categoryType = cursor.getInt(BlotterColumns.category_type.ordinal());
-                if (categoryType == CategoryEntity.TYPE_INCOME) {
+                if (categoryType == Category.TYPE_INCOME) {
                     v.iconView.setImageDrawable(icBlotterIncome);
                     v.iconView.setColorFilter(u.positiveColor);
-                } else if (categoryType == CategoryEntity.TYPE_EXPENSE) {
+                } else if (categoryType == Category.TYPE_EXPENSE) {
                     v.iconView.setImageDrawable(icBlotterExpense);
                     v.iconView.setColorFilter(u.negativeColor);
                 }

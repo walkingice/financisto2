@@ -30,7 +30,7 @@ public class DatabaseAdapterTest extends AbstractDbTest {
     public void setUp() throws Exception {
         super.setUp();
         a1 = AccountBuilder.createDefault(db);
-        categoriesMap = CategoryBuilder.createDefaultHierarchy(db);
+        categoriesMap = CategoryBuilder.createDefaultHierarchy(categoryRepository);
     }
 
     public void test_should_restore_split_transaction() {
@@ -98,20 +98,6 @@ public class DatabaseAdapterTest extends AbstractDbTest {
         //now it's two currencies
         AccountBuilder.withDb(db).currency(c2).title("Account5").create();
         assertFalse(db.singleCurrencyOnly());
-    }
-
-    public void test_should_not_return_split_category_as_parent_when_editing_a_category() {
-        List<Category> list = db.getCategoriesWithoutSubtreeAsList(categoriesMap.get("A").id);
-        for (Category category : list) {
-            assertFalse("Should not be split", category.isSplit());
-        }
-    }
-
-    public void test_should_return_only_valid_parent_categories_when_editing_a_category() {
-        List<Category> list = db.getCategoriesWithoutSubtreeAsList(categoriesMap.get("A").id);
-        assertEquals(2, list.size());
-        assertEquals(Category.NO_CATEGORY_ID, list.get(0).id);
-        assertEquals(categoriesMap.get("B").id, list.get(1).id);
     }
 
     public void test_should_return_id_of_the_nearest_transaction_which_is_older_than_specified_date() {
@@ -198,18 +184,6 @@ public class DatabaseAdapterTest extends AbstractDbTest {
         assertEquals(DateTime.date(2012, 5, 25).at(17, 30, 45, 0).asLong(), db.findLatestTransactionDate(a2.id));
         assertEquals(DateTime.date(2012, 5, 22).at(12, 30, 0, 0).asLong(), db.findLatestTransactionDate(a3.id));
         assertEquals(0, db.findLatestTransactionDate(a4.id));
-    }
-
-    public void test_should_restore_no_category() {
-        //given
-        db.db().execSQL("delete from category where _id=0");
-        assertNull(db.get(Category.class, Category.NO_CATEGORY_ID));
-        //when
-        db.restoreNoCategory();
-        //then
-        Category c = db.get(Category.class, Category.NO_CATEGORY_ID);
-        assertNotNull(c);
-        assertEquals("No category", c.title);
     }
 
     private String fetchFirstPayee(String s) {

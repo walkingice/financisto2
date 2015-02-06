@@ -46,7 +46,7 @@ public class AccountPurgeTest extends AbstractDbTest {
         super.setUp();
         a1 = AccountBuilder.createDefault(db);
         a2 = AccountBuilder.createDefault(db);
-        categoriesMap = CategoryBuilder.createDefaultHierarchy(db);
+        categoriesMap = CategoryBuilder.createDefaultHierarchy(categoryRepository);
         /*                        A1     A2
         * 29/05 A1 +10          |  40  |
         * 28/05 A1 -20          |  30  |

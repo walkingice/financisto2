@@ -11,6 +11,7 @@ package ru.orangesoftware.financisto2.test.model;
 import java.util.List;
 import java.util.Map;
 
+import ru.orangesoftware.financisto2.db.CategoryRepository;
 import ru.orangesoftware.financisto2.model.Category;
 import ru.orangesoftware.financisto2.model.CategoryTreeNavigator;
 import ru.orangesoftware.financisto2.test.builders.CategoryBuilder;
@@ -31,8 +32,10 @@ public class CategoryTreeNavigatorTest extends AbstractDbTest {
          * - A2
          * B
          */
-        categories = CategoryBuilder.createDefaultHierarchy(db);
-        navigator = new CategoryTreeNavigator(db);
+        categories = CategoryBuilder.createDefaultHierarchy(categoryRepository);
+        CategoryRepository repository = new CategoryRepository(context);
+        repository.db = db;
+        navigator = new CategoryTreeNavigator(context, repository);
     }
     
     public void test_should_add_expense_income_level() {

@@ -9,11 +9,14 @@
 package ru.orangesoftware.financisto2.export;
 
 import android.database.sqlite.SQLiteDatabase;
+
+import ru.orangesoftware.financisto2.db.CategoryRepository;
 import ru.orangesoftware.financisto2.db.DatabaseAdapter;
 import ru.orangesoftware.financisto2.model.Category;
 import ru.orangesoftware.financisto2.model.CategoryTree;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
@@ -36,20 +39,21 @@ public class CategoryCache {
     }
 
     public Map<String, Category> categoryNameToCategory = new HashMap<String, Category>();
-    public CategoryTree<Category> categoryTree = new CategoryTree<Category>();
+    public CategoryTree categoryTree = new CategoryTree();
     private AtomicLong seq = new AtomicLong(1);
 
     private boolean freshStart = true;
     
-    public void loadExistingCategories(DatabaseAdapter db) {
-        categoryTree = db.getCategoriesTree(false);
-        long maxId = updateNameToCategoryMapping(categoryTree, 0);
+    public void loadExistingCategories(CategoryRepository categoryRepository) {
+        categoryTree = categoryRepository.loadCategories();
+        long maxId = updateNameToCategoryMapping(categoryTree.getRoot().children, 0);
         seq = new AtomicLong(maxId+1);
         freshStart = false;
     }
 
-    private long updateNameToCategoryMapping(CategoryTree<Category> categoryTree, long maxId) {
-        for (Category category : categoryTree) {
+    private long updateNameToCategoryMapping(List<Category> categories, long maxId) {
+        if (categories == null) return maxId;
+        for (Category category : categories) {
             String name = CategoryInfo.buildName(category);
             categoryNameToCategory.put(name, category);
             if (category.id > maxId) {
@@ -65,24 +69,15 @@ public class CategoryCache {
         return maxId;
     }
 
-    public void insertCategories(DatabaseAdapter dbAdapter, Set<? extends CategoryInfo> categories) {
+    public void insertCategories(CategoryRepository categoryRepository, Set<? extends CategoryInfo> categories) {
         for (CategoryInfo category : categories) {
             String name = extractCategoryName(category.name);
             insertCategory(name, category.isIncome);
         }
         if (freshStart) {
-            categoryTree.sortByTitle();
-        } else {
-            categoryTree.reIndex();
+            categoryTree.getRoot().sortByTitle();
         }
-        SQLiteDatabase database = dbAdapter.db();
-        database.beginTransaction();
-        try {
-            dbAdapter.insertCategoryTreeInTransaction(categoryTree);
-            database.setTransactionSuccessful();
-        } finally {
-            database.endTransaction();
-        }
+        categoryRepository.saveCategories(categoryTree);
     }
 
     private Category insertCategory(String name, boolean isIncome) {
@@ -101,7 +96,7 @@ public class CategoryCache {
         Category c = categoryNameToCategory.get(name);
         if (c == null) {
             c = createCategoryInCache(name, name, income);
-            categoryTree.add(c);
+            categoryTree.addRoot(c);
         }
         return c;
     }

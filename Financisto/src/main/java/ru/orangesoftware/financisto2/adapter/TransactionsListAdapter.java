@@ -92,7 +92,7 @@ public class TransactionsListAdapter extends BlotterListAdapter {
 
         long balance = cursor.getLong(BlotterColumns.from_account_balance.ordinal());
         v.rightCenterView.setText(Utils.amountToString(c, balance, false));
-        removeRightCenterViewIfNeeded(v);
+        removeRunningBalanceViewIfNeeded(v);
         setIndicatorColor(v, cursor);
     }
 

@@ -203,8 +203,6 @@ public abstract class AbstractTransactionActivity extends AbstractActivity imple
 		isShowIsCCardPayment = MyPreferences.isShowIsCCardPayment(this);
         isOpenCalculatorForTemplates = MyPreferences.isOpenCalculatorForTemplates(this);
 
-        categorySelector = new CategorySelector(this, x);
-        categorySelector.setListener(this);
         fetchCategories();
 
         projectSelector = new ProjectSelector(this, x);

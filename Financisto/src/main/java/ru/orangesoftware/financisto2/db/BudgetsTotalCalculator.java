@@ -9,6 +9,7 @@
 package ru.orangesoftware.financisto2.db;
 
 import android.os.Handler;
+import android.support.v4.util.LongSparseArray;
 import android.util.Log;
 import ru.orangesoftware.financisto2.model.*;
 import ru.orangesoftware.financisto2.rates.ExchangeRate;
@@ -29,18 +30,20 @@ import java.util.Map;
 public class BudgetsTotalCalculator {
 
     private final DatabaseAdapter db;
+    private final CategoryRepository categoryRepository;
     private final List<Budget> budgets;
 
-    public BudgetsTotalCalculator(DatabaseAdapter db, List<Budget> budgets) {
+    public BudgetsTotalCalculator(DatabaseAdapter db, CategoryRepository categoryRepository, List<Budget> budgets) {
         this.db = db;
+        this.categoryRepository = categoryRepository;
         this.budgets = budgets;
     }
 
     public void updateBudgets(Handler handler) {
         long t0 = System.currentTimeMillis();
         try {
-            Map<Long, Category> categories = MyEntity.asMap(db.getCategoriesList(true));
-            Map<Long, Project> projects = MyEntity.asMap(db.getAllProjectsList(true));
+            LongSparseArray<Category> categories = categoryRepository.loadCategories().asIdMap();
+            LongSparseArray<Project> projects = MyEntity.asMap(db.getAllProjectsList(true));
             for (final Budget b : budgets) {
                 final long spent = db.fetchBudgetBalance(categories, projects, b);
                 final String categoriesText = getChecked(categories, b.categories);
@@ -111,7 +114,7 @@ public class BudgetsTotalCalculator {
         return BigDecimal.valueOf(r.rate*spent);
     }
 
-    private <T extends MyEntity> String getChecked(Map<Long, T> entities, String s) {
+    private <T extends MyEntity> String getChecked(LongSparseArray<T> entities, String s) {
         long[] ids = MyEntity.splitIds(s);
         if (ids == null) {
             return null;

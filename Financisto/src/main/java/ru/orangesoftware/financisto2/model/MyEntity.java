@@ -10,6 +10,8 @@
  ******************************************************************************/
 package ru.orangesoftware.financisto2.model;
 
+import android.support.v4.util.LongSparseArray;
+
 import ru.orangesoftware.financisto2.utils.Utils;
 
 import javax.persistence.Column;
@@ -38,7 +40,10 @@ public class MyEntity implements MultiChoiceItem {
 	@Transient
 	public boolean checked;
 
-	@Override
+    @Transient
+    public boolean systemEntity;
+
+    @Override
 	public long getId() {
 		return id;
 	}
@@ -76,8 +81,8 @@ public class MyEntity implements MultiChoiceItem {
 		return ids;
 	}
 	
-	public static <T extends MyEntity> Map<Long, T> asMap(List<T> list) {
-		HashMap<Long, T> map = new HashMap<Long, T>();
+	public static <T extends MyEntity> LongSparseArray<T> asMap(List<T> list) {
+		LongSparseArray<T> map = new LongSparseArray<T>();
 		for (T e : list) {
 			map.put(e.id, e);
 		}
