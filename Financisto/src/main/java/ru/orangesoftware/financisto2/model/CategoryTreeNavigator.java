@@ -103,6 +103,15 @@ public class CategoryTreeNavigator {
         return !categoriesStack.isEmpty();
     }
 
+    public boolean goRoot() {
+        boolean result = canGoBack();
+
+        while (canGoBack())
+            goBack();
+
+        return result;
+    }
+
     public boolean navigateTo(long categoryId) {
         Category selectedCategory = findCategory(categoryId);
         if (selectedCategory != null) {

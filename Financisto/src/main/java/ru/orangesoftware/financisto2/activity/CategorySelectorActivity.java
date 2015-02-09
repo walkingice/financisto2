@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -69,10 +70,24 @@ public class CategorySelectorActivity extends AbstractListActivity {
         navigator.selectCategory(selectedCategoryId);
     }
 
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        menu.findItem(R.id.menu_back).setVisible(navigator.canGoBack());
+        menu.findItem(R.id.menu_top).setVisible(navigator.canGoBack());
+        return true;
+    }
+
     @OptionsItem(R.id.menu_back)
     protected void goBack() {
         if (navigator.goBack()) {
-            recreateAdapter();
+            onNavigate();
+        }
+    }
+
+    @OptionsItem(R.id.menu_top)
+    protected void goRoot() {
+        if (navigator.goRoot()) {
+            onNavigate();
         }
     }
 
@@ -110,12 +125,17 @@ public class CategorySelectorActivity extends AbstractListActivity {
     @Override
     protected void viewItem(View v, int position, long id) {
         if (navigator.navigateTo(id)) {
-            recreateAdapter();
+            onNavigate();
         } else {
             if (MyPreferences.isAutoSelectChildCategory(this)) {
                 confirmSelection();
             }
         }
+    }
+
+    private void onNavigate() {
+        recreateAdapter();
+        invalidateOptionsMenu();
     }
 
     public static boolean pickCategory(Activity activity, long selectedCategoryId, boolean includeSplitCategory) {

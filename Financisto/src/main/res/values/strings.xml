@@ -758,6 +758,7 @@
     <string name="currency_make_default">Make default</string>
     <string name="currency_make_default_warning">Please set Default Currency to get correct Total (Menu -&gt; Entities -&gt; Currencies)</string>
 
+    <string name="top">Top</string>
     <string name="back">Back</string>
     <string name="select">Select</string>
     <string name="category_selector">Category selector</string>
