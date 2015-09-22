@@ -96,7 +96,7 @@
                 android:resource="@xml/widget_4x1" />
         </receiver>
 
-        <receiver android:name="ru.orangesoftware.financisto2.activity.ScheduledAlarmReceiver">
+        <receiver android:name="ru.orangesoftware.financisto2.activity.ScheduledAlarmReceiver" android:exported="false">
             <intent-filter>
                 <action android:name="ru.orangesoftware.financisto2.SCHEDULED_ALARM" />
                 <action android:name="ru.orangesoftware.financisto2.SCHEDULED_BACKUP" />
@@ -104,7 +104,7 @@
             </intent-filter>
         </receiver>
 
-        <service android:name="ru.orangesoftware.financisto2.service.FinancistoService_">
+        <service android:name="ru.orangesoftware.financisto2.service.FinancistoService_" android:exported="false">
             <intent-filter>
                 <action android:name="ru.orangesoftware.financisto2.SCHEDULE_ONE" />
                 <action android:name="ru.orangesoftware.financisto2.SCHEDULE_ALL" />

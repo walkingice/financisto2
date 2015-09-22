@@ -96,16 +96,6 @@
                                     android:title="@string/show_payee"
                                     android:summary="@string/show_payee_summary"
                                     android:defaultValue="true"/>
-                <CheckBoxPreference android:key="ntsl_show_location"
-                                    android:title="@string/show_location"
-                                    android:summary="@string/show_location_summary"
-                                    android:defaultValue="true"/>
-                <ListPreference android:key="ntsl_show_location_order"
-                                android:title="@string/show_location_order"
-                                android:summary="@string/show_location_order_summary"
-                                android:entries="@array/sort_order_entities"
-                                android:entryValues="@array/sort_order_entities"
-                                android:dependency="ntsl_show_location" android:defaultValue="1"/>
                 <CheckBoxPreference android:key="ntsl_show_note"
                                     android:title="@string/show_note" android:summary="@string/show_note_summary"
                                     android:defaultValue="true"/>

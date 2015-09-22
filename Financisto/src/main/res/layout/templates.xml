@@ -19,9 +19,9 @@
 
 	<LinearLayout android:layout_height="wrap_content"
 		android:layout_width="fill_parent" style="@style/ButtonBar">
-		<Button android:layout_height="wrap_content" android:id="@+id/bEditTemplates"
-			android:layout_width="wrap_content" android:layout_weight="1"
-			android:text="@string/edit"></Button>
+		<Button android:layout_height="wrap_content" android:id="@+id/bCancel"
+			android:text="@string/cancel" android:layout_width="wrap_content"
+			android:layout_weight="1" />
 		<ImageButton android:layout_width="wrap_content"
 			android:layout_height="wrap_content" style="@style/MinusButton"
 			android:id="@+id/bMinus" android:layout_marginLeft="10dp" />
@@ -31,9 +31,9 @@
 		<ImageButton android:layout_width="wrap_content"
 			android:layout_height="wrap_content" style="@style/PlusButton"
 			android:id="@+id/bPlus" android:layout_marginRight="10dp" />
-		<Button android:layout_height="wrap_content" android:id="@+id/bCancel"
-			android:text="@string/cancel" android:layout_width="wrap_content"
-			android:layout_weight="1" />
+		<Button android:layout_height="wrap_content" android:id="@+id/bEditTemplates"
+			android:layout_width="wrap_content" android:layout_weight="1"
+			android:text="@string/edit"></Button>
 	</LinearLayout>
 
 	

@@ -18,7 +18,7 @@
 		android:password="true" android:singleLine="true" android:id="@+id/result1" android:layout_gravity="center" android:layout_width="fill_parent" android:textSize="30sp" android:background="@drawable/textfield_default" android:textColor="#000"/><TextView android:layout_height="wrap_content"
 		android:layout_width="fill_parent" android:gravity="center_vertical|center_horizontal"
 		android:password="true" android:singleLine="true" android:id="@+id/result2" android:background="@drawable/textfield_default" android:textSize="30sp" android:textColor="#000"/>
-	</ViewSwitcher><TextView android:id="@+id/TextView01" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_weight="1"></TextView>		
+	</ViewSwitcher>
 		<TableLayout android:layout_width="wrap_content"
 			android:layout_height="wrap_content" android:layout_gravity="center">
 			<TableRow android:layout_height="wrap_content"
@@ -60,5 +60,5 @@
 				
 				
 			</TableRow>
-		</TableLayout><TextView android:id="@+id/TextView01" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_weight="1"></TextView>
+		</TableLayout>
 </LinearLayout>
