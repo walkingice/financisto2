@@ -260,12 +260,6 @@ public class BackupRestoreListActivity extends ListActivity {
                 context.doRestoreDatabase();
             }
         },
-        FLOWZR_SYNC(R.string.flowzr_sync, R.drawable.backup_flowzr){
-            @Override
-            public void startActivity(BackupRestoreListActivity context) {
-                FlowzrSyncActivity_.intent(context).start();
-            }
-        },
         GOOGLE_DRIVE_BACKUP(R.string.backup_database_online_google_drive, R.drawable.backup_google_drive){
             @Override
             public void startActivity(BackupRestoreListActivity context) {

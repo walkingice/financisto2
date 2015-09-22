@@ -215,13 +215,6 @@ public class DatabaseAdapter extends MyEntityManager {
                 BlotterColumns.datetime + " DESC");
     }
 
-    private static final String LOCATION_COUNT_UPDATE = "UPDATE " + LOCATIONS_TABLE
-            + " SET count=count+(?) WHERE _id=?";
-
-    private void updateLocationCount(long locationId, int count) {
-        db().execSQL(LOCATION_COUNT_UPDATE, new Object[]{count, locationId});
-    }
-
     private static final String ACCOUNT_LAST_CATEGORY_UPDATE = "UPDATE " + ACCOUNT_TABLE
             + " SET " + AccountColumns.LAST_CATEGORY_ID + "=? "
             + " WHERE " + AccountColumns.ID + "=?";
@@ -233,9 +226,6 @@ public class DatabaseAdapter extends MyEntityManager {
     private static final String PAYEE_LAST_CATEGORY_UPDATE = "UPDATE " + PAYEE_TABLE
             + " SET last_category_id=(?) WHERE _id=?";
 
-    private static final String CATEGORY_LAST_LOCATION_UPDATE = "UPDATE " + CATEGORY_TABLE
-            + " SET last_location_id=(?) WHERE _id=?";
-
     private static final String CATEGORY_LAST_PROJECT_UPDATE = "UPDATE " + CATEGORY_TABLE
             + " SET last_project_id=(?) WHERE _id=?";
 
@@ -246,7 +236,6 @@ public class DatabaseAdapter extends MyEntityManager {
         }
         db.execSQL(ACCOUNT_LAST_CATEGORY_UPDATE, new Object[]{t.categoryId, t.fromAccountId});
         db.execSQL(PAYEE_LAST_CATEGORY_UPDATE, new Object[]{t.categoryId, t.payeeId});
-        db.execSQL(CATEGORY_LAST_LOCATION_UPDATE, new Object[]{t.locationId, t.categoryId});
         db.execSQL(CATEGORY_LAST_PROJECT_UPDATE, new Object[]{t.projectId, t.categoryId});
     }
 
@@ -434,7 +423,6 @@ public class DatabaseAdapter extends MyEntityManager {
                 } else {
                     updateFromAccountBalance(t, id);
                     updateToAccountBalance(t, id);
-                    updateLocationCount(t.locationId, 1);
                     updateLastUsed(t);
                 }
             }
@@ -459,10 +447,6 @@ public class DatabaseAdapter extends MyEntityManager {
             updateAccountBalance(oldT.fromAccountId, oldT.fromAmount, t.fromAccountId, t.fromAmount);
             updateAccountBalance(oldT.toAccountId, oldT.toAmount, t.toAccountId, t.toAmount);
             updateRunningBalance(oldT, t);
-            if (oldT.locationId != t.locationId) {
-                updateLocationCount(oldT.locationId, -1);
-                updateLocationCount(t.locationId, 1);
-            }
         }
         t.updatedOn = System.currentTimeMillis();
         db().update(TRANSACTION_TABLE, t.toValues(), TransactionColumns._id + "=?",
@@ -497,7 +481,6 @@ public class DatabaseAdapter extends MyEntityManager {
             revertToAccountBalance(t);
             updateAccountLastTransactionDate(t.fromAccountId);
             updateAccountLastTransactionDate(t.toAccountId);
-            updateLocationCount(t.locationId, -1);
         }
         String[] sid = new String[]{String.valueOf(id)};
         SQLiteDatabase db = db();

@@ -35,9 +35,6 @@ public class Transaction extends TransactionBase {
 	@Column(name = "project_id")
 	public long projectId;
 	
-	@Column(name = "location_id")
-	public long locationId;
-	
 	@Column(name = "from_account_id")
 	public long fromAccountId;
 	
@@ -71,11 +68,6 @@ public class Transaction extends TransactionBase {
 		values.put(TransactionColumns.category_id.name(), categoryId);
 		values.put(TransactionColumns.project_id.name(), projectId);
 		values.put(TransactionColumns.datetime.name(), dateTime);
-		values.put(TransactionColumns.location_id.name(), locationId);
-		values.put(TransactionColumns.provider.name(), provider);
-		values.put(TransactionColumns.accuracy.name(), accuracy);
-		values.put(TransactionColumns.latitude.name(), latitude);
-		values.put(TransactionColumns.longitude.name(), longitude);
 		values.put(TransactionColumns.from_account_id.name(), fromAccountId);
 		values.put(TransactionColumns.to_account_id.name(), toAccountId);
         values.put(TransactionColumns.payee_id.name(), payeeId);
@@ -122,11 +114,6 @@ public class Transaction extends TransactionBase {
 		t.dateTime = c.getLong(BlotterColumns.datetime.ordinal());
         t.originalCurrencyId = c.getLong(BlotterColumns.original_currency_id.ordinal());
         t.originalFromAmount = c.getLong(BlotterColumns.original_from_amount.ordinal());
-        t.locationId = c.getLong(BlotterColumns.location_id.ordinal());
-//		t.provider = c.getString(BlotterColumns.provider.ordinal());
-//		t.accuracy = c.getFloat(BlotterColumns.accuracy.ordinal());
-//		t.latitude = c.getDouble(BlotterColumns.latitude.ordinal());
-//		t.longitude = c.getDouble(BlotterColumns.longitude.ordinal());
 		t.isTemplate = c.getInt(BlotterColumns.is_template.ordinal());
 		t.templateName = c.getString(BlotterColumns.template_name.ordinal());
 		t.recurrence = c.getString(BlotterColumns.recurrence.ordinal());

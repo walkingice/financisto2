@@ -23,18 +23,6 @@ public abstract class TransactionBase implements Serializable, Cloneable {
 	@Column(name = "datetime")
 	public long dateTime = System.currentTimeMillis();
 	
-	@Column(name = "provider")
-	public String provider;
-
-	@Column(name = "accuracy")
-	public float accuracy;
-
-	@Column(name = "longitude")
-	public double longitude;
-
-	@Column(name = "latitude")
-	public double latitude;
-
 	@Column(name = "note")
 	public String note;
 

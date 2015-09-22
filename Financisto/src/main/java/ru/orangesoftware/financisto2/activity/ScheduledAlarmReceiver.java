@@ -4,42 +4,40 @@
  * are made available under the terms of the GNU Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
- * 
+ * <p/>
  * Contributors:
- *     Denis Solonenko - initial API and implementation
+ * Denis Solonenko - initial API and implementation
  ******************************************************************************/
 package ru.orangesoftware.financisto2.activity;
 
 import com.commonsware.cwac.wakeful.WakefulIntentService;
+
 import ru.orangesoftware.financisto2.service.FinancistoService;
+
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+
 import ru.orangesoftware.financisto2.service.RecurrenceScheduler;
 
 public class ScheduledAlarmReceiver extends PackageReplaceReceiver {
 
-	private static final String BOOT_COMPLETED = "android.intent.action.BOOT_COMPLETED";
+    private static final String BOOT_COMPLETED = "android.intent.action.BOOT_COMPLETED";
     private static final String SCHEDULED_BACKUP = "ru.orangesoftware.financisto2.SCHEDULED_BACKUP";
-    private static final String SCHEDULED_SYNC ="ru.orangesoftware.financisto2.SCHEDULED_SYNC";
 
-	@Override
-	public void onReceive(Context context, Intent intent) {
-		Log.i("ScheduledAlarmReceiver", "Received " + intent.getAction());
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        Log.i("ScheduledAlarmReceiver", "Received " + intent.getAction());
         String action = intent.getAction();
-		if (BOOT_COMPLETED.equals(action)) {
+        if (BOOT_COMPLETED.equals(action)) {
             requestScheduleAll(context);
             requestScheduleAutoBackup(context);
-            requestScheduleAutoSync(context);
-		} else if (SCHEDULED_BACKUP.equals(action)) {
+        } else if (SCHEDULED_BACKUP.equals(action)) {
             requestAutoBackup(context);
-        } else if (SCHEDULED_SYNC.equals(action)) {
-            requestScheduleAutoSync(context);
-            requestAutoSync(context);            
-        }else {
+        } else {
             requestScheduleOne(context, intent);
-		}
-	}
+        }
+    }
 
     private void requestScheduleOne(Context context, Intent intent) {
         Intent serviceIntent = new Intent(FinancistoService.ACTION_SCHEDULE_ONE);
@@ -52,14 +50,4 @@ public class ScheduledAlarmReceiver extends PackageReplaceReceiver {
         WakefulIntentService.sendWakefulWork(context, serviceIntent);
     }
 
-    private void requestAutoSync(Context context) {
-        Intent serviceIntent = new Intent(FinancistoService.ACTION_AUTO_SYNC);
-        WakefulIntentService.sendWakefulWork(context, serviceIntent);
-    }  
-    
-    protected void requestScheduleAutoSync(Context context) {
-        Intent serviceIntent = new Intent(FinancistoService.ACTION_SCHEDULE_AUTO_SYNC);
-        WakefulIntentService.sendWakefulWork(context, serviceIntent);
-    }  
-    
 }

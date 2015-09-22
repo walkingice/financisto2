@@ -74,12 +74,6 @@ public class EntityListActivity extends ListActivity {
             public void startActivity(Context context) {
                 ProjectListActivity_.intent(context).start();
             }
-        },
-        LOCATIONS(R.string.locations, R.drawable.ic_action_location_2){
-            @Override
-            public void startActivity(Context context) {
-                context.startActivity(new Intent(context, LocationsListActivity.class));
-            }
         };
 
         private final int titleId;

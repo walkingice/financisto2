@@ -47,7 +47,7 @@ public class MyPreferences {
 		public final String property;
 		public final boolean asc;
 
-		private AccountSortOrder(String property, boolean asc) {
+		AccountSortOrder(String property, boolean asc) {
 			this.property = property;
 			this.asc = asc;
 		}
@@ -60,7 +60,7 @@ public class MyPreferences {
 		public final String property;
 		public final boolean asc;
 
-		private LocationsSortOrder(String property, boolean asc) {
+		LocationsSortOrder(String property, boolean asc) {
 			this.property = property;
 			this.asc = asc;
 		}
@@ -74,7 +74,7 @@ public class MyPreferences {
 
         public final String tag;
 
-        private StartupScreen(String tag) {
+        StartupScreen(String tag) {
             this.tag = tag;
         }
     }
@@ -158,11 +158,6 @@ public class MyPreferences {
 		return sharedPreferences.getBoolean("remember_last_category", false);
 	}
 
-	public static boolean isRememberLocation(Context context) {
-		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-		return sharedPreferences.getBoolean("remember_last_location", false);
-	}
-
 	public static boolean isRememberProject(Context context) {
 		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
 		return sharedPreferences.getBoolean("remember_last_project", false);
@@ -197,16 +192,6 @@ public class MyPreferences {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         return Integer.parseInt(sharedPreferences.getString("ntsl_show_payee_order", "1"));
     }
-
-	public static boolean isShowLocation(Context context) {
-		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-		return isLocationSupported(context) && sharedPreferences.getBoolean("ntsl_show_location", true);
-	}
-
-	public static int getLocationOrder(Context context) {
-		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-		return Integer.parseInt(sharedPreferences.getString("ntsl_show_location_order", "1"));
-	}
 
 	public static boolean isShowIsCCardPayment(Context context) {
 		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
@@ -363,11 +348,6 @@ public class MyPreferences {
 		return sharedPreferences.getBoolean("ntsl_use_fixed_layout", true);
 	}
 	
-	public static boolean isSendErrorReport(Context context) {
-		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-		return sharedPreferences.getBoolean("send_error_reports", true);
-	}	
-	
 	public static boolean isWidgetEnabled(Context context) {
 		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
 		return sharedPreferences.getBoolean("enable_widget", true);
@@ -412,18 +392,6 @@ public class MyPreferences {
 
     public static boolean isCameraSupported(Context context) {
         return isFeatureSupported(context, PackageManager.FEATURE_CAMERA);
-    }
-
-    public static boolean isLocationSupported(Context context) {
-        return isFeatureSupported(context, PackageManager.FEATURE_LOCATION);
-    }
-
-    public static boolean isLocationNetworkSupported(Context context) {
-        return isFeatureSupported(context, PackageManager.FEATURE_LOCATION_NETWORK);
-    }
-
-    public static boolean isLocationGPSSupported(Context context) {
-        return isFeatureSupported(context, PackageManager.FEATURE_LOCATION_GPS);
     }
 
     public static boolean isAutoBackupEnabled(Context context) {

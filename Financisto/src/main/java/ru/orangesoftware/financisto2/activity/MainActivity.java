@@ -50,7 +50,6 @@ import ru.orangesoftware.financisto2.utils.IntegrityFix;
 import ru.orangesoftware.financisto2.utils.MyPreferences;
 
 import static ru.orangesoftware.financisto2.service.DailyAutoBackupScheduler.scheduleNextAutoBackup;
-import static ru.orangesoftware.financisto2.service.FlowzrAutoSyncScheduler.scheduleNextAutoSync;
 import static ru.orangesoftware.financisto2.utils.EnumUtils.showPickOneDialog;
 
 public class MainActivity extends TabActivity implements TabHost.OnTabChangeListener {
@@ -60,7 +59,6 @@ public class MainActivity extends TabActivity implements TabHost.OnTabChangeList
     private static final int ACTIVITY_CSV_IMPORT = 4;
     private static final int ACTIVITY_QIF_IMPORT = 5;
     private static final int CHANGE_PREFERENCES = 6;
-    private static final int ACTIVITY_FLOWZR_SYNC = 7;
 
     private static final int MENU_PREFERENCES = Menu.FIRST + 1;
     private static final int MENU_ABOUT = Menu.FIRST + 2;
@@ -74,8 +72,7 @@ public class MainActivity extends TabActivity implements TabHost.OnTabChangeList
     private static final int MENU_BACKUP_TO = Menu.FIRST + 12;
     private static final int MENU_INTEGRITY_FIX = Menu.FIRST + 13;
     private static final int MENU_PLANNER = Menu.FIRST + 14;
-    private static final int MENU_CLOUD_SYNC = Menu.FIRST + 15;
-    private static final int MENU_BACKUP_RESTORE_ONLINE = Menu.FIRST + 16;
+    private static final int MENU_BACKUP_RESTORE_ONLINE = Menu.FIRST + 15;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,7 +117,6 @@ public class MainActivity extends TabActivity implements TabHost.OnTabChangeList
             }
         } else if (requestCode == CHANGE_PREFERENCES) {
             scheduleNextAutoBackup(this);
-            scheduleNextAutoSync(this);
         }
     }
 
@@ -178,8 +174,6 @@ public class MainActivity extends TabActivity implements TabHost.OnTabChangeList
         menuItem.setIcon(R.drawable.ic_menu_today);
         menuItem = menu.add(0, MENU_MASS_OP, 0, R.string.mass_operations);
         menuItem.setIcon(R.drawable.ic_menu_agenda);
-        menuItem = menu.add(0, MENU_CLOUD_SYNC, 0, R.string.flowzr_sync);
-        menuItem.setIcon(R.drawable.ic_menu_refresh);
         menuItem = menu.add(0, MENU_BACKUP, 0, R.string.backup_database);
         menuItem.setIcon(R.drawable.ic_menu_upload);
         menuItem.setIcon(android.R.drawable.ic_menu_preferences);
@@ -367,14 +361,13 @@ public class MainActivity extends TabActivity implements TabHost.OnTabChangeList
         EXCHANGE_RATES(R.string.exchange_rates, R.drawable.menu_entities_exchange_rates, ExchangeRatesListActivity.class),
         CATEGORIES(R.string.categories, R.drawable.menu_entities_categories, CategoryListActivity2.class),
         PAYEES(R.string.payees, R.drawable.menu_entities_payees, PayeeListActivity.class),
-        PROJECTS(R.string.projects, R.drawable.menu_entities_projects, ProjectListActivity.class),
-        LOCATIONS(R.string.locations, R.drawable.menu_entities_locations, LocationsListActivity.class);
+        PROJECTS(R.string.projects, R.drawable.menu_entities_projects, ProjectListActivity.class);
 
         private final int titleId;
         private final int iconId;
         private final Class<?> actitivyClass;
 
-        private MenuEntities(int titleId, int iconId, Class<?> activityClass) {
+        MenuEntities(int titleId, int iconId, Class<?> activityClass) {
             this.titleId = titleId;
             this.iconId = iconId;
             this.actitivyClass = activityClass;
@@ -426,7 +419,7 @@ public class MainActivity extends TabActivity implements TabHost.OnTabChangeList
         private final int titleId;
         private final int iconId;
 
-        private ImportExportEntities(int titleId, int iconId) {
+        ImportExportEntities(int titleId, int iconId) {
             this.titleId = titleId;
             this.iconId = iconId;
         }
@@ -461,7 +454,7 @@ public class MainActivity extends TabActivity implements TabHost.OnTabChangeList
         private final int titleId;
         private final int iconId;
 
-        private BackupRestoreEntities(int titleId, int iconId) {
+        BackupRestoreEntities(int titleId, int iconId) {
             this.titleId = titleId;
             this.iconId = iconId;
         }

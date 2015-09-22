@@ -3,7 +3,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.0.1'
+        classpath 'com.android.tools.build:gradle:1.3.0'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.4'
     }
 }
@@ -19,7 +19,7 @@ repositories {
 
 android {
     compileSdkVersion 19
-    buildToolsVersion '21.1.2'
+    buildToolsVersion '23.0.1'
 
 //    compileOptions {
 //        sourceCompatibility JavaVersion.VERSION_1_7
@@ -72,13 +72,13 @@ dependencies {
     //compile "com.google.android.gms:play-services-wearable:$googlePlayVersion"
     //compile "com.google.android.gms:play-services-all-wear:$googlePlayVersion"
 
-    apt "org.androidannotations:androidannotations:3.2"
-    compile "org.androidannotations:androidannotations-api:3.2"
+    apt "org.androidannotations:androidannotations:3.3.2"
+    compile "org.androidannotations:androidannotations-api:3.3.2"
 
     compile 'com.commonsware.cwac:wakeful:1.0.1'
     compile 'org.achartengine:achartengine:1.2.0'
     compile 'net.sf.trove4j:trove4j:3.0.3'
-    compile 'de.greenrobot:eventbus:2.2.0'
+    compile 'de.greenrobot:eventbus:2.4.0'
 
     compile fileTree(dir: 'libs', include: ['**/*.jar'])
 }

@@ -182,8 +182,6 @@ public class TransactionTest extends AbstractDbTest {
         t.fromAccountId = 1;
         t.fromAmount = 1000;
         t.categoryId = 5;
-        t.accuracy = 6.0f;
-        t.latitude = -11.0;
         t.isCCardPayment = 1;
         t.note = "My note";
         t.status = TransactionStatus.RS;
@@ -195,8 +193,6 @@ public class TransactionTest extends AbstractDbTest {
         assertEquals(t.categoryId, restored.categoryId);
         assertEquals(t.note, restored.note);
         assertEquals(t.status, restored.status);
-        assertEquals(t.accuracy, restored.accuracy);
-        assertEquals(t.latitude, restored.latitude);
         assertEquals(t.isCCardPayment, restored.isCCardPayment);
     }
 

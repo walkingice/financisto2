@@ -35,14 +35,6 @@ public class CsvExport extends Export {
 
     public static final String[] HEADER = "date,time,account,amount,currency,original amount,original currency,category,parent,payee,location,project,note".split(",");
 
-    private static final MyLocation TRANSFER_IN = new MyLocation();
-    private static final MyLocation TRANSFER_OUT = new MyLocation();
-
-    static {
-        TRANSFER_IN.name = "Transfer In";
-        TRANSFER_OUT.name = "Transfer Out";
-    }
-
     private final DatabaseAdapter db;
 	private final CategoryRepository categoryRepository;
     private final CsvExportOptions options;
@@ -113,13 +105,12 @@ public class CsvExport extends Export {
         Account fromAccount = getAccount(t.fromAccountId);
         if (t.isTransfer()) {
             Account toAccount = getAccount(t.toAccountId);
-            writeLine(w, dt, fromAccount.title, t.fromAmount, fromAccount.currency.id, 0, 0, category, null, TRANSFER_OUT, project, t.note);
-            writeLine(w, dt, toAccount.title, t.toAmount, toAccount.currency.id, 0, 0, category, null, TRANSFER_IN, project, t.note);
+            writeLine(w, dt, fromAccount.title, t.fromAmount, fromAccount.currency.id, 0, 0, category, null, project, t.note);
+            writeLine(w, dt, toAccount.title, t.toAmount, toAccount.currency.id, 0, 0, category, null, project, t.note);
         } else {
-            MyLocation location = getLocationById(t.locationId);
             Payee payee = getPayee(t.payeeId);
             writeLine(w, dt, fromAccount.title, t.fromAmount, fromAccount.currency.id, t.originalFromAmount, t.originalCurrencyId,
-                    category, payee, location, project, t.note);
+                    category, payee, project, t.note);
             if (category != null && category.isSplit() && options.exportSplits) {
                 List<Transaction> splits = db.getSplitsForTransaction(t.id);
                 for (Transaction split : splits) {
@@ -133,7 +124,7 @@ public class CsvExport extends Export {
     private void writeLine(Csv.Writer w, Date dt, String account,
                            long amount, long currencyId,
                            long originalAmount, long originalCurrencyId,
-			               Category category, Payee payee, MyLocation location, Project project, String note) {
+			               Category category, Payee payee, Project project, String note) {
         if (dt != null) {
 		    w.value(FORMAT_DATE_ISO_8601.format(dt));
 		    w.value(FORMAT_TIME_ISO_8601.format(dt));
@@ -158,7 +149,6 @@ public class CsvExport extends Export {
 		String sParent = buildPath(category);
 		w.value(sParent);
         w.value(payee != null ? payee.title : "");
-		w.value(location != null ? location.name : "");
 		w.value(project != null ? project.title : "");
 		w.value(note);
 		w.newLine();

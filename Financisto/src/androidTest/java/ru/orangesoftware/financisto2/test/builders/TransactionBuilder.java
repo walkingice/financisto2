@@ -57,13 +57,6 @@ public class TransactionBuilder {
         return this;
     }
 
-    public TransactionBuilder location(String location) {
-        MyLocation myLocation = new MyLocation();
-        myLocation.name = location;
-        t.locationId = db.saveLocation(myLocation);
-        return this;
-    }
-
     public TransactionBuilder project(String project) {
         Project myProject = new Project();
         myProject.title = project;

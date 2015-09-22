@@ -51,9 +51,9 @@ public class CsvExportTest extends AbstractExportTest<CsvExport, CsvExportOption
     public void test_should_export_regular_transaction() throws Exception {
         CsvExportOptions options = new CsvExportOptions(createExportCurrency(), ',', false, false, false, WhereFilter.empty(), false);
         TransactionBuilder.withDb(db).dateTime(DateTime.date(2011, 8, 3).at(22, 34, 55, 10))
-                .account(a1).amount(-123456).category(categoriesMap.get("AA1")).payee("P1").location("Home").project("P1").note("My note").create();
+                .account(a1).amount(-123456).category(categoriesMap.get("AA1")).payee("P1").project("P1").note("My note").create();
         TransactionBuilder.withDb(db).dateTime(DateTime.date(2011, 8, 4).at(23, 34, 55, 10))
-                .account(a1).amount(-789).originalAmount(a2.currency, -888).category(categoriesMap.get("AA1")).payee("P1").location("Home").project("P1").note("My note").create();
+                .account(a1).amount(-789).originalAmount(a2.currency, -888).category(categoriesMap.get("AA1")).payee("P1").project("P1").note("My note").create();
         assertEquals(
                 "2011-08-04,23:34:55,My Cash Account,-7.89,SGD,-8.88,CZK,AA1,A:A1,P1,Home,P1,My note\n"+
                 "2011-08-03,22:34:55,My Cash Account,-1234.56,SGD,\"\",\"\",AA1,A:A1,P1,Home,P1,My note\n",
@@ -73,7 +73,7 @@ public class CsvExportTest extends AbstractExportTest<CsvExport, CsvExportOption
     public void test_should_export_split_transaction() throws Exception {
         CsvExportOptions options = new CsvExportOptions(createExportCurrency(), ',', false, true, false, WhereFilter.empty(), false);
         TransactionBuilder.withDb(db).dateTime(DateTime.date(2011, 8, 3).at(22, 34, 55, 10))
-                .account(a1).amount(-2000).payee("P1").location("Home").project("R1").note("My note")
+                .account(a1).amount(-2000).payee("P1").project("R1").note("My note")
                 .withSplit(categoriesMap.get("A1"), -500)
                 .withSplit(categoriesMap.get("A2"), -1500)
                 .create();
@@ -87,7 +87,7 @@ public class CsvExportTest extends AbstractExportTest<CsvExport, CsvExportOption
     public void test_should_export_split_transfer() throws Exception {
         CsvExportOptions options = new CsvExportOptions(createExportCurrency(), ',', false, true, false, WhereFilter.empty(), false);
         TransactionBuilder.withDb(db).dateTime(DateTime.date(2011, 8, 3).at(22, 34, 55, 10))
-                .account(a1).amount(-500).payee("P1").location("Home").project("R1").note("My note")
+                .account(a1).amount(-500).payee("P1").project("R1").note("My note")
                 .withTransferSplit(a2, -500, +100)
                 .create();
         assertEquals(
@@ -100,7 +100,7 @@ public class CsvExportTest extends AbstractExportTest<CsvExport, CsvExportOption
     public void test_should_not_export_split_transactions_if_not_set_in_options() throws Exception {
         CsvExportOptions options = new CsvExportOptions(createExportCurrency(), ',', false, false, false, WhereFilter.empty(), false);
         TransactionBuilder.withDb(db).dateTime(DateTime.date(2011, 8, 3).at(22, 34, 55, 10))
-                .account(a1).amount(-2000).payee("P1").location("Home").project("R1").note("My note")
+                .account(a1).amount(-2000).payee("P1").project("R1").note("My note")
                 .withSplit(categoriesMap.get("A1"), -500)
                 .withSplit(categoriesMap.get("A2"), -1500)
                 .create();

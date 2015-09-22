@@ -2,7 +2,7 @@
   <library name="play-services-plus-6.5.87">
     <CLASSES>
       <root url="file://$PROJECT_DIR$/Financisto/build/intermediates/exploded-aar/com.google.android.gms/play-services-plus/6.5.87/res" />
-      <root url="jar://$PROJECT_DIR$/Financisto/build/intermediates/exploded-aar/com.google.android.gms/play-services-plus/6.5.87/classes.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Financisto/build/intermediates/exploded-aar/com.google.android.gms/play-services-plus/6.5.87/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

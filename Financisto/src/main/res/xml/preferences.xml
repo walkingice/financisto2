@@ -79,10 +79,6 @@
                                     android:title="@string/remember_last_category_for_payee"
                                     android:summary="@string/remember_last_category_for_payee_summary"
                                     android:defaultValue="false"/>
-                <CheckBoxPreference android:key="remember_last_location"
-                                    android:title="@string/remember_last_location"
-                                    android:summary="@string/remember_last_location_summary"
-                                    android:defaultValue="false" android:dependency="remember_last_category"/>
                 <CheckBoxPreference android:key="remember_last_project"
                                     android:title="@string/remember_last_project"
                                     android:summary="@string/remember_last_project_summary"
@@ -228,25 +224,6 @@
                             android:summary="@string/backup_folder_summary"/>
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/flowzr_sync">
-
-        <CheckBoxPreference android:key="auto_sync_enabled"
-                            android:title="@string/auto_sync_enabled"
-                            android:summary="@string/auto_sync_enabled_summary"
-                            android:defaultValue="false"/>
-
-        <CheckBoxPreference android:key="googledrive_upload"
-                            android:title="@string/googledrive_upload"
-                            android:summary="@string/googledrive_upload_summary"
-                            android:defaultValue="false"/>
-
-        <EditTextPreference android:key="googledrive_folder"
-                            android:title="@string/googledrive_folder"
-                            android:summary="@string/googledrive_folder_summary"
-                            android:defaultValue="financial_docs"
-                />
-    </PreferenceCategory>
-
     <PreferenceCategory android:title="@string/exchange_rates">
         <ListPreference android:key="exchange_rate_provider"
                         android:title="@string/exchange_rate_provider"
@@ -260,20 +237,6 @@
                             android:enabled="false"/>
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/location">
-        <CheckBoxPreference android:key="use_gps"
-                            android:title="@string/use_gps" android:summary="@string/use_gps_summary"
-                            android:defaultValue="true"/>
-        <CheckBoxPreference android:key="use_my_location"
-                            android:title="@string/use_my_location" android:summary="@string/use_my_location_summary"
-                            android:defaultValue="true"/>
-        <ListPreference android:key="sort_locations"
-                        android:title="@string/sort_locations" android:summary="@string/sort_locations_summary"
-                        android:entries="@array/sort_locations_entities"
-                        android:entryValues="@array/sort_locations_values"
-                        android:defaultValue="NAME"/>
-    </PreferenceCategory>
-
     <PreferenceCategory android:title="@string/other">
         <CheckBoxPreference android:key="include_transfers_into_reports"
                             android:title="@string/include_transfers_into_reports"
@@ -282,10 +245,6 @@
         <CheckBoxPreference android:key="restore_missed_scheduled_transactions"
                             android:title="@string/restore_missed_scheduled_transactions"
                             android:summary="@string/restore_missed_scheduled_transactions_summary"
-                            android:defaultValue="true"/>
-        <CheckBoxPreference android:key="send_error_reports"
-                            android:title="@string/send_error_reports"
-                            android:summary="@string/send_error_reports_summary"
                             android:defaultValue="true"/>
     </PreferenceCategory>
 

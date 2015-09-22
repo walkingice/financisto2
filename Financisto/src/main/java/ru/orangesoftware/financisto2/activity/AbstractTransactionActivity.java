@@ -120,10 +120,6 @@ public abstract class AbstractTransactionActivity extends AbstractActivity imple
 	protected Cursor accountCursor;
 	protected ListAdapter accountAdapter;
 	
-	protected TextView locationText;
-	protected Cursor locationCursor;
-	protected ListAdapter locationAdapter;
-
 	protected Calendar dateTime;
 	protected ImageButton status;
 	protected Button dateText;
@@ -140,24 +136,15 @@ public abstract class AbstractTransactionActivity extends AbstractActivity imple
 	
 	protected Account selectedAccount;
 
-	protected long selectedLocationId = 0;
 	protected String recurrence;
 	protected String notificationOptions;
 	
-	private LocationManager locationManager;
-	private Location lastFix;
-
-
-	private boolean setCurrentLocation;
-
     protected ProjectSelector projectSelector;
     protected CategorySelector categorySelector;
 
     protected boolean isRememberLastAccount;
 	protected boolean isRememberLastCategory;
-	protected boolean isRememberLastLocation;
 	protected boolean isRememberLastProject;
-	protected boolean isShowLocation;
 	protected boolean isShowNote;
 	protected boolean isShowTakePicture;
 	protected boolean isShowIsCCardPayment;
@@ -195,9 +182,7 @@ public abstract class AbstractTransactionActivity extends AbstractActivity imple
 
 		isRememberLastAccount = MyPreferences.isRememberAccount(this);
 		isRememberLastCategory = isRememberLastAccount && MyPreferences.isRememberCategory(this);
-		isRememberLastLocation = isRememberLastCategory && MyPreferences.isRememberLocation(this);
 		isRememberLastProject = isRememberLastCategory && MyPreferences.isRememberProject(this);
-		isShowLocation = MyPreferences.isShowLocation(this);
 		isShowNote = MyPreferences.isShowNote(this);
 		isShowTakePicture = MyPreferences.isShowTakePicture(this);
 		isShowIsCCardPayment = MyPreferences.isShowIsCCardPayment(this);
@@ -207,12 +192,6 @@ public abstract class AbstractTransactionActivity extends AbstractActivity imple
 
         projectSelector = new ProjectSelector(this, x);
         projectSelector.fetchProjects();
-
-		if (isShowLocation) {
-			locationCursor = db.getAllLocations(true);
-			startManagingCursor(locationCursor);
-			locationAdapter = TransactionUtils.createLocationAdapter(this, locationCursor);
-		}
 
         transaction.dateTime = transactionDateTime;
         if (transactionId != -1) {
@@ -322,9 +301,6 @@ public abstract class AbstractTransactionActivity extends AbstractActivity imple
 			if (!isRememberLastProject) {
 				projectSelector.selectProject(0);
 			}
-			if (!isRememberLastLocation) {
-				selectCurrentLocation(false);
-			}							
 			if (transaction.isScheduled()) {
 				selectStatus(TransactionStatus.PN);
 			}
@@ -415,141 +391,16 @@ public abstract class AbstractTransactionActivity extends AbstractActivity imple
         return attributes;
     }
 
-    @OptionsItem(R.id.menu_force_gps_location)
-    protected void selectCurrentLocation() {
-        selectCurrentLocation(true);
-    }
-
-	protected void selectCurrentLocation(boolean forceUseGps) {
-        setCurrentLocation = true;
-        selectedLocationId = 0;
-
-		if (transaction.isTemplateLike()) {
-			if (isShowLocation) {
-				locationText.setText(R.string.current_location);
-			}
-			return;
-		}		
-		      
-        // Start listener to find current location
-        locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-        String provider = locationManager.getBestProvider(new Criteria(), true);
-        
-        if (provider != null) {
-        	lastFix = locationManager.getLastKnownLocation(provider);        	
-        }  
-
-        if (lastFix != null) {
-        	setLocation(lastFix);
-        	connectGps(forceUseGps);
-        } else {
-        	// No enabled providers found, so disable option
-        	if (isShowLocation) {
-        		locationText.setText(R.string.no_fix);
-        	}
-        }
-	}
-
-	private void connectGps(boolean forceUseGps) {
-		if (locationManager != null) {
-			boolean useGps = forceUseGps || MyPreferences.isUseGps(this);
-            try {
-                if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {	    	        
-                    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, networkLocationListener);	        	    	        
-                }
-            } catch (Exception e) {
-                Log.e("Financisto", "Unable to connect network provider");
-            }
-            try {
-                if (useGps && locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, gpsLocationListener);
-                }
-            } catch (Exception e) {
-                Log.e("Financisto", "Unable to connect gps provider");
-            }
-		}
-	}
-
-	private void disconnectGPS() {
-		if (locationManager != null) {
-			locationManager.removeUpdates(networkLocationListener);
-			locationManager.removeUpdates(gpsLocationListener);
-		}
-	}
-
-	@Override
-	protected void onDestroy() {
-		disconnectGPS();
-		super.onDestroy();
-	}
-
-	@Override
-	protected void onPause() {
-		disconnectGPS();
-		super.onPause();
-	}
 
     @Override
     protected boolean shouldLock() {
         return MyPreferences.isPinProtectedNewTransaction(this);
     }
 
-    @Override
-	protected void onResume() {
-		super.onResume();
-		if (lastFix != null) {
-			connectGps(false);
-		}
-	}
-
-	private class DefaultLocationListener implements LocationListener {
-
-		@Override
-		public void onLocationChanged(Location location) {
-			Log.i(">>>>>>>>>", "onLocationChanged "+location.toString());
-			lastFix = location;
-			if (setCurrentLocation) {
-				setLocation(location);
-			}
-		}
-
-		@Override
-		public void onProviderDisabled(String provider) {
-		}
-
-		@Override
-		public void onProviderEnabled(String provider) {
-		}
-
-		@Override
-		public void onStatusChanged(String provider, int status, Bundle extras) {
-		}
-		
-	}
-
-	private final LocationListener networkLocationListener = new DefaultLocationListener() {
-
-		@Override
-		public void onLocationChanged(Location location) {
-			super.onLocationChanged(location);
-			locationManager.removeUpdates(networkLocationListener);
-		}
-
-	};
-	
-	private final LocationListener gpsLocationListener = new DefaultLocationListener();
-
 	protected void createCommonNodes(LinearLayout layout) {
-		int locationOrder = MyPreferences.getLocationOrder(this);
 		int noteOrder = MyPreferences.getNoteOrder(this);
 		int projectOrder = MyPreferences.getProjectOrder(this);
 		for (int i=0; i<6; i++) {
-			if (i == locationOrder) {
-				if (isShowLocation) {
-					//location
-					locationText = x.addListNodePlus(layout, R.id.location, R.id.location_add, R.string.location, R.string.select_location);
-				}
-			}
 			if (i == noteOrder) {
 				if (isShowNote) {
 					//note
@@ -585,15 +436,6 @@ public abstract class AbstractTransactionActivity extends AbstractActivity imple
 				x.select(this, R.id.account, R.string.account, accountCursor, accountAdapter,
                         AccountColumns.ID, getSelectedAccountId());
 				break;
-			case R.id.location: {
-				x.select(this, R.id.location, R.string.location, locationCursor, locationAdapter, "_id", selectedLocationId);
-				break;
-			}
-			case R.id.location_add: {
-				Intent intent = new Intent(this, LocationActivity.class);
-				startActivityForResult(intent, NEW_LOCATION_REQUEST);				
-				break;
-			}
 			case R.id.recurrence_pattern: {
 				Intent intent = new Intent(this, RecurrenceActivity.class);
 				intent.putExtra(RecurrenceActivity.RECURRENCE_PATTERN, recurrence);
@@ -645,9 +487,6 @@ public abstract class AbstractTransactionActivity extends AbstractActivity imple
 			case R.id.account:				
 				selectAccount(selectedId);
 				break;
-			case R.id.location:
-				selectLocation(selectedId);
-				break;
 		}
 	}
 	
@@ -679,9 +518,6 @@ public abstract class AbstractTransactionActivity extends AbstractActivity imple
         addOrRemoveSplits();
         categorySelector.addAttributes(transaction);
         switchIncomeExpenseButton(category);
-        if (selectLast && isRememberLastLocation) {
-            selectLocation(category.lastLocationId);
-        }
         if (selectLast && isRememberLastProject) {
             projectSelector.selectProject(category.lastProjectId);
         }
@@ -694,21 +530,6 @@ public abstract class AbstractTransactionActivity extends AbstractActivity imple
     protected void switchIncomeExpenseButton(Category category) {
 
     }
-
-	private void selectLocation(long locationId) {
-		if (locationId == 0) {
-			selectCurrentLocation(false);
-		} else {
-			if (isShowLocation) {
-                MyLocation location = db.get(MyLocation.class, locationId);
-				if (location != null) {
-					locationText.setText(location.toString());
-					selectedLocationId = locationId;
-					setCurrentLocation = false;
-				}
-			}
-		}
-	}
 
 	private void setRecurrence(String recurrence) {
 		this.recurrence = recurrence;
@@ -742,13 +563,13 @@ public abstract class AbstractTransactionActivity extends AbstractActivity imple
 		if (resultCode == RESULT_OK) {
             rateView.onActivityResult(requestCode, data);
 			switch (requestCode) {
-				case NEW_LOCATION_REQUEST:
-					locationCursor.requery();
-					long locationId = data.getLongExtra(LocationActivity.LOCATION_ID_EXTRA, -1);
-					if (locationId != -1) {
-						selectLocation(locationId);
-					}
-					break;
+//				case NEW_LOCATION_REQUEST:
+//					locationCursor.requery();
+//					long locationId = data.getLongExtra(LocationActivity.LOCATION_ID_EXTRA, -1);
+//					if (locationId != -1) {
+//						selectLocation(locationId);
+//					}
+//					break;
 				case RECURRENCE_REQUEST:					
 					String recurrence = data.getStringExtra(RecurrenceActivity.RECURRENCE_PATTERN);
 					setRecurrence(recurrence);
@@ -820,11 +641,6 @@ public abstract class AbstractTransactionActivity extends AbstractActivity imple
 		categorySelector.selectCategory(transaction.categoryId, false);
 		projectSelector.selectProject(transaction.projectId);
 		setDateTime(transaction.dateTime);		
-		if (transaction.locationId > 0) {
-			selectLocation(transaction.locationId);
-		} else {
-			setLocation(transaction.provider, transaction.accuracy, transaction.latitude, transaction.longitude);
-		}
 		if (isShowNote) {
 			noteText.setText(transaction.note);
 		}
@@ -852,26 +668,6 @@ public abstract class AbstractTransactionActivity extends AbstractActivity imple
 		ccardPayment.setChecked(isCCardPaymentValue==1);
 	}
 
-	private void setLocation(String provider, float accuracy, double latitude, double longitude) {
-		lastFix = new Location(provider);
-		lastFix.setLatitude(latitude);
-		lastFix.setLongitude(longitude);
-		lastFix.setAccuracy(accuracy);
-		setLocation(lastFix);
-	}
-
-	private void setLocation(Location lastFix) {
-		if (isShowLocation) {
-			if (lastFix.getProvider() == null) {
-				locationText.setText(R.string.no_fix);
-			} else {
-				locationText.setText(Utils.locationToText(lastFix.getProvider(), 
-					lastFix.getLatitude(), lastFix.getLongitude(), 
-					lastFix.hasAccuracy() ? lastFix.getAccuracy() : 0, null));
-			}
-		}
-	}
-
 	protected void updateTransactionFromUI(Transaction transaction) {
 		transaction.categoryId = categorySelector.getSelectedCategoryId();
 		transaction.projectId = projectSelector.getSelectedProjectId();
@@ -879,15 +675,6 @@ public abstract class AbstractTransactionActivity extends AbstractActivity imple
 			DateUtils.zeroSeconds(dateTime);
 		}
 		transaction.dateTime = dateTime.getTime().getTime();
-		if (selectedLocationId > 0) {
-			transaction.locationId = selectedLocationId;
-		} else {
-			transaction.locationId = 0;
-			transaction.provider = lastFix != null ? lastFix.getProvider() : null;
-			transaction.accuracy = lastFix != null ? lastFix.getAccuracy() : 0;
-			transaction.latitude = lastFix != null ? lastFix.getLatitude() : 0;
-			transaction.longitude = lastFix != null ? lastFix.getLongitude() : 0;
-		}
         if (isShowPayee) {
             transaction.payeeId = db.insertPayee(text(payeeText)).id;
         }

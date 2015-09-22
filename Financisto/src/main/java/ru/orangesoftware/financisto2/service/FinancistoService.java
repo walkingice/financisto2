@@ -36,8 +36,6 @@ import ru.orangesoftware.financisto2.backup.DatabaseExport;
 import ru.orangesoftware.financisto2.blotter.BlotterFilter;
 import ru.orangesoftware.financisto2.db.DatabaseAdapter;
 import ru.orangesoftware.financisto2.export.Export;
-import ru.orangesoftware.financisto2.export.flowzr.FlowzrSyncEngine;
-import ru.orangesoftware.financisto2.export.flowzr.FlowzrSyncOptions;
 import ru.orangesoftware.financisto2.filter.WhereFilter;
 import ru.orangesoftware.financisto2.model.TransactionInfo;
 import ru.orangesoftware.financisto2.model.TransactionStatus;
@@ -45,7 +43,6 @@ import ru.orangesoftware.financisto2.recur.NotificationOptions;
 import ru.orangesoftware.financisto2.utils.MyPreferences;
 
 import static ru.orangesoftware.financisto2.service.DailyAutoBackupScheduler.scheduleNextAutoBackup;
-import static ru.orangesoftware.financisto2.service.FlowzrAutoSyncScheduler.scheduleNextAutoSync;
 
 @EService
 public class FinancistoService extends WakefulIntentService {
@@ -55,9 +52,7 @@ public class FinancistoService extends WakefulIntentService {
     public static final String ACTION_SCHEDULE_ONE = "ru.orangesoftware.financisto2.SCHEDULE_ONE";
     public static final String ACTION_SCHEDULE_AUTO_BACKUP = "ru.orangesoftware.financisto2.ACTION_SCHEDULE_AUTO_BACKUP";
     public static final String ACTION_AUTO_BACKUP = "ru.orangesoftware.financisto2.ACTION_AUTO_BACKUP";
-    public static final String ACTION_SCHEDULE_AUTO_SYNC = "ru.orangesoftware.financisto2.ACTION_SCHEDULE_AUTO_SYNC";
-    public static final String ACTION_AUTO_SYNC = "ru.orangesoftware.financisto2.ACTION_AUTO_SYNC";
-    
+
 	private static final int RESTORED_NOTIFICATION_ID = 0;
 
     @Bean
@@ -87,10 +82,6 @@ public class FinancistoService extends WakefulIntentService {
             scheduleNextAutoBackup(this);
         } else if (ACTION_AUTO_BACKUP.equals(action)) {
             doAutoBackup();
-        } else if (ACTION_SCHEDULE_AUTO_SYNC.equals(action)) {
-            scheduleNextAutoSync(this);
-        } else if (ACTION_AUTO_SYNC.equals(action)) {
-            doAutoSync();
         }
     }
 
@@ -109,33 +100,6 @@ public class FinancistoService extends WakefulIntentService {
                 notifyUser(transaction);
                 AccountWidget.updateWidgets(this);
             }
-        }
-    }
-    
-    private void doAutoSync() {
-    	try {
-    		Log.i(TAG, "Auto-sync started at " + new Date());
-			SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);		
-			FlowzrSyncOptions o =FlowzrSyncOptions.fromPrefs(preferences);    		
-			if (isPushSyncNeed(o.last_sync_ts)) {
-				FlowzrSyncEngine.builAndRun(getApplicationContext());
-    		} else {
-				Log.i(TAG,"no changes to push since " + new Date(o.last_sync_ts).toString());
-			}
-    	} finally {
-    		scheduleNextAutoSync(this);
-    	}
-    }
-    
-    private boolean isPushSyncNeed(long lastSyncLocalTimestamp) {
-        String sql = "select count(*) from transactions where updated_on > " + lastSyncLocalTimestamp;
-        Cursor c = db.db().rawQuery(sql, null);
-        try {
-            c.moveToFirst();
-            long total = c.getLong(0);
-            return total != 0;
-        } finally {
-            c.close();
         }
     }
     
