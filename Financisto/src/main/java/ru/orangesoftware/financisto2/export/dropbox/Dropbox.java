@@ -24,11 +24,6 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.*;
 
-/**
- * Created by IntelliJ IDEA.
- * User: denis.solonenko
- * Date: 1/10/12 10:52 PM
- */
 public class Dropbox {
 
     public static final String APP_KEY = "INSERT_APP_KEY_HERE";
@@ -47,7 +42,7 @@ public class Dropbox {
 
     public void startAuth() {
         startedAuth = true;
-        dropboxApi.getSession().startAuthentication(context);
+        dropboxApi.getSession().startOAuth2Authentication(context);
     }
 
     public void completeAuth() {
@@ -55,8 +50,8 @@ public class Dropbox {
             if (startedAuth && dropboxApi.getSession().authenticationSuccessful()) {
                 try {
                     dropboxApi.getSession().finishAuthentication();
-                    AccessTokenPair tokens = dropboxApi.getSession().getAccessTokenPair();
-                    MyPreferences.storeDropboxKeys(context, tokens.key, tokens.secret);
+                    String token = dropboxApi.getSession().getOAuth2AccessToken();
+                    MyPreferences.storeDropboxToken(context, token);
                 } catch (IllegalStateException e) {
                     Log.i("Financisto", "Error authenticating Dropbox", e);
                 }
@@ -78,9 +73,9 @@ public class Dropbox {
     }
 
     public boolean authSession() {
-        AccessTokenPair access = MyPreferences.getDropboxKeys(context);
-        if (access != null) {
-            dropboxApi.getSession().setAccessTokenPair(access);
+        String token = MyPreferences.getDropboxToken(context);
+        if (token != null) {
+            dropboxApi.getSession().setOAuth2AccessToken(token);
             return dropboxApi.getSession().isLinked();
         }
         return false;

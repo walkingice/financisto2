@@ -243,7 +243,12 @@ public class PreferencesActivity extends PreferenceActivity {
     Dropbox dropbox = new Dropbox(this);
 
     private void authDropbox() {
-        dropbox.startAuth();
+        try {
+            dropbox.startAuth();
+        } catch (Exception e) {
+            Log.e("Financisto", "Dropbox auth error", e);
+            Toast.makeText(this, "Unable to authorize Dropbox:\n"+e.getMessage(), Toast.LENGTH_LONG).show();
+        }
     }
 
     private void deAuthDropbox() {
