@@ -16,17 +16,12 @@ package ru.orangesoftware.financisto2.export;
  */
 public class ImportExportException extends Exception {
 
-    public final int errorResId;
-    public final Exception cause;
-
-    public ImportExportException(int errorResId) {
-        this.errorResId = errorResId;
-        this.cause = null;
+    public ImportExportException(String error) {
+        super(error);
     }
 
-    public ImportExportException(int errorResId, Exception cause) {
-        this.errorResId = errorResId;
-        this.cause = cause;
+    public ImportExportException(String error, Exception cause) {
+        super(error, cause);
     }
 
 }

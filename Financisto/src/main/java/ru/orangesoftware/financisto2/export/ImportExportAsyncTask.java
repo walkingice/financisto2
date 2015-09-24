@@ -85,14 +85,9 @@ public abstract class ImportExportAsyncTask extends AsyncTask<String, String, Ob
 
         if (result instanceof ImportExportException) {
             ImportExportException exception = (ImportExportException) result;
-            StringBuilder sb = new StringBuilder();
-            sb.append(context.getString(exception.errorResId));
-            if (exception.cause != null) {
-                sb.append(" : ").append(exception.cause);
-            }
             new AlertDialog.Builder(context)
                     .setTitle(R.string.fail)
-                    .setMessage(sb.toString())
+                    .setMessage(exception.getMessage())
                     .setPositiveButton(R.string.ok, null)
                     .show();
             return;

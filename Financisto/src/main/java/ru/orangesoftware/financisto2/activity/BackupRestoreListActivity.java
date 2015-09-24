@@ -36,9 +36,9 @@ import ru.orangesoftware.financisto2.export.BackupExportTask;
 import ru.orangesoftware.financisto2.export.BackupImportTask;
 import ru.orangesoftware.financisto2.export.Export;
 import ru.orangesoftware.financisto2.export.ImportExportAsyncTaskListener;
-import ru.orangesoftware.financisto2.export.drive.DoBackup;
-import ru.orangesoftware.financisto2.export.drive.DoListFiles;
-import ru.orangesoftware.financisto2.export.drive.DoRestore;
+import ru.orangesoftware.financisto2.export.drive.DoDriveBackup;
+import ru.orangesoftware.financisto2.export.drive.DoDriveListFiles;
+import ru.orangesoftware.financisto2.export.drive.DoDriveRestore;
 import ru.orangesoftware.financisto2.export.drive.DriveBackupError;
 import ru.orangesoftware.financisto2.export.drive.DriveBackupFailure;
 import ru.orangesoftware.financisto2.export.drive.DriveBackupSuccess;
@@ -46,6 +46,13 @@ import ru.orangesoftware.financisto2.export.drive.DriveConnectionFailed;
 import ru.orangesoftware.financisto2.export.drive.DriveFileInfo;
 import ru.orangesoftware.financisto2.export.drive.DriveFileList;
 import ru.orangesoftware.financisto2.export.drive.DriveRestoreSuccess;
+import ru.orangesoftware.financisto2.export.dropbox.DoDropboxBackup;
+import ru.orangesoftware.financisto2.export.dropbox.DoDropboxListFiles;
+import ru.orangesoftware.financisto2.export.dropbox.DoDropboxRestore;
+import ru.orangesoftware.financisto2.export.dropbox.DropboxBackupError;
+import ru.orangesoftware.financisto2.export.dropbox.DropboxBackupSuccess;
+import ru.orangesoftware.financisto2.export.dropbox.DropboxFileList;
+import ru.orangesoftware.financisto2.export.dropbox.DropboxRestoreSuccess;
 import ru.orangesoftware.financisto2.utils.EntityEnum;
 import ru.orangesoftware.financisto2.utils.EnumUtils;
 
@@ -57,7 +64,7 @@ public class BackupRestoreListActivity extends ListActivity {
     @Bean
     public GreenRobotBus bus;
 
-    final Entity[] entities = Entity.values();
+    private final Entity[] entities = Entity.values();
 
     ProgressDialog progressDialog;
 
@@ -93,6 +100,17 @@ public class BackupRestoreListActivity extends ListActivity {
         bus.unregister(this);
         super.onPause();
     }
+
+    private void dissmissProgressDialog() {
+        if (progressDialog != null) {
+            progressDialog.dismiss();
+            progressDialog = null;
+        }
+    }
+
+    // =========================================================================================
+    // DATABASE ================================================================================
+    // =========================================================================================
 
     private void doBackupDatabase() {
         ProgressDialog d = ProgressDialog.show(this, null, getString(R.string.backup_database_inprogress), true);
@@ -148,17 +166,21 @@ public class BackupRestoreListActivity extends ListActivity {
         startActivity(Intent.createChooser(intent, getString(R.string.backup_database_to_title)));
     }
 
+    // =========================================================================================
+    // GOOGLE DRIVE ============================================================================
+    // =========================================================================================
+
     private void doBackupOnGoogleDrive() {
         progressDialog = ProgressDialog.show(this, null, getString(R.string.backup_database_gdocs_inprogress), true);
-        bus.post(new DoBackup());
+        bus.post(new DoDriveBackup());
     }
-
-    private DriveFileInfo selectedDriveFile;
 
     private void doRestoreFromGoogleDrive() {
         progressDialog = ProgressDialog.show(this, null, getString(R.string.google_drive_loading_files), true);
-        bus.post(new DoListFiles());
+        bus.post(new DoDriveListFiles());
     }
+
+    private DriveFileInfo selectedDriveFile;
 
     public void onEventMainThread(DriveFileList event) {
         dissmissProgressDialog();
@@ -172,7 +194,7 @@ public class BackupRestoreListActivity extends ListActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         if (selectedDriveFile != null) {
                             progressDialog = ProgressDialog.show(context, null, getString(R.string.google_drive_restore_in_progress), true);
-                            bus.post(new DoRestore(selectedDriveFile));
+                            bus.post(new DoDriveRestore(selectedDriveFile));
                         }
                     }
                 })
@@ -214,7 +236,7 @@ public class BackupRestoreListActivity extends ListActivity {
 
     public void onEventMainThread(DriveBackupError event) {
         dissmissProgressDialog();
-        Toast.makeText(this, getString(R.string.google_drive_connection_failed, event.e), Toast.LENGTH_LONG).show();
+        Toast.makeText(this, getString(R.string.google_drive_connection_failed, event.e.getMessage()), Toast.LENGTH_LONG).show();
     }
 
     public void onEventMainThread(DriveConnectionFailed event) {
@@ -239,11 +261,62 @@ public class BackupRestoreListActivity extends ListActivity {
         }
     }
 
-    private void dissmissProgressDialog() {
-        if (progressDialog != null) {
-            progressDialog.dismiss();
-            progressDialog = null;
-        }
+    // =========================================================================================
+    // DROPBOX =================================================================================
+    // =========================================================================================
+
+    private void doBackupOnDropbox() {
+        progressDialog = ProgressDialog.show(this, null, getString(R.string.backup_database_gdocs_inprogress), true);
+        bus.post(new DoDropboxBackup());
+    }
+
+    private void doRestoreFromDropbox() {
+        progressDialog = ProgressDialog.show(this, null, getString(R.string.dropbox_loading_files), true);
+        bus.post(new DoDropboxListFiles());
+    }
+
+    public void onEventMainThread(DropboxBackupSuccess event) {
+        dissmissProgressDialog();
+        Toast.makeText(this, getString(R.string.dropbox_backup_success, event.fileName), Toast.LENGTH_LONG).show();
+    }
+
+    public void onEventMainThread(DropboxRestoreSuccess event) {
+        dissmissProgressDialog();
+        Toast.makeText(this, R.string.restore_database_success, Toast.LENGTH_LONG).show();
+    }
+
+    public void onEventMainThread(DropboxBackupError event) {
+        dissmissProgressDialog();
+        Toast.makeText(this, getString(R.string.dropbox_error, event.e.getMessage()), Toast.LENGTH_LONG).show();
+    }
+
+    private String selectedDropboxFile;
+
+    public void onEventMainThread(DropboxFileList event) {
+        dissmissProgressDialog();
+        final List<String> files = event.files;
+        final BackupRestoreListActivity context = this;
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, android.R.layout.simple_list_item_single_choice, files);
+        new AlertDialog.Builder(context)
+                .setTitle(R.string.restore_database)
+                .setPositiveButton(R.string.restore, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (selectedDropboxFile != null) {
+                            progressDialog = ProgressDialog.show(context, null, getString(R.string.dropbox_restore_in_progress), true);
+                            bus.post(new DoDropboxRestore(selectedDropboxFile));
+                        }
+                    }
+                })
+                .setSingleChoiceItems(adapter, -1, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (which >= 0 && which < files.size()) {
+                            selectedDropboxFile = files.get(which);
+                        }
+                    }
+                })
+                .show();
     }
 
     private enum Entity implements EntityEnum {
@@ -275,13 +348,13 @@ public class BackupRestoreListActivity extends ListActivity {
         DROPBOX_BACKUP(R.string.backup_database_online_dropbox, R.drawable.backup_dropbox){
             @Override
             public void startActivity(BackupRestoreListActivity context) {
-                ExchangeRatesListActivity_.intent(context).start();
+                context.doBackupOnDropbox();
             }
         },
         DROPBOX_RESTORE(R.string.restore_database_online_dropbox, R.drawable.backup_dropbox){
             @Override
             public void startActivity(BackupRestoreListActivity context) {
-                ExchangeRatesListActivity_.intent(context).start();
+                context.doRestoreFromDropbox();
             }
         },
         SEND_BACKUP_TO(R.string.backup_database_to, R.drawable.backup_share_2){
@@ -318,7 +391,7 @@ public class BackupRestoreListActivity extends ListActivity {
         private final int titleId;
         private final int iconId;
 
-        private Entity(int titleId, int iconId) {
+        Entity(int titleId, int iconId) {
             this.titleId = titleId;
             this.iconId = iconId;
         }

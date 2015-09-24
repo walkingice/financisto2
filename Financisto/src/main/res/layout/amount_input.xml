@@ -27,10 +27,8 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="right|center_vertical"
-        android:inputType="number"
+        android:inputType="numberDecimal"
         android:maxLength="16"
-        android:numeric="integer"
-        android:phoneNumber="true"
         android:singleLine="true"
         android:textSize="20sp"
         android:textStyle="bold" />
@@ -50,8 +48,6 @@
         android:gravity="left|center_vertical"
         android:inputType="number"
         android:maxLength="2"
-        android:numeric="integer"
-        android:phoneNumber="true"
         android:singleLine="true"
         android:textSize="20sp"
         android:textStyle="bold" />

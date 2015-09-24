@@ -255,16 +255,16 @@
 	<string name="confirm_pin">Confirm PIN</string>			
 	<string name="restore">Restore</string>
 	<string name="backup_database">Backup Database</string>
-	<string name="backup_database_inprogress">Backing up database...</string>
+	<string name="backup_database_inprogress">Backing up database…</string>
 	<string name="backup_database_gdocs">Backup on Google Drive</string>
-	<string name="backup_database_gdocs_inprogress">Backing up database...</string>
+	<string name="backup_database_gdocs_inprogress">Backing up database…</string>
 	<string name="csv_export">CSV Export</string>
-	<string name="csv_export_inprogress">Exporting database to CSV...</string>	
+	<string name="csv_export_inprogress">Exporting database to CSV…</string>
 	<string name="restore_database">Restore Database</string>
-	<string name="restore_database_inprogress">Restoring database...</string>
+	<string name="restore_database_inprogress">Restoring database…</string>
 	<string name="restore_database_gdocs">Restore from Google Drive</string>
-	<string name="google_drive_restore_in_progress">Restoring database...</string>
-    <string name="restore_database_inprogress_dropbox">Restoring database...</string>
+	<string name="google_drive_restore_in_progress">Restoring database from Google Drive…</string>
+    <string name="dropbox_restore_in_progress">Restoring database from Dropbox…</string>
 	<string name="restore_database_success">Database has been successfully restored.</string>
 	<string name="gdocs_connection_failed">Can not connect to Google Drive.</string>
 	<string name="gdocs_folder_not_found">The backup folder on Google Drive was not found.</string>
@@ -712,10 +712,10 @@
     <string name="dropbox_upload_backup_summary">Upload database backups to Dropbox</string>
     <string name="dropbox_upload_autobackup">Upload Auto-backups</string>
     <string name="dropbox_upload_autobackup_summary">Upload database auto-backups to Dropbox</string>
-    <string name="dropbox_uploading_file">Uploading file to Dropbox...</string>
-    <string name="dropbox_error">Error while working with Dropbox</string>
+    <string name="dropbox_uploading_file">Uploading file to Dropbox…</string>
+    <string name="dropbox_error">Error while working with Dropbox: %s</string>
     <string name="dropbox_auth_error">Not authorized to upload to Dropbox. Please check your Preferences.</string>
-    <string name="dropbox_loading_files">Loading files from Dropbox...</string>
+    <string name="dropbox_loading_files">Loading files from Dropbox…</string>
 
     <string name="exchange_rates">Exchange rates</string>
     <string name="no_exchange_rates">No exchange rates</string>
@@ -881,8 +881,9 @@
     <string name="card_issuer_eps">EPS</string>
     <string name="delete_account">Delete account</string>
     <string name="backup_restore">Backup/Restore</string>
-    <string name="google_drive_connection_resolved">Connection resolved. Please try the last operation again...</string>
+    <string name="google_drive_connection_resolved">Connection resolved. Please try the last operation again…</string>
     <string name="google_drive_connection_failed">Unable to connect to Google Drive:\n%s</string>
     <string name="google_drive_backup_success">Backup success on Google Drive: %s</string>
+	<string name="dropbox_backup_success">Backup success on Dropbox: %s</string>
 
 </resources>

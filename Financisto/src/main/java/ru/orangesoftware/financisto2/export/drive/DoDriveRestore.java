@@ -1,10 +1,10 @@
 package ru.orangesoftware.financisto2.export.drive;
 
-public class DoRestore {
+public class DoDriveRestore {
 
     public final DriveFileInfo selectedDriveFile;
 
-    public DoRestore(DriveFileInfo selectedDriveFile) {
+    public DoDriveRestore(DriveFileInfo selectedDriveFile) {
         this.selectedDriveFile = selectedDriveFile;
     }
 

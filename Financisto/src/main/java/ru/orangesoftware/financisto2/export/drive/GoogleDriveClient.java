@@ -13,7 +13,6 @@ import android.content.Context;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Status;
-import com.google.android.gms.drive.Contents;
 import com.google.android.gms.drive.Drive;
 import com.google.android.gms.drive.DriveApi;
 import com.google.android.gms.drive.DriveContents;
@@ -47,13 +46,6 @@ import ru.orangesoftware.financisto2.export.Export;
 import ru.orangesoftware.financisto2.export.ImportExportException;
 import ru.orangesoftware.financisto2.utils.MyPreferences;
 
-import static java.util.Arrays.asList;
-
-/**
- * Created by IntelliJ IDEA.
- * User: Denis Solonenko
- * Date: 11/9/11 2:19 AM
- */
 @EBean(scope = EBean.Scope.Singleton)
 public class GoogleDriveClient {
 
@@ -83,7 +75,7 @@ public class GoogleDriveClient {
         if (googleApiClient == null) {
             String googleDriveAccount = MyPreferences.getGoogleDriveAccount(context);
             if (googleDriveAccount == null) {
-                throw new ImportExportException(R.string.google_drive_account_required);
+                throw new ImportExportException(context.getString(R.string.google_drive_account_required));
             }
             googleApiClient = new GoogleApiClient.Builder(context)
                     .addApi(Drive.API)
@@ -100,7 +92,7 @@ public class GoogleDriveClient {
         }
     }
 
-    public void onEventBackgroundThread(DoBackup event) {
+    public void onEventBackgroundThread(DoDriveBackup event) {
         DatabaseExport export = new DatabaseExport(context, db.db(), true);
         try {
             String targetFolder = getDriveFolderName();
@@ -123,7 +115,7 @@ public class GoogleDriveClient {
         }
     }
 
-    public void onEventBackgroundThread(DoListFiles event) {
+    public void onEventBackgroundThread(DoDriveListFiles event) {
         try {
             String targetFolder = getDriveFolderName();
             ConnectionResult connectionResult = connect();
@@ -150,7 +142,7 @@ public class GoogleDriveClient {
         }
     }
 
-    public void onEventBackgroundThread(DoRestore event) {
+    public void onEventBackgroundThread(DoDriveRestore event) {
         try {
             String targetFolder = getDriveFolderName();
             ConnectionResult connectionResult = connect();
@@ -199,7 +191,7 @@ public class GoogleDriveClient {
         String folder = MyPreferences.getBackupFolder(context);
         // check the backup folder registered on preferences
         if (folder == null || folder.equals("")) {
-            throw new ImportExportException(R.string.gdocs_folder_not_configured);
+            throw new ImportExportException(context.getString(R.string.gdocs_folder_not_configured));
         }
         return folder;
     }
@@ -207,7 +199,7 @@ public class GoogleDriveClient {
     protected DriveFolder getDriveFolder(String targetFolder) throws IOException, ImportExportException {
         DriveFolder folder = getOrCreateDriveFolder(targetFolder);
         if (folder == null) {
-            throw new ImportExportException(R.string.gdocs_folder_not_found);
+            throw new ImportExportException(context.getString(R.string.gdocs_folder_not_found));
         }
         return folder;
     }

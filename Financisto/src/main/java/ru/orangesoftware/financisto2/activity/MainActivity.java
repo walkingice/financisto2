@@ -36,9 +36,6 @@ import ru.orangesoftware.financisto2.export.csv.CsvExportOptions;
 import ru.orangesoftware.financisto2.export.csv.CsvExportTask;
 import ru.orangesoftware.financisto2.export.csv.CsvImportOptions;
 import ru.orangesoftware.financisto2.export.csv.CsvImportTask;
-import ru.orangesoftware.financisto2.export.dropbox.DropboxBackupTask;
-import ru.orangesoftware.financisto2.export.dropbox.DropboxListFilesTask;
-import ru.orangesoftware.financisto2.export.dropbox.DropboxRestoreTask;
 import ru.orangesoftware.financisto2.export.qif.QifExportOptions;
 import ru.orangesoftware.financisto2.export.qif.QifExportTask;
 import ru.orangesoftware.financisto2.export.qif.QifImportOptions;
@@ -230,9 +227,6 @@ public class MainActivity extends TabActivity implements TabHost.OnTabChangeList
             case MENU_IMPORT_EXPORT:
                 showPickOneDialog(this, R.string.import_export, ImportExportEntities.values(), this);
                 break;
-            case MENU_BACKUP_RESTORE_ONLINE:
-                showPickOneDialog(this, R.string.backup_restore_database_online, BackupRestoreEntities.values(), this);
-                break;
             case MENU_INTEGRITY_FIX:
                 doIntegrityFix();
                 break;
@@ -318,43 +312,6 @@ public class MainActivity extends TabActivity implements TabHost.OnTabChangeList
         startActivityForResult(intent, ACTIVITY_QIF_IMPORT);
     }
 
-    private void doBackupOnDropbox() {
-        ProgressDialog d = ProgressDialog.show(this, null, getString(R.string.backup_database_dropbox_inprogress), true);
-        new DropboxBackupTask(this, d).execute();
-    }
-
-    private void doRestoreFromDropbox() {
-        ProgressDialog d = ProgressDialog.show(MainActivity.this, null, getString(R.string.dropbox_loading_files), true);
-        new DropboxListFilesTask(this, d).execute();
-    }
-
-    private String selectedDropboxFile;
-
-    public void doImportFromDropbox(final String[] backupFiles) {
-        if (backupFiles != null) {
-            new AlertDialog.Builder(MainActivity.this)
-                    .setTitle(R.string.restore_database)
-                    .setPositiveButton(R.string.restore, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            if (selectedDropboxFile != null) {
-                                ProgressDialog d = ProgressDialog.show(MainActivity.this, null, getString(R.string.restore_database_inprogress_dropbox), true);
-                                new DropboxRestoreTask(MainActivity.this, d, selectedDropboxFile).execute();
-                            }
-                        }
-                    })
-                    .setSingleChoiceItems(backupFiles, -1, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            if (which >= 0 && which < backupFiles.length) {
-                                selectedDropboxFile = backupFiles[which];
-                            }
-                        }
-                    })
-                    .show();
-        }
-    }
-
     private enum MenuEntities implements EntityEnum {
 
         CURRENCIES(R.string.currencies, R.drawable.menu_entities_currencies, CurrencyListActivity.class),
@@ -420,41 +377,6 @@ public class MainActivity extends TabActivity implements TabHost.OnTabChangeList
         private final int iconId;
 
         ImportExportEntities(int titleId, int iconId) {
-            this.titleId = titleId;
-            this.iconId = iconId;
-        }
-
-        @Override
-        public int getTitleId() {
-            return titleId;
-        }
-
-        @Override
-        public int getIconId() {
-            return iconId;
-        }
-
-    }
-
-    private enum BackupRestoreEntities implements ExecutableEntityEnum<MainActivity> {
-
-        DROPBOX_BACKUP(R.string.backup_database_online_dropbox, R.drawable.ic_menu_back) {
-            @Override
-            public void execute(MainActivity mainActivity) {
-                mainActivity.doBackupOnDropbox();
-            }
-        },
-        DROPBOX_RESTORE(R.string.restore_database_online_dropbox, R.drawable.ic_menu_forward) {
-            @Override
-            public void execute(MainActivity mainActivity) {
-                mainActivity.doRestoreFromDropbox();
-            }
-        };
-
-        private final int titleId;
-        private final int iconId;
-
-        BackupRestoreEntities(int titleId, int iconId) {
             this.titleId = titleId;
             this.iconId = iconId;
         }
