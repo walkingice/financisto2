@@ -98,7 +98,10 @@ public class DatabaseImport extends FullDatabaseImport {
             if (line.startsWith("$")) {
                 if ("$$".equals(line)) {
                     if (tableName != null && values.size() > 0) {
-                        sqlDb.insert(tableName, null, values);
+                        if (shouldRestoreTable(tableName)) {
+                            cleanupValues(tableName, values);
+                            sqlDb.insert(tableName, null, values);
+                        }
                         tableName = null;
                         insideEntity = false;
                     }
@@ -122,5 +125,23 @@ public class DatabaseImport extends FullDatabaseImport {
             }
         }
 	}
+
+    private boolean shouldRestoreTable(String tableName) {
+        if ("locations".equals(tableName)) return false;
+        return true;
+    }
+
+    private void cleanupValues(String tableName, ContentValues values) {
+        if ("transactions".equals(tableName)) {
+            values.remove("location_id");
+            values.remove("provider");
+            values.remove("accuracy");
+            values.remove("latitude");
+            values.remove("longitude");
+        } else if ("category".equals(tableName)) {
+            values.remove("last_location_id");
+            values.remove("sort_order");
+        }
+    }
 
 }
