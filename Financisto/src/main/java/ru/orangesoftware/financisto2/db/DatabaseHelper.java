@@ -43,7 +43,6 @@ public class DatabaseHelper extends DatabaseSchemaEvolution {
     public static final String ATTRIBUTES_TABLE = "attributes";
     public static final String CATEGORY_ATTRIBUTE_TABLE = "category_attribute";
     public static final String TRANSACTION_ATTRIBUTE_TABLE = "transaction_attribute";
-    public static final String LOCATIONS_TABLE = "locations";
     public static final String PAYEE_TABLE = "payee";
     public static final String CCARD_CLOSING_DATE_TABLE = "ccard_closing_date";
     public static final String EXCHANGE_RATES_TABLE = "currency_exchange_rate";
@@ -59,11 +58,10 @@ public class DatabaseHelper extends DatabaseSchemaEvolution {
     public static final String V_REPORT_CATEGORY = "v_report_category";
     public static final String V_REPORT_SUB_CATEGORY = "v_report_sub_category";
     public static final String V_REPORT_PERIOD = "v_report_period";
-    public static final String V_REPORT_LOCATIONS = "v_report_location";
     public static final String V_REPORT_PROJECTS = "v_report_project";
     public static final String V_REPORT_PAYEES = "v_report_payee";
 
-    public static enum TransactionColumns {
+    public enum TransactionColumns {
         _id,
         parent_id,
         from_account_id,
@@ -77,7 +75,6 @@ public class DatabaseHelper extends DatabaseSchemaEvolution {
         datetime,
         original_currency_id,
         original_from_amount,
-        location_id,
         provider,
         accuracy,
         latitude,
@@ -98,7 +95,7 @@ public class DatabaseHelper extends DatabaseSchemaEvolution {
 
     }
 
-    public static enum BlotterColumns {
+    public enum BlotterColumns {
         _id,
         parent_id,
         from_account_id,
@@ -114,8 +111,6 @@ public class DatabaseHelper extends DatabaseSchemaEvolution {
         category_type,
         project_id,
         project,
-        location_id,
-        location,
         payee_id,
         payee,
         note,
@@ -169,33 +164,31 @@ public class DatabaseHelper extends DatabaseSchemaEvolution {
 
     }
 
-    public static enum CategoryColumns {
+    public enum CategoryColumns {
         _id,
         title,
         left,
         right,
         type,
-        last_location_id,
         last_project_id,
         updated_on,
         remote_key,
         sort_order
     }
 
-    public static enum CategoryViewColumns {
+    public enum CategoryViewColumns {
         _id,
         title,
         level,
         left,
         right,
         type,
-        last_location_id,
         last_project_id;
 
         public static String[] NORMAL_PROJECTION = asStringArray(CategoryViewColumns.values());
     }
 
-    public static enum ExchangeRateColumns {
+    public enum ExchangeRateColumns {
         from_currency_id,
         to_currency_id,
         rate_date,
@@ -294,19 +287,6 @@ public class DatabaseHelper extends DatabaseSchemaEvolution {
 
         public static String[] NORMAL_PROJECTION = {ID, NAME, DATETIME, FROM_ACCOUNT_CURRENCY_ID, FROM_AMOUNT, TO_ACCOUNT_CURRENCY_ID, TO_AMOUNT, ORIGINAL_CURRENCY_ID, ORIGINAL_FROM_AMOUNT, LEFT, RIGHT, IS_TRANSFER};
     }
-
-    public static class LocationColumns {
-        public static final String ID = "_id";
-        public static final String NAME = "name";
-        public static final String DATETIME = "datetime";
-        public static final String PROVIDER = "provider";
-        public static final String ACCURACY = "accuracy";
-        public static final String LATITUDE = "latitude";
-        public static final String LONGITUDE = "longitude";
-        public static final String IS_PAYEE = "is_payee";
-        public static final String RESOLVED_ADDRESS = "resolved_address";
-    }
-
 
     public static class CreditCardClosingDateColumns {
 

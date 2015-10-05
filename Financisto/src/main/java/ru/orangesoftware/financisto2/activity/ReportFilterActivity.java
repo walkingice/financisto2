@@ -43,7 +43,6 @@ public class ReportFilterActivity extends AbstractActivity {
     private TextView category;
     private TextView project;
     private TextView payee;
-    private TextView location;
     private TextView status;
 
     private DateFormat df;
@@ -65,7 +64,6 @@ public class ReportFilterActivity extends AbstractActivity {
         category = x.addFilterNodeMinus(layout, R.id.category, R.id.category_clear, R.string.category, R.string.no_filter);
         payee = x.addFilterNodeMinus(layout, R.id.payee, R.id.payee_clear, R.string.payee, R.string.no_filter);
         project = x.addFilterNodeMinus(layout, R.id.project, R.id.project_clear, R.string.project, R.string.no_filter);
-        location = x.addFilterNodeMinus(layout, R.id.location, R.id.location_clear, R.string.location, R.string.no_filter);
         status = x.addFilterNodeMinus(layout, R.id.status, R.id.status_clear, R.string.transaction_status, R.string.no_filter);
 
         Button bOk = (Button)findViewById(R.id.bOK);
@@ -106,7 +104,6 @@ public class ReportFilterActivity extends AbstractActivity {
             updateCategoryFromFilter();
             updateProjectFromFilter();
             updatePayeeFromFilter();
-            updateLocationFromFilter();
             updateStatusFromFilter();
         }
 
@@ -125,18 +122,6 @@ public class ReportFilterActivity extends AbstractActivity {
     private ImageView findMinusButton(TextView textView) {
         LinearLayout layout = (LinearLayout) textView.getParent().getParent();
         return (ImageView) layout.getChildAt(layout.getChildCount()-1);
-    }
-
-    private void updateLocationFromFilter() {
-        Criteria c = filter.get(BlotterFilter.LOCATION_ID);
-        if (c != null) {
-            MyLocation loc = db.get(MyLocation.class, c.getLongValue1());
-            location.setText(loc != null ? loc.name : filterValueNotFound);
-            showMinusButton(location);
-        } else {
-            location.setText(R.string.no_filter);
-            hideMinusButton(location);
-        }
     }
 
     private void updateProjectFromFilter() {
@@ -282,17 +267,6 @@ public class ReportFilterActivity extends AbstractActivity {
             case R.id.payee_clear:
                 clear(BlotterFilter.PAYEE_ID, payee);
                 break;
-            case R.id.location: {
-                Cursor cursor = db.getAllLocations(false);
-                startManagingCursor(cursor);
-                ListAdapter adapter = TransactionUtils.createLocationAdapter(this, cursor);
-                Criteria c = filter.get(BlotterFilter.LOCATION_ID);
-                long selectedId = c != null ? c.getLongValue1() : -1;
-                x.select(this, R.id.location, R.string.location, cursor, adapter, "_id", selectedId);
-            } break;
-            case R.id.location_clear:
-                clear(BlotterFilter.LOCATION_ID, location);
-                break;
             case R.id.status: {
                 ArrayAdapter<String> adapter = EnumUtils.createDropDownAdapter(this, statuses);
                 Criteria c = filter.get(BlotterFilter.STATUS);
@@ -334,10 +308,6 @@ public class ReportFilterActivity extends AbstractActivity {
             case R.id.payee:
                 filter.put(Criteria.eq(BlotterFilter.PAYEE_ID, String.valueOf(selectedId)));
                 updatePayeeFromFilter();
-                break;
-            case R.id.location:
-                filter.put(Criteria.eq(BlotterFilter.LOCATION_ID, String.valueOf(selectedId)));
-                updateLocationFromFilter();
                 break;
         }
     }

@@ -43,7 +43,6 @@ public class CsvExport extends Export {
     private LongSparseArray<Account> accountsMap;
     private LongSparseArray<Payee> payeeMap;
     private LongSparseArray<Project> projectMap;
-    private LongSparseArray<MyLocation> locationMap;
 
     public CsvExport(Context context, DatabaseAdapter db, CategoryRepository categoryRepository, CsvExportOptions options) {
         super(context, false);
@@ -83,7 +82,6 @@ public class CsvExport extends Export {
             categoriesMap = categoryRepository.loadCategories().asIdMap();
             payeeMap = db.getAllPayeeByIdMap();
             projectMap = db.getAllProjectsByIdMap(true);
-            locationMap = db.getAllLocationsByIdMap(false);
             Cursor c = db.getBlotter(options.filter);
 			try {			
 				while (c.moveToNext()) {
@@ -190,10 +188,6 @@ public class CsvExport extends Export {
 
     private Project getProjectById(long projectId) {
         return projectMap.get(projectId);
-    }
-
-    private MyLocation getLocationById(long locationId) {
-        return locationMap.get(locationId);
     }
 
 }

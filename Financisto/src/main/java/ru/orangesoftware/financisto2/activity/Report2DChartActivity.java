@@ -25,7 +25,6 @@ import ru.orangesoftware.financisto2.model.Currency;
 import ru.orangesoftware.financisto2.model.ReportDataByPeriod;
 import ru.orangesoftware.financisto2.report.AccountByPeriodReport;
 import ru.orangesoftware.financisto2.report.CategoryByPeriodReport;
-import ru.orangesoftware.financisto2.report.LocationByPeriodReport;
 import ru.orangesoftware.financisto2.report.PayeeByPeriodReport;
 import ru.orangesoftware.financisto2.report.ProjectByPeriodReport;
 import ru.orangesoftware.financisto2.utils.CurrencyCache;
@@ -112,9 +111,6 @@ public class Report2DChartActivity extends Activity {
         case Report2DChart.REPORT_PAYEE_BY_PERIOD:
             reportData = new PayeeByPeriodReport(this, db, startPeriod, periodLength, currency);
             break;
-		case Report2DChart.REPORT_LOCATION_BY_PERIOD:
-			reportData = new LocationByPeriodReport(this, db, startPeriod, periodLength, currency);
-			break;
 		case Report2DChart.REPORT_PROJECT_BY_PERIOD:
 			reportData = new ProjectByPeriodReport(this, db, startPeriod, periodLength, currency);
 			break;

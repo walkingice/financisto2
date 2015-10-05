@@ -15,7 +15,7 @@ Financisto is an open-source personal finance manager for Android platform.
 - Split transactions
 - Hierarchical categories with custom attributes
 - Recurring budgets
-- Projects, payees and locations
+- Projects and payees
 - Filtering and reporting
 - Cloud backup (Dropbox, Google Drive)
 - Automatic daily backups

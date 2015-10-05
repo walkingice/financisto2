@@ -54,19 +54,6 @@ public class MyPreferences {
         }
     }
 
-    public enum LocationsSortOrder {
-        FREQUENCY("count", false),
-        NAME("name", true);
-
-        public final String property;
-        public final boolean asc;
-
-        LocationsSortOrder(String property, boolean asc) {
-            this.property = property;
-            this.asc = asc;
-        }
-    }
-
     public enum StartupScreen {
         ACCOUNTS("accounts"),
         BLOTTER("blotter"),
@@ -90,16 +77,6 @@ public class MyPreferences {
             hasSystemFeatureMethod = null;
         }
 
-    }
-
-    public static boolean isUseGps(Context context) {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        return sharedPreferences.getBoolean("use_gps", true);
-    }
-
-    public static boolean isUseMyLocation(Context context) {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        return sharedPreferences.getBoolean("use_my_location", true);
     }
 
     public static boolean isPinProtected(Context context) {
@@ -133,12 +110,6 @@ public class MyPreferences {
         return AccountSortOrder.valueOf(sortOrder);
     }
 
-    public static LocationsSortOrder getLocationsSortOrder(Context context) {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        String sortOrder = sharedPreferences.getString("sort_locations", LocationsSortOrder.NAME.name());
-        return LocationsSortOrder.valueOf(sortOrder);
-    }
-
     public static long getLastAccount(Context context) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         return sharedPreferences.getLong("last_account_id", -1);
@@ -146,7 +117,7 @@ public class MyPreferences {
 
     public static void setLastAccount(Context context, long accountId) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        sharedPreferences.edit().putLong("last_account_id", accountId).commit();
+        sharedPreferences.edit().putLong("last_account_id", accountId).apply();
     }
 
     public static boolean isRememberAccount(Context context) {
@@ -203,7 +174,6 @@ public class MyPreferences {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         return sharedPreferences.getBoolean("ntsl_open_calculator_for_template_transactions", true);
     }
-
 
     /**
      * Get google docs user login registered on preferences
@@ -448,7 +418,7 @@ public class MyPreferences {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         boolean result = sharedPreferences.getBoolean(name, true);
         if (result) {
-            sharedPreferences.edit().putBoolean(name, false).commit();
+            sharedPreferences.edit().putBoolean(name, false).apply();
         }
         return result;
     }
@@ -460,7 +430,7 @@ public class MyPreferences {
 
     public static void setDatabaseBackupFolder(Context context, String databaseBackupFolder) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        sharedPreferences.edit().putString("database_backup_folder", databaseBackupFolder).commit();
+        sharedPreferences.edit().putString("database_backup_folder", databaseBackupFolder).apply();
     }
 
     public static String[] getReportPreferences(Context context) {

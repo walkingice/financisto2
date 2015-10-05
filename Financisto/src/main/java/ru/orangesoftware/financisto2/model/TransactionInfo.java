@@ -47,9 +47,6 @@ public class TransactionInfo extends TransactionBase {
 	@JoinColumn(name = "project_id", required = false)
 	public Project project;
 
-	@JoinColumn(name = "location_id", required = false)
-	public MyLocation location;
-
     @JoinColumn(name = "original_currency_id", required = false)
     public Currency originalCurrency;
 
@@ -159,11 +156,6 @@ public class TransactionInfo extends TransactionBase {
         payee.id = c.getLong(DatabaseHelper.BlotterColumns.payee_id.ordinal());
         payee.title = c.getString(DatabaseHelper.BlotterColumns.payee.ordinal());
         t.payee = payee;
-
-        MyLocation location = new MyLocation();
-        location.id = c.getLong(DatabaseHelper.BlotterColumns.location_id.ordinal());
-        location.name = c.getString(DatabaseHelper.BlotterColumns.location.ordinal());
-        t.location = location;
 
         t.isTemplate = c.getInt(DatabaseHelper.BlotterColumns.is_template.ordinal());
         t.templateName = c.getString(DatabaseHelper.BlotterColumns.template_name.ordinal());

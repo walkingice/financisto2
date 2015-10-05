@@ -41,12 +41,6 @@ public enum ReportType {
             return new PayeesReport(context, currency);
         }
     },
-	BY_LOCATION(R.string.report_by_location, R.string.report_by_location_summary, R.drawable.report_icon_default){
-		@Override
-		public Report createReport(Context context, Currency currency) {
-			return new LocationsReport(context, currency);
-		}
-	},
 	BY_PROJECT(R.string.report_by_project, R.string.report_by_project_summary, R.drawable.report_icon_default){
 		@Override
 		public Report createReport(Context context, Currency currency) {
@@ -86,17 +80,6 @@ public enum ReportType {
             return false;
         }
     },
-	BY_LOCATION_BY_PERIOD(R.string.report_by_location_by_period, R.string.report_by_location_by_period_summary, R.drawable.report_icon_line){
-		@Override
-		public Report createReport(Context context, Currency currency) {
-			return null;
-		}
-		
-		@Override
-		public boolean isConventionalBarReport() {
-			return false;
-		}
-	}, 
 	BY_PROJECT_BY_PERIOD(R.string.report_by_project_by_period, R.string.report_by_project_by_period_summary, R.drawable.report_icon_line){
 		@Override
 		public Report createReport(Context context, Currency currency) {

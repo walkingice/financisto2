@@ -236,11 +236,9 @@ public class BlotterListAdapter extends ResourceCursorAdapter {
         sb.setLength(0);
         String payee = cursor.getString(BlotterColumns.payee.ordinal());
         String note = cursor.getString(BlotterColumns.note.ordinal());
-        long locationId = cursor.getLong(BlotterColumns.location_id.ordinal());
-        String location = getLocationTitle(cursor, locationId);
         long categoryId = cursor.getLong(BlotterColumns.category_id.ordinal());
         String category = getCategoryTitle(cursor, categoryId);
-        String text = generateTransactionTitle(sb, payee, note, location, categoryId, category);
+        String text = generateTransactionTitle(sb, payee, note, categoryId, category);
         noteView.setText(text);
     }
 
@@ -250,14 +248,6 @@ public class BlotterListAdapter extends ResourceCursorAdapter {
             category = cursor.getString(BlotterColumns.category_title.ordinal());
         }
         return category;
-    }
-
-    private String getLocationTitle(Cursor cursor, long locationId) {
-        String location = "";
-        if (locationId > 0) {
-            location = cursor.getString(BlotterColumns.location.ordinal());
-        }
-        return location;
     }
 
     protected void removeRunningBalanceViewIfNeeded(BlotterViewHolder v) {

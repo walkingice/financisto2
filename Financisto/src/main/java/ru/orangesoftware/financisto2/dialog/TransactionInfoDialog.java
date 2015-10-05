@@ -162,13 +162,6 @@ public class TransactionInfoDialog {
         if (!Utils.isEmpty(ti.note)) {
             add(layout, R.string.note, ti.note);
         }
-
-        MyLocation location = ti.location;
-        String locationName;
-        if (location != null && location.id > 0) {
-            locationName = location.name + (location.resolvedAddress != null ? " (" + location.resolvedAddress + ")" : "");
-            add(layout, R.string.location, locationName);
-        }
     }
 
     private View createTitleView(TransactionInfo ti, LinearLayout layout) {

@@ -16,7 +16,6 @@ select
        t.category_left as category_left,
        t.category_right as category_right,
        t.project_id as project_id,
-       t.location_id as location_id,
        t.payee_id as payee_id,
        t.status as status
 from payee p

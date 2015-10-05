@@ -16,8 +16,6 @@ SELECT
     cat.type as category_type,
 	p._id as project_id,
 	p.title as project,
-	loc._id as location_id,
-	loc.name as location,
 	pp._id as payee_id,
 	pp.title as payee,
 	t.note as note,
@@ -44,7 +42,6 @@ FROM
 	INNER JOIN category as cat ON cat._id=t.category_id
 	LEFT OUTER JOIN running_balance as rb ON rb.transaction_id=(CASE WHEN t.parent_id=0 THEN t._id ELSE t.parent_id END) AND rb.account_id=t.from_account_id
 	LEFT OUTER JOIN account as a2 ON a2._id=t.to_account_id
-	LEFT OUTER JOIN locations as loc ON loc._id=t.location_id
 	LEFT OUTER JOIN project as p ON p._id=t.project_id
 	LEFT OUTER JOIN payee as pp ON pp._id=t.payee_id
 WHERE is_template=0
@@ -66,8 +63,6 @@ SELECT
 	cat.type as category_type,
 	p._id as project_id,
 	p.title as project,
-	loc._id as location_id,
-	loc.name as location,
 	pp._id as payee_id,
 	pp.title as payee,
 	t.note as note,
@@ -94,7 +89,6 @@ FROM
 	INNER JOIN category as cat ON cat._id=t.category_id
 	LEFT OUTER JOIN running_balance as rb ON rb.transaction_id=t._id AND rb.account_id=t.to_account_id
 	LEFT OUTER JOIN account as a2 ON a2._id=t.from_account_id
-	LEFT OUTER JOIN locations as loc ON loc._id=t.location_id
 	LEFT OUTER JOIN project as p ON p._id=t.project_id
 	LEFT OUTER JOIN payee as pp ON pp._id=t.payee_id
 WHERE is_template=0;

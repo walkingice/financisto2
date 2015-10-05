@@ -127,33 +127,15 @@ public class CreditCardStatementAdapter extends BaseAdapter implements Filterabl
         // get columns values or needed parameters
         long date = t.dateTime;
         String note = t.note;
-        String desc = "";
         boolean future = date > Calendar.getInstance().getTimeInMillis();
-
-        /*
-               * Set description:
-               * a) if location is set, format description considering location
-               *    - "Location (Note)"
-               * b) otherwise, show description as note
-               *    - "Note"
-               */
-        if (t.location != null && t.location.id > 0) {
-            if (note != null && note.length() > 0) {
-                desc = t.location.name + " (" + note + ")";
-            } else {
-                desc = t.location.name;
-            }
-        } else {
-            desc = note;
-        }
 
         // set expenses date, description and value to the respective columns
         TextView dateText = h.dateText;
         TextView descText = h.descText;
         TextView valueText = h.valueText;
 
-        dateText.setText(getDate(date) + " ");
-        descText.setText(desc);
+        dateText.setText(getDate(date));
+        descText.setText(note);
         if (isStatementPreview) {
             u.setAmountText(valueText, currency, (-1) * value, false);
         } else {

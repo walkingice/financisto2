@@ -131,16 +131,12 @@ public class ScheduledListAdapter extends BaseAdapter {
 			String fromAccountTitle = t.fromAccount.title;
 			v.topView.setText(fromAccountTitle);
 			String note = t.note;
-            String location = "";
-			if (t.location != null && t.location.id > 0) {
-                location = t.location.name;
-			}
 			String category = "";
 			if (t.category.id > 0) {
 				category = t.category.title;
 			}
             String payee = t.payee != null ? t.payee.title : null;
-            String text = generateTransactionTitle(sb, payee, note, location, t.category.id, category);
+            String text = generateTransactionTitle(sb, payee, note, t.category.id, category);
             noteView.setText(text);
 			noteView.setTextColor(Color.WHITE);
 			

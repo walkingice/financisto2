@@ -68,11 +68,6 @@ public class TransactionUtils {
         return new MyEntityAdapter<Currency>(context, android.R.layout.simple_spinner_dropdown_item, android.R.id.text1, currencies);
     }
 
-    public static ListAdapter createLocationAdapter(Context context, Cursor cursor) {
-		return new SimpleCursorAdapter(context, android.R.layout.simple_spinner_dropdown_item, cursor, 
-				new String[]{"e_name"}, new int[]{android.R.id.text1});
-	}
-
     public static SimpleCursorAdapter createPayeeAdapter(Context context, final DatabaseAdapter db) {
         return new SimpleCursorAdapter(context, android.R.layout.simple_dropdown_item_1line, null,
                 new String[]{"e_title"}, new int[]{android.R.id.text1}){

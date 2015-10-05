@@ -14,14 +14,9 @@ import android.app.DatePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.TimePickerDialog;
 import android.app.TimePickerDialog.OnTimeSetListener;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.location.Criteria;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -65,7 +60,6 @@ import ru.orangesoftware.financisto2.db.DatabaseHelper.TransactionColumns;
 import ru.orangesoftware.financisto2.model.Account;
 import ru.orangesoftware.financisto2.model.Attribute;
 import ru.orangesoftware.financisto2.model.Category;
-import ru.orangesoftware.financisto2.model.MyLocation;
 import ru.orangesoftware.financisto2.model.Payee;
 import ru.orangesoftware.financisto2.model.SystemAttribute;
 import ru.orangesoftware.financisto2.model.Transaction;
@@ -76,7 +70,6 @@ import ru.orangesoftware.financisto2.recur.Recurrence;
 import ru.orangesoftware.financisto2.utils.EnumUtils;
 import ru.orangesoftware.financisto2.utils.MyPreferences;
 import ru.orangesoftware.financisto2.utils.TransactionUtils;
-import ru.orangesoftware.financisto2.utils.Utils;
 import ru.orangesoftware.financisto2.view.AttributeView;
 import ru.orangesoftware.financisto2.view.AttributeViewFactory;
 import ru.orangesoftware.financisto2.widget.RateLayoutView;
@@ -90,7 +83,6 @@ import static ru.orangesoftware.financisto2.utils.Utils.text;
 @EActivity
 public abstract class AbstractTransactionActivity extends AbstractActivity implements CategorySelector.CategorySelectorListener {
 	
-	private static final int NEW_LOCATION_REQUEST = 4002;
 	private static final int RECURRENCE_REQUEST = 4003;
 	private static final int NOTIFICATION_REQUEST = 4004;
 	private static final int PICTURE_REQUEST = 4005;
@@ -563,14 +555,7 @@ public abstract class AbstractTransactionActivity extends AbstractActivity imple
 		if (resultCode == RESULT_OK) {
             rateView.onActivityResult(requestCode, data);
 			switch (requestCode) {
-//				case NEW_LOCATION_REQUEST:
-//					locationCursor.requery();
-//					long locationId = data.getLongExtra(LocationActivity.LOCATION_ID_EXTRA, -1);
-//					if (locationId != -1) {
-//						selectLocation(locationId);
-//					}
-//					break;
-				case RECURRENCE_REQUEST:					
+				case RECURRENCE_REQUEST:
 					String recurrence = data.getStringExtra(RecurrenceActivity.RECURRENCE_PATTERN);
 					setRecurrence(recurrence);
 					break;

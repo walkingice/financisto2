@@ -16,8 +16,6 @@ SELECT
 	cat.type as category_type,
 	p._id as project_id,
 	p.title as project,
-	loc._id as location_id,
-	loc.name as location,
 	pp._id as payee_id,
 	pp.title as payee,
 	t.note as note,
@@ -47,5 +45,4 @@ FROM
 	LEFT OUTER JOIN account as a2 ON a2._id=t.to_account_id
 	LEFT OUTER JOIN currency as c2 ON c2._id=a2.currency_id
 	LEFT OUTER JOIN project as p ON p._id=t.project_id
-	LEFT OUTER JOIN locations as loc ON loc._id=t.location_id
 	LEFT OUTER JOIN payee as pp ON pp._id=t.payee_id;

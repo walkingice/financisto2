@@ -6,7 +6,6 @@ CREATE TABLE category (
     right integer not null default 0,
     type integer not null default 0,
     level integer not null default 0,
-    last_location_id long not null default 0,
     last_project_id long not null default 0,
     updated_on TIMESTAMP DEFAULT 0,
     remote_key text);

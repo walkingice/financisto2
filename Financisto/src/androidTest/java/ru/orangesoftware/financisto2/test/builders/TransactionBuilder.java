@@ -10,7 +10,6 @@ import ru.orangesoftware.financisto2.db.DatabaseAdapter;
 import ru.orangesoftware.financisto2.model.Account;
 import ru.orangesoftware.financisto2.model.Category;
 import ru.orangesoftware.financisto2.model.Currency;
-import ru.orangesoftware.financisto2.model.MyLocation;
 import ru.orangesoftware.financisto2.model.Project;
 import ru.orangesoftware.financisto2.model.Transaction;
 import ru.orangesoftware.financisto2.model.TransactionAttribute;

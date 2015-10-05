@@ -12,16 +12,16 @@ import static ru.orangesoftware.financisto2.utils.Utils.isNotEmpty;
  */
 public class TransactionTitleUtils {
 
-    public static String generateTransactionTitle(StringBuilder sb, String payee, String note, String location, long categoryId, String category) {
+    public static String generateTransactionTitle(StringBuilder sb, String payee, String note, long categoryId, String category) {
         if (isSplit(categoryId)) {
-            return generateTransactionTitleForSplit(sb, payee, note, location, category);
+            return generateTransactionTitleForSplit(sb, payee, note, category);
         } else {
-            return generateTransactionTitleForRegular(sb, payee, note, location, category);
+            return generateTransactionTitleForRegular(sb, payee, note, category);
         }
     }
 
-    private static String generateTransactionTitleForRegular(StringBuilder sb, String payee, String note, String location, String category) {
-        String secondPart = joinAdditionalFields(sb, payee, note, location);
+    private static String generateTransactionTitleForRegular(StringBuilder sb, String payee, String note, String category) {
+        String secondPart = joinAdditionalFields(sb, payee, note);
         if (isNotEmpty(category)) {
             if (isNotEmpty(secondPart)) {
                 sb.append(category).append(" (").append(secondPart).append(")");
@@ -34,18 +34,17 @@ public class TransactionTitleUtils {
         }
     }
 
-    private static String joinAdditionalFields(StringBuilder sb, String payee, String note, String location) {
+    private static String joinAdditionalFields(StringBuilder sb, String payee, String note) {
         sb.setLength(0);
         append(sb, payee);
-        append(sb, location);
         append(sb, note);
         String secondPart = sb.toString();
         sb.setLength(0);
         return secondPart;
     }
 
-    private static String generateTransactionTitleForSplit(StringBuilder sb, String payee, String note, String location, String category) {
-        String secondPart = joinAdditionalFields(sb, note, location);
+    private static String generateTransactionTitleForSplit(StringBuilder sb, String payee, String note, String category) {
+        String secondPart = joinAdditionalFields(sb, note);
         if (isNotEmpty(payee)) {
             if (isNotEmpty(secondPart)) {
                 return sb.append("[").append(payee).append("...] ").append(secondPart).toString();
@@ -59,9 +58,8 @@ public class TransactionTitleUtils {
         }
     }
 
-    private static String joinAdditionalFields(StringBuilder sb, String note, String location) {
+    private static String joinAdditionalFields(StringBuilder sb, String note) {
         sb.setLength(0);
-        append(sb, location);
         append(sb, note);
         String secondPart = sb.toString();
         sb.setLength(0);

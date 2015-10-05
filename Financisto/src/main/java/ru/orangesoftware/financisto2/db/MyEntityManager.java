@@ -16,9 +16,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v4.util.LongSparseArray;
 
-import org.androidannotations.annotations.Bean;
-import org.androidannotations.annotations.EBean;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -35,7 +32,6 @@ import ru.orangesoftware.financisto2.model.Budget;
 import ru.orangesoftware.financisto2.model.Category;
 import ru.orangesoftware.financisto2.model.Currency;
 import ru.orangesoftware.financisto2.model.MyEntity;
-import ru.orangesoftware.financisto2.model.MyLocation;
 import ru.orangesoftware.financisto2.model.Payee;
 import ru.orangesoftware.financisto2.model.Project;
 import ru.orangesoftware.financisto2.model.SystemAttribute;
@@ -44,7 +40,6 @@ import ru.orangesoftware.financisto2.model.TransactionAttributeInfo;
 import ru.orangesoftware.financisto2.model.TransactionInfo;
 import ru.orangesoftware.financisto2.utils.MyPreferences;
 import ru.orangesoftware.financisto2.utils.MyPreferences.AccountSortOrder;
-import ru.orangesoftware.financisto2.utils.MyPreferences.LocationsSortOrder;
 import ru.orangesoftware.financisto2.utils.RecurUtils;
 import ru.orangesoftware.financisto2.utils.RecurUtils.Recur;
 import ru.orangesoftware.financisto2.utils.Utils;
@@ -123,76 +118,6 @@ class MyEntityManager extends EntityManager {
         } finally {
             c.close();
         }
-    }
-
-	/* ===============================================
-     * LOCATION
-	 * =============================================== */
-
-    public Cursor getAllLocations(boolean includeCurrentLocation) {
-        Query<MyLocation> q = createQuery(MyLocation.class);
-        if (!includeCurrentLocation) {
-            q.where(Expressions.neq("id", 0));
-        }
-        LocationsSortOrder sortOrder = MyPreferences.getLocationsSortOrder(context);
-        if (sortOrder.asc) {
-            q.asc(sortOrder.property);
-        } else {
-            q.desc(sortOrder.property);
-        }
-        if (sortOrder != LocationsSortOrder.NAME) {
-            q.asc(LocationsSortOrder.NAME.property);
-        }
-        return q.execute();
-    }
-
-    public List<MyLocation> getAllLocationsList(boolean includeNoLocation) {
-        Cursor c = getAllLocations(includeNoLocation);
-        try {
-            MyLocation e0 = null;
-            ArrayList<MyLocation> list = new ArrayList<MyLocation>();
-            while (c.moveToNext()) {
-                MyLocation e = EntityManager.loadFromCursor(c, MyLocation.class);
-                if (e.id == 0) {
-                    e0 = e;
-                } else {
-                    list.add(e);
-                }
-            }
-            if (e0 != null) {
-                list.add(0, e0);
-            }
-            return list;
-        } finally {
-            c.close();
-        }
-    }
-
-    public LongSparseArray<MyLocation> getAllLocationsByIdMap(boolean includeNoLocation) {
-        List<MyLocation> locations = getAllLocationsList(includeNoLocation);
-        LongSparseArray<MyLocation> map = new LongSparseArray<MyLocation>();
-        for (MyLocation location : locations) {
-            map.put(location.id, location);
-        }
-        return map;
-    }
-
-    public void deleteLocation(long id) {
-        SQLiteDatabase db = db();
-        db.beginTransaction();
-        try {
-            delete(MyLocation.class, id);
-            ContentValues values = new ContentValues();
-            values.put("location_id", 0);
-            db.update("transactions", values, "location_id=?", new String[]{String.valueOf(id)});
-            db.setTransactionSuccessful();
-        } finally {
-            db.endTransaction();
-        }
-    }
-
-    public long saveLocation(MyLocation location) {
-        return saveOrUpdate(location);
     }
 
 	/* ===============================================

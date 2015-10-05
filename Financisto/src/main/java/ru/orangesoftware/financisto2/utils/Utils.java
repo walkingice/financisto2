@@ -16,7 +16,6 @@ import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
-import android.location.Location;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.TextAppearanceSpan;
@@ -179,23 +178,6 @@ public class Utils {
 		System.arraycopy(a1, 0, a, 0, a1.length);
 		System.arraycopy(a2, 0, a, a1.length, a2.length);
 		return a;
-	}
-
-	public static String locationToText(String provider, double latitude, double longitude, float accuracy, String resolvedAddress) {
-    	StringBuilder sb = new StringBuilder();
-    	sb.append(provider).append(" (");
-    	if (resolvedAddress != null) {
-    		sb.append(resolvedAddress);
-    	} else {    		
-    		sb.append("Lat: ").append(Location.convert(latitude, Location.FORMAT_DEGREES)).append(", ");
-    		sb.append("Lon: ").append(Location.convert(longitude, Location.FORMAT_DEGREES));
-    		if (accuracy > 0) {
-    			sb.append(", ");
-    			sb.append("±").append(String.format("%.2f", accuracy)).append("m");
-    		}    	
-    	}
-    	sb.append(")");
-		return sb.toString();
 	}
 
 	public static void setEnabled(ViewGroup layout, boolean enabled) {

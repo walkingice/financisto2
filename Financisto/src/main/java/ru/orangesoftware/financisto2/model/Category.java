@@ -60,9 +60,6 @@ public class Category extends MyEntity implements Iterable<Category> {
     @Column(name = "parent_id")
     public long parentId;
 
-    @Column(name = "last_location_id")
-    public long lastLocationId;
-
     @Column(name = "last_project_id")
     public long lastProjectId;
 
@@ -138,20 +135,6 @@ public class Category extends MyEntity implements Iterable<Category> {
     public void makeThisCategoryExpense() {
         this.type = TYPE_EXPENSE;
     }
-
-	public static Category formCursor(Cursor c) {
-		long id = c.getLong(CategoryViewColumns._id.ordinal());
-		Category cat = new Category();
-		cat.id = id;
-		cat.title = c.getString(CategoryViewColumns.title.ordinal());
-		cat.level = c.getInt(CategoryViewColumns.level.ordinal());
-		cat.left = c.getInt(CategoryViewColumns.left.ordinal());
-		cat.right = c.getInt(CategoryViewColumns.right.ordinal());
-        cat.type = c.getInt(CategoryViewColumns.type.ordinal());
-		cat.lastLocationId = c.getInt(CategoryViewColumns.last_location_id.ordinal());
-		cat.lastProjectId = c.getInt(CategoryViewColumns.last_project_id.ordinal());
-		return cat;
-	}
 
     public void copyTypeFromParent() {
         if (parent != null) {

@@ -46,7 +46,6 @@ public class UIEventHandler {
             updateFieldInTable(sqlDb, DatabaseHelper.CATEGORY_TABLE, 0, "title", context.getString(R.string.no_category));
             updateFieldInTable(sqlDb, DatabaseHelper.CATEGORY_TABLE, -1, "title", context.getString(R.string.split));
             updateFieldInTable(sqlDb, DatabaseHelper.PROJECT_TABLE, 0, "title", context.getString(R.string.no_project));
-            updateFieldInTable(sqlDb, DatabaseHelper.LOCATIONS_TABLE, 0, "name", context.getString(R.string.current_location));
             sqlDb.setTransactionSuccessful();
         } finally {
             sqlDb.endTransaction();

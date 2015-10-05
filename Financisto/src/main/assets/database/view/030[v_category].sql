@@ -6,7 +6,6 @@ SELECT
     left as left,
     right as right,
     type as type,
-	last_location_id as last_location_id,
 	last_project_id as last_project_id,
     level as level
 FROM category

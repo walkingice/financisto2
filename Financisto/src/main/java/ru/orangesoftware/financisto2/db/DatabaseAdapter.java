@@ -74,8 +74,6 @@ import static ru.orangesoftware.financisto2.db.DatabaseHelper.CreditCardClosingD
 import static ru.orangesoftware.financisto2.db.DatabaseHelper.DELETE_LOG_TABLE;
 import static ru.orangesoftware.financisto2.db.DatabaseHelper.EXCHANGE_RATES_TABLE;
 import static ru.orangesoftware.financisto2.db.DatabaseHelper.ExchangeRateColumns;
-import static ru.orangesoftware.financisto2.db.DatabaseHelper.LOCATIONS_TABLE;
-import static ru.orangesoftware.financisto2.db.DatabaseHelper.LocationColumns;
 import static ru.orangesoftware.financisto2.db.DatabaseHelper.PAYEE_TABLE;
 import static ru.orangesoftware.financisto2.db.DatabaseHelper.TRANSACTION_ATTRIBUTE_TABLE;
 import static ru.orangesoftware.financisto2.db.DatabaseHelper.TRANSACTION_TABLE;
@@ -1100,23 +1098,6 @@ public class DatabaseAdapter extends MyEntityManager {
         }
     }
 
-
-    /**
-     * Gets the location name for a given id.
-     */
-    public String getLocationName(long id) {
-        Cursor c = db().query(LOCATIONS_TABLE, new String[]{LocationColumns.NAME},
-                LocationColumns.ID + "=?", new String[]{String.valueOf(id)}, null, null, null);
-        try {
-            if (c.moveToNext()) {
-                return c.getString(0);
-            } else {
-                return "";
-            }
-        } finally {
-            c.close();
-        }
-    }
 
     /**
      * Sets status=CL (Cleared) for the selected transactions
