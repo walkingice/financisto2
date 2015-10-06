@@ -36,6 +36,7 @@ import ru.orangesoftware.financisto2.activity.TransferActivity_;
 import ru.orangesoftware.financisto2.adapter.BlotterListAdapter;
 import ru.orangesoftware.financisto2.adapter.BlotterListAdapter_;
 import ru.orangesoftware.financisto2.adapter.TransactionsListAdapter;
+import ru.orangesoftware.financisto2.adapter.TransactionsListAdapter_;
 import ru.orangesoftware.financisto2.bus.RemoveBlotterFilter;
 import ru.orangesoftware.financisto2.bus.GetTransactionList;
 import ru.orangesoftware.financisto2.bus.TransactionDeleted;
@@ -115,7 +116,7 @@ public class BlotterFragment extends AbstractListFragment implements QuickAction
         DatabaseAdapter db = DatabaseAdapter_.getInstance_(context);
         BlotterListAdapter adapter;
         if (event.accountId != -1) {
-            adapter = new TransactionsListAdapter(context, db, event.cursor);
+            adapter = TransactionsListAdapter_.getInstance_(context);
         } else {
             adapter = BlotterListAdapter_.getInstance_(context);
         }

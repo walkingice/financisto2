@@ -55,6 +55,8 @@ public class Utils {
     public int futureColor;
     @ColorRes(R.color.split_color)
     public int splitColor;
+    @ColorRes(android.R.color.primary_text_light)
+    public int regularColor;
 
 	public Utils(Context context) {
         this.context = context;
@@ -251,6 +253,10 @@ public class Utils {
         Utils.amountToString(sb, fromCurrency, fromBalance, false).append(TRANSFER_DELIMITER);
         Utils.amountToString(sb, toCurrency, toBalance, false);
         textView.setText(sb.toString());
+    }
+
+    public void setRegularTextColor(TextView textView) {
+        textView.setTextColor(regularColor);
     }
 
     public void setTransferTextColor(TextView textView) {

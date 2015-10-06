@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ListAdapter;
 import ru.orangesoftware.financisto2.adapter.TransactionsListAdapter;
+import ru.orangesoftware.financisto2.adapter.TransactionsListAdapter_;
 import ru.orangesoftware.financisto2.blotter.TotalCalculationTask;
 import ru.orangesoftware.financisto2.model.*;
 
@@ -45,8 +46,10 @@ public class BudgetBlotterActivity extends BlotterActivity {
 
 	@Override
 	protected ListAdapter createAdapter(Cursor cursor) {
-		return new TransactionsListAdapter(this, db, cursor);
-	}
+        TransactionsListAdapter adapter = TransactionsListAdapter_.getInstance_(this);
+        adapter.initWithCursor(cursor);
+        return adapter;
+    }
 	
 	private Cursor getBlotterForBudget(long budgetId) {
 		Budget b = db.load(Budget.class, budgetId);

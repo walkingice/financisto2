@@ -37,6 +37,7 @@ import greendroid.widget.QuickActionWidget;
 import ru.orangesoftware.financisto2.R;
 import ru.orangesoftware.financisto2.adapter.BlotterListAdapter_;
 import ru.orangesoftware.financisto2.adapter.TransactionsListAdapter;
+import ru.orangesoftware.financisto2.adapter.TransactionsListAdapter_;
 import ru.orangesoftware.financisto2.blotter.AccountTotalCalculationTask;
 import ru.orangesoftware.financisto2.blotter.BlotterTotalCalculationTask;
 import ru.orangesoftware.financisto2.blotter.TotalCalculationTask;
@@ -373,7 +374,7 @@ public class BlotterActivity extends AbstractListActivity {
 	protected ListAdapter createAdapter(Cursor cursor) {
 		long accountId = blotterFilter.getAccountId();
 		if (accountId != -1) {
-			return new TransactionsListAdapter(this, db, cursor);
+			return TransactionsListAdapter_.getInstance_(this);
 		} else {
 			return BlotterListAdapter_.getInstance_(this);
 		}		
