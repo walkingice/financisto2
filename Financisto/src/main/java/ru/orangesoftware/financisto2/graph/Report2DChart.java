@@ -6,6 +6,8 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 import ru.orangesoftware.financisto2.R;
+import ru.orangesoftware.financisto2.db.CategoryRepository;
+import ru.orangesoftware.financisto2.db.CategoryRepository_;
 import ru.orangesoftware.financisto2.db.DatabaseAdapter;
 import ru.orangesoftware.financisto2.model.Currency;
 import ru.orangesoftware.financisto2.model.PeriodValue;
@@ -42,6 +44,7 @@ public abstract class Report2DChart {
 	protected int selectedPoint;
 	
 	protected DatabaseAdapter db;
+	protected CategoryRepository categoryRepository;
 	protected Context context;
 
 	/**
@@ -130,6 +133,7 @@ public abstract class Report2DChart {
 	private void init(Context context, DatabaseAdapter db, Calendar startPeriod, int periodLength, Currency currency) {
 		this.context = context;
 		this.db = db;
+		this.categoryRepository = CategoryRepository_.getInstance_(context);
 		this.startPeriod = startPeriod;
 		this.periodLength = periodLength;
 		this.currency = currency;

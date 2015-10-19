@@ -122,7 +122,7 @@ public class CategoryListActivity2 extends ListActivity {
 
     @SuppressWarnings("unused")
 	public void onEventMainThread(final DeleteEntity event) {
-		Category c = db.getCategory(event.id);
+		Category c = categoryRepository.getCategoryById(event.id);
 		new AlertDialog.Builder(this)
 			.setTitle(c.getTitle())
 			.setMessage(R.string.delete_category_dialog)

@@ -135,7 +135,7 @@ public class ReportFilterActivity extends AbstractActivity {
     private void updateCategoryFromFilter() {
         Criteria c = filter.get(BlotterFilter.CATEGORY_LEFT);
         if (c != null) {
-            Category cat = db.getCategoryByLeft(c.getLongValue1());
+            Category cat = categoryRepository.getCategoryByLeft(c.getLongValue1());
             if (cat.id > 0) {
                 category.setText(cat.title);
             } else {
@@ -297,7 +297,7 @@ public class ReportFilterActivity extends AbstractActivity {
                 updateCurrencyFromFilter();
                 break;
             case R.id.category:
-                Category cat = db.getCategoryByLeft(selectedId);
+                Category cat = categoryRepository.getCategoryByLeft(selectedId);
                 filter.put(Criteria.btw(BlotterFilter.CATEGORY_LEFT, String.valueOf(cat.left), String.valueOf(cat.right)));
                 updateCategoryFromFilter();
                 break;

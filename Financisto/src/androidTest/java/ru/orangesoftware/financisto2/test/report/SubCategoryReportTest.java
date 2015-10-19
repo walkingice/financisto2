@@ -22,7 +22,7 @@ public class SubCategoryReportTest extends AbstractReportTest {
     public void setUp() throws Exception {
         super.setUp();
         CategoryReport r = new CategoryReport(getContext(), c1);
-        filter = r.createFilterForSubCategory(db, WhereFilter.empty(), categories.get("A").id);
+        filter = r.createFilterForSubCategory(categoryRepository, WhereFilter.empty(), categories.get("A").id);
     }
 
     public void test_should_calculate_correct_report_with_one_currency() {

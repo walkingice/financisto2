@@ -30,6 +30,8 @@ import org.achartengine.renderer.DefaultRenderer;
 import org.achartengine.renderer.SimpleSeriesRenderer;
 import ru.orangesoftware.financisto2.R;
 import ru.orangesoftware.financisto2.adapter.ReportAdapter;
+import ru.orangesoftware.financisto2.db.CategoryRepository;
+import ru.orangesoftware.financisto2.db.CategoryRepository_;
 import ru.orangesoftware.financisto2.db.DatabaseAdapter_;
 import ru.orangesoftware.financisto2.filter.WhereFilter;
 import ru.orangesoftware.financisto2.filter.Criteria;
@@ -55,6 +57,7 @@ public class ReportActivity extends ListActivity implements RefreshSupportedActi
     public static final String FILTER_INCOME_EXPENSE = "FILTER_INCOME_EXPENSE";
     
 	private DatabaseAdapter db;
+	private CategoryRepository categoryRepository;
 
 	private ImageButton bFilter;
     private ImageButton bToggle;
@@ -73,6 +76,7 @@ public class ReportActivity extends ListActivity implements RefreshSupportedActi
 		setContentView(R.layout.report);
 
         db = DatabaseAdapter_.getInstance_(this);
+        categoryRepository = CategoryRepository_.getInstance_(this);
 
 		bFilter = (ImageButton)findViewById(R.id.bFilter);
 		bFilter.setOnClickListener(new OnClickListener(){
@@ -186,7 +190,7 @@ public class ReportActivity extends ListActivity implements RefreshSupportedActi
     @Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		if (currentReport != null) {
-			Intent intent = currentReport.createActivityIntent(this, db, WhereFilter.copyOf(filter), id);
+			Intent intent = currentReport.createActivityIntent(this, categoryRepository, WhereFilter.copyOf(filter), id);
 			startActivity(intent);
 		}
 	}

@@ -22,6 +22,8 @@ import android.widget.*;
 import ru.orangesoftware.financisto2.R;
 import ru.orangesoftware.financisto2.activity.BlotterActivity;
 import ru.orangesoftware.financisto2.activity.BlotterOperations;
+import ru.orangesoftware.financisto2.db.CategoryRepository;
+import ru.orangesoftware.financisto2.db.CategoryRepository_;
 import ru.orangesoftware.financisto2.db.DatabaseAdapter;
 import ru.orangesoftware.financisto2.model.*;
 import ru.orangesoftware.financisto2.model.TransactionAttributeInfo;
@@ -42,6 +44,7 @@ public class TransactionInfoDialog {
     private final DatabaseAdapter db;
     private final NodeInflater inflater;
     private final LayoutInflater layoutInflater;
+    private final CategoryRepository categoryRepository;
     private final int splitPadding;
     private final Utils u;
 
@@ -52,6 +55,7 @@ public class TransactionInfoDialog {
         this.layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.splitPadding = context.getResources().getDimensionPixelSize(R.dimen.transaction_icon_padding);
         this.u = new Utils(context);
+        this.categoryRepository = CategoryRepository_.getInstance_(context);
     }
 
     public void show(BlotterActivity blotterActivity, long transactionId) {
@@ -113,7 +117,7 @@ public class TransactionInfoDialog {
             u.setTransferAmountText(amountView, fromAccount.currency, split.fromAmount, toAccount.currency, split.toAmount);
             topLayout.setPadding(splitPadding, 0, 0, 0);
         } else {
-            Category c = db.getCategory(split.categoryId);
+            Category c = categoryRepository.getCategoryById(split.categoryId);
             StringBuilder sb = new StringBuilder();
             if (c != null && c.id > 0) {
                 sb.append(c.title);

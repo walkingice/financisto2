@@ -154,13 +154,13 @@ public abstract class Report {
 		return c.getLong(0);
 	}
 
-	public Intent createActivityIntent(Context context, DatabaseAdapter db, WhereFilter parentFilter, long id) {
+	public Intent createActivityIntent(Context context, CategoryRepository categoryRepository, WhereFilter parentFilter, long id) {
 		WhereFilter filter = WhereFilter.empty();
 		Criteria c = parentFilter.get(BlotterFilter.DATETIME);
 		if (c != null) {
 			filter.put(c);
 		}
-		c = getCriteriaForId(db, id);
+		c = getCriteriaForId(categoryRepository, id);
 		if (c != null) {
 			filter.put(c);
 		}
@@ -170,7 +170,7 @@ public abstract class Report {
 		return intent;
 	}
 
-    protected abstract Criteria getCriteriaForId(DatabaseAdapter db, long id);
+    protected abstract Criteria getCriteriaForId(CategoryRepository categoryRepository, long id);
 
     protected Class<? extends BlotterActivity> getBlotterActivityClass() {
         return BlotterActivity.class;

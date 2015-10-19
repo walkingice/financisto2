@@ -86,7 +86,7 @@ public class CategoryActivity extends AbstractActivity {
     protected void afterViews() {
 
         if (categoryId != -1) {
-            category = db.getCategory(categoryId);
+            category = categoryRepository.getCategoryById(categoryId);
         }
 
         fetchAttributes();
@@ -136,6 +136,7 @@ public class CategoryActivity extends AbstractActivity {
                     attributes.add((Attribute) o);
                 }
             }
+            category.attributes = attributes;
             categoryRepository.saveCategory(category);
             Intent data = new Intent();
             data.putExtra(CategoryColumns._id.name(), category.id);
@@ -198,7 +199,8 @@ public class CategoryActivity extends AbstractActivity {
 
     private void addParentAttributes() {
         long categoryId = category.getParentId();
-        List<Attribute> attributes = db.getAllAttributesForCategory(categoryId);
+        Category category = categoryRepository.getCategoryById(categoryId);
+        List<Attribute> attributes = db.getAllAttributesForCategory(category);
         if (attributes.size() > 0) {
             for (Attribute a : attributes) {
                 View v = x.inflater.new Builder(parentAttributesLayout, R.layout.select_entry_simple).create();
@@ -287,10 +289,9 @@ public class CategoryActivity extends AbstractActivity {
     }
 
     private void selectParentCategory(long parentId) {
-        Category c = db.getCategory(parentId);
+        Category c = categoryRepository.getCategoryById(parentId);
         if (c != null) {
             category.parent = c;
-            category.parentId = parentId;
             parentCategoryText.setText(c.title);
         }
         updateIncomeExpenseType();

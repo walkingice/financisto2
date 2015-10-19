@@ -411,7 +411,6 @@ public class QifExportTest extends AbstractExportTest<QifExport, QifExportOption
         Category c = new Category();
         c.title = name;
         c.parent = parent;
-        c.parentId = parent.id;
         categoryRepository.saveCategory(c);
         return c;
     }

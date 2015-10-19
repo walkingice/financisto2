@@ -627,7 +627,7 @@ public class TransactionActivity extends AbstractTransactionActivity {
 
     private String createSplitTransactionTitle(Transaction split) {
         StringBuilder sb = new StringBuilder();
-        Category category = db.getCategory(split.categoryId);
+        Category category = categoryRepository.getCategoryById(split.categoryId);
         sb.append(category.title);
         if (isNotEmpty(split.note)) {
             sb.append(" (").append(split.note).append(")");

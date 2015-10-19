@@ -13,6 +13,7 @@ package ru.orangesoftware.financisto2.report;
 import android.content.Context;
 import android.database.Cursor;
 
+import ru.orangesoftware.financisto2.db.CategoryRepository;
 import ru.orangesoftware.financisto2.filter.WhereFilter;
 import ru.orangesoftware.financisto2.datetime.Period;
 import ru.orangesoftware.financisto2.datetime.PeriodType;
@@ -77,7 +78,7 @@ public class PeriodReport extends Report {
     }
 
     @Override
-	public Criteria getCriteriaForId(DatabaseAdapter db, long id) {
+	public Criteria getCriteriaForId(CategoryRepository categoryRepository, long id) {
         for (Period period : periods) {
             if (period.type.ordinal() == id) {
                 return new DateTimeCriteria(period);

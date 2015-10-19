@@ -14,6 +14,8 @@ import android.content.Context;
 import ru.orangesoftware.financisto2.activity.BlotterActivity;
 import ru.orangesoftware.financisto2.activity.SplitsBlotterActivity;
 import ru.orangesoftware.financisto2.blotter.BlotterFilter;
+import ru.orangesoftware.financisto2.db.CategoryRepository;
+import ru.orangesoftware.financisto2.db.CategoryRepository_;
 import ru.orangesoftware.financisto2.filter.WhereFilter;
 import ru.orangesoftware.financisto2.filter.Criteria;
 import ru.orangesoftware.financisto2.db.DatabaseAdapter;
@@ -35,8 +37,8 @@ public class CategoryReportAll extends Report {
 	}
 	
 	@Override
-	public Criteria getCriteriaForId(DatabaseAdapter db, long id) {
-		Category c = db.getCategory(id);
+	public Criteria getCriteriaForId(CategoryRepository categoryRepository, long id) {
+		Category c = categoryRepository.getCategoryById(id);
 		return Criteria.btw(BlotterFilter.CATEGORY_LEFT, String.valueOf(c.left), String.valueOf(c.right));
 	}
 

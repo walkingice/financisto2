@@ -12,6 +12,7 @@ package ru.orangesoftware.financisto2.report;
 
 import android.content.Context;
 import ru.orangesoftware.financisto2.blotter.BlotterFilter;
+import ru.orangesoftware.financisto2.db.CategoryRepository;
 import ru.orangesoftware.financisto2.filter.WhereFilter;
 import ru.orangesoftware.financisto2.filter.Criteria;
 import ru.orangesoftware.financisto2.db.DatabaseAdapter;
@@ -32,7 +33,7 @@ public class PayeesReport extends Report {
 	}
 
 	@Override
-	public Criteria getCriteriaForId(DatabaseAdapter db, long id) {
+	public Criteria getCriteriaForId(CategoryRepository categoryRepository, long id) {
 		return Criteria.eq(BlotterFilter.PAYEE_ID, String.valueOf(id));
 	}		
 	

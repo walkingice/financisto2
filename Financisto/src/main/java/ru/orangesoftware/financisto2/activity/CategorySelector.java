@@ -48,7 +48,7 @@ public class CategorySelector {
     private ListAdapter categoryAdapter;
     private LinearLayout attributesLayout;
 
-    private long selectedCategoryId = 0;
+    private Category selectedCategory;
     private CategorySelectorListener listener;
     private boolean showSplitCategory = true;
     boolean fetchAllCategories = true;
@@ -59,6 +59,7 @@ public class CategorySelector {
         this.categoryRepository = CategoryRepository_.getInstance_(activity);
         this.x = x;
         this.fetchAllCategories = fetchAllCategories;
+        this.selectedCategory = Category.noCategory(activity);
     }
 
     public void setListener(CategorySelectorListener listener) {
@@ -94,8 +95,8 @@ public class CategorySelector {
     public void onClick(int id) {
         switch (id) {
             case R.id.category: {
-                if (!CategorySelectorActivity.pickCategory(activity, selectedCategoryId, showSplitCategory)) {
-                    int selectedPosition = MyEntity.indexOf(categories, selectedCategoryId);
+                if (!CategorySelectorActivity.pickCategory(activity, selectedCategory.id, showSplitCategory)) {
+                    int selectedPosition = MyEntity.indexOf(categories, selectedCategory.id);
                     x.selectItemId(activity, R.id.category, R.string.category, categoryAdapter, selectedPosition);
                 }
                 break;
@@ -117,7 +118,7 @@ public class CategorySelector {
     }
 
     public long getSelectedCategoryId() {
-        return selectedCategoryId;
+        return selectedCategory.id;
     }
 
     public void selectCategory(long categoryId) {
@@ -125,11 +126,11 @@ public class CategorySelector {
     }
 
     public void selectCategory(long categoryId, boolean selectLast) {
-        if (selectedCategoryId != categoryId) {
-            Category category = db.getCategory(categoryId);
+        if (selectedCategory.id != categoryId) {
+            Category category = categoryRepository.getCategoryById(categoryId);
             if (category != null) {
                 categoryText.setText(Category.getTitle(category.title, category.level));
-                selectedCategoryId = categoryId;
+                selectedCategory = category;
                 if (listener != null) {
                     listener.onCategorySelected(category, selectLast);
                 }
@@ -160,7 +161,7 @@ public class CategorySelector {
 
     public void addAttributes(Transaction transaction) {
         attributesLayout.removeAllViews();
-        List<Attribute> attributes = db.getAllAttributesForCategory(selectedCategoryId);
+        List<Attribute> attributes = db.getAllAttributesForCategory(selectedCategory);
         Map<Long, String> values = transaction.categoryAttributes;
         for (Attribute a : attributes) {
             AttributeView av = inflateAttribute(a);
@@ -198,10 +199,10 @@ public class CategorySelector {
     }
 
     public boolean isSplitCategorySelected() {
-        return Category.isSplit(selectedCategoryId);
+        return selectedCategory.isSplit();
     }
 
-    public static interface CategorySelectorListener {
+    public interface CategorySelectorListener {
         void onCategorySelected(Category category, boolean selectLast);
     }
 

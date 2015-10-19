@@ -26,26 +26,6 @@ public class CategoryTree {
         this.root.children = new ArrayList<Category>();
     }
 
-    public static CategoryTree createFromList(List<Category> categories) {
-        LongSparseArray<Category> map = new LongSparseArray<Category>();
-        for (Category category : categories) {
-            map.put(category.id, category);
-        }
-        CategoryTree tree = new CategoryTree();
-        for (Category category : categories) {
-            if (category.parentId > 0) {
-                Category parent = map.get(category.parentId);
-                if (parent != null) {
-                    parent.addChild(category);
-                }
-            } else {
-                tree.addRoot(category);
-            }
-        }
-        return tree;
-    }
-
-    @Deprecated()
     public static CategoryTree createFromListSortedByLeft(List<Category> categories) {
         CategoryTree tree = new CategoryTree();
         Category parent = null;
@@ -103,7 +83,7 @@ public class CategoryTree {
         }
     }
 
-    public static interface NodeCreator<T> {
+    public interface NodeCreator<T> {
         T createNode(Cursor c);
     }
 
@@ -156,8 +136,8 @@ public class CategoryTree {
     private void assignIds(List<Category> categories, Category parent) {
         if (categories == null) return;
         for (Category t : categories) {
+            t.parent = parent;
             long parentId = parent.id;
-            t.parentId = parentId;
             if (parentId > 0) {
                 t.type = parent.type;
             }
@@ -179,7 +159,7 @@ public class CategoryTree {
 
     private void printTree(StringBuilder sb, List<Category> tree) {
         for (Category t : tree) {
-            sb.append("\n").append("L").append(t.level).append(" I").append(t.id).append(" P").append(t.parentId);
+            sb.append("\n").append("L").append(t.level).append(" I").append(t.id).append(" P").append(t.getParentId());
             sb.append(" [").append(w2(t.left)).append(",").append(w2(t.right)).append("] ").append(t.getTitle());
             if (t.hasChildren()) {
                 printTree(sb, t.children);

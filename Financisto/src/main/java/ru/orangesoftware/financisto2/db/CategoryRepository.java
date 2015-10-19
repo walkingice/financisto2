@@ -33,8 +33,12 @@ public class CategoryRepository {
                 .where(Expressions.gt("id", 0))
                 .asc("left")
                 .list();
-        CategoryTree tree = CategoryTree.createFromList(categories);
+        CategoryTree tree = CategoryTree.createFromListSortedByLeft(categories);
         return tree;
+    }
+
+    public void loadAttributesFor(Category category) {
+        category.attributes = db.getAttributesForCategory(category.id);
     }
 
     public void saveCategory(Category newCategory) {
@@ -44,8 +48,8 @@ public class CategoryRepository {
             Category oldCategory = map.get(newCategory.id);
             if (oldCategory != null) {
                 oldCategory.title = newCategory.title;
-                Category oldParent = map.get(oldCategory.parentId);
-                Category newParent = map.get(newCategory.parentId);
+                Category oldParent = map.get(oldCategory.getParentId());
+                Category newParent = map.get(newCategory.getParentId());
                 if (newParent != oldParent) {
                     if (oldParent != null) {
                         oldParent.removeChild(oldCategory);
@@ -60,9 +64,9 @@ public class CategoryRepository {
                 }
             }
         } else {
-            if (newCategory.parentId > 0) {
+            if (newCategory.getParentId() > 0) {
                 LongSparseArray<Category> map = tree.asIdMap();
-                Category parent = map.get(newCategory.parentId);
+                Category parent = map.get(newCategory.getParentId());
                 if (parent != null) {
                     parent.addChild(newCategory);
                 }
@@ -71,6 +75,23 @@ public class CategoryRepository {
             }
         }
         saveCategories(tree);
+    }
+
+    public Category getCategoryById(long id) {
+        if (id == Category.NO_CATEGORY_ID) return Category.noCategory(context);
+        if (id == Category.SPLIT_CATEGORY_ID) return Category.splitCategory(context);
+        CategoryTree tree = loadCategories();
+        LongSparseArray<Category> map = tree.asIdMap();
+        return map.get(id);
+    }
+
+    public Category getCategoryByLeft(long left) {
+        CategoryTree tree = loadCategories();
+        List<Category> list = tree.asFlatList();
+        for (Category category : list) {
+            if (category.left == left) return category;
+        }
+        return null;
     }
 
     public void deleteCategoryById(long id) {
@@ -118,6 +139,7 @@ public class CategoryRepository {
         for (Category category : categories) {
             if (category.id <= 0) continue;
             db.reInsertCategory(category);
+            db.addAttributes(category.id, category.attributes);
             if (category.hasChildren()) {
                 insertInTransaction(category.children);
             }

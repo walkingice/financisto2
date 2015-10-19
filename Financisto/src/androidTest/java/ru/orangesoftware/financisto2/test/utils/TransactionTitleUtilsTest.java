@@ -25,7 +25,6 @@ public class TransactionTitleUtilsTest extends AndroidTestCase {
         assertEquals("[Split...]", generateTransactionTitle(sb(), null, null, Category.SPLIT_CATEGORY_ID, "[Split...]"));
         assertEquals("[Payee...]", generateTransactionTitle(sb(), "Payee", null, Category.SPLIT_CATEGORY_ID, "[Split...]"));
         assertEquals("[...] Note", generateTransactionTitle(sb(), null, "Note", Category.SPLIT_CATEGORY_ID, "[Split...]"));
-        assertEquals("[...]", generateTransactionTitle(sb(), null, null, Category.SPLIT_CATEGORY_ID, "[Split...]"));
         assertEquals("[Payee...] Note", generateTransactionTitle(sb(), "Payee", "Note", Category.SPLIT_CATEGORY_ID, "[Split...]"));
     }
 

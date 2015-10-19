@@ -600,10 +600,10 @@ public class DatabaseAdapter extends MyEntityManager {
 //        }
 //    }
 
-    private void addAttributes(long categoryId, List<Attribute> attributes) {
+    public void addAttributes(long categoryId, List<Attribute> attributes) {
         SQLiteDatabase db = db();
         db.delete(CATEGORY_ATTRIBUTE_TABLE, CategoryAttributeColumns.CATEGORY_ID + "=?", new String[]{String.valueOf(categoryId)});
-        if (attributes != null) {
+        if (attributes != null && attributes.size() > 0) {
             ContentValues values = new ContentValues();
             values.put(CategoryAttributeColumns.CATEGORY_ID, categoryId);
             for (Attribute a : attributes) {
@@ -675,37 +675,37 @@ public class DatabaseAdapter extends MyEntityManager {
 //    }
 
 
-    public Category getCategory(long id) {
-        if (id == Category.NO_CATEGORY_ID) return Category.noCategory(context);
-        if (id == Category.SPLIT_CATEGORY_ID) return Category.splitCategory(context);
-        Category category = getCategoryNoParent(id);
-        if (category != null) {
-            if (category.parentId > 0)  {
-                Category parent = getCategoryNoParent(category.parentId);
-                if (parent != null) {
-                    category.parent = parent;
-                } else {
-                    category.parent = new Category(category.parentId);
-                }
-            };
-            return category;
-        }
-        return new Category(-1);
-    }
-
-    protected Category getCategoryNoParent(long id) {
-        return get(Category.class, id);
-    }
-
-    public Category getCategoryByLeft(long left) {
-        Category category = createQuery(Category.class).where(Expressions.eq("left", left)).uniqueResult();
-        if (category != null) {
-            return category;
-        } else {
-            return new Category(-1);
-        }
-    }
-
+//    public Category getCategory(long id) {
+//        if (id == Category.NO_CATEGORY_ID) return Category.noCategory(context);
+//        if (id == Category.SPLIT_CATEGORY_ID) return Category.splitCategory(context);
+//        Category category = getCategoryNoParent(id);
+//        if (category != null) {
+//            if (category.parentId > 0)  {
+//                Category parent = getCategoryNoParent(category.parentId);
+//                if (parent != null) {
+//                    category.parent = parent;
+//                } else {
+//                    category.parent = new Category(category.parentId);
+//                }
+//            };
+//            return category;
+//        }
+//        return new Category(-1);
+//    }
+//
+//    protected Category getCategoryNoParent(long id) {
+//        return get(Category.class, id);
+//    }
+//
+//    public Category getCategoryByLeft(long left) {
+//        Category category = createQuery(Category.class).where(Expressions.eq("left", left)).uniqueResult();
+//        if (category != null) {
+//            return category;
+//        } else {
+//            return new Category(-1);
+//        }
+//    }
+//
 //    public CategoryTree getCategoriesTree(boolean includeNoCategory) {
 //        return null;
 ////        Cursor c = getCategories(includeNoCategory);
@@ -1002,8 +1002,7 @@ public class DatabaseAdapter extends MyEntityManager {
         return collectAttributesFromCursor(attributesMap, c);
     }
 
-    public List<Attribute> getAllAttributesForCategory(long categoryId) {
-        Category category = getCategory(categoryId);
+    public List<Attribute> getAllAttributesForCategory(Category category) {
         LongSparseArray<Attribute> attributesMap = getAllAttributesMap();
         Cursor c = db().query(V_ATTRIBUTES, AttributeViewColumns.NORMAL_PROJECTION,
                 AttributeViewColumns.CATEGORY_LEFT + "<= ? AND " + AttributeViewColumns.CATEGORY_RIGHT + " >= ?",

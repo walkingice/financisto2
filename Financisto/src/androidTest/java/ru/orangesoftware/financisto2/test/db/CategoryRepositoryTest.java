@@ -29,7 +29,7 @@ public class CategoryRepositoryTest extends AbstractDbTest {
         assertEquals(0, tree.asIdMap().size());
     }
 
-    /*public void test_should_move_child_category_to_another_parent() {
+    public void test_should_move_child_category_to_another_parent() {
         Category parent = createCategory("A");
         Category child = createCategory("a1");
         parent.addChild(child);
@@ -49,8 +49,8 @@ public class CategoryRepositoryTest extends AbstractDbTest {
         );
 
         Category a1 = tree.rootAt(0).childAt(0);
-        a1.moveToNewParent(tree.getRoot());
-        repository.saveCategories(tree);
+        a1.parent = Category.noCategory(context);
+        repository.saveCategory(a1);
         assertTree(
                 "L0 I1 P0 [ 1, 4] A",
                 "L1 I5 P1 [ 2, 3] - a2",
@@ -59,7 +59,7 @@ public class CategoryRepositoryTest extends AbstractDbTest {
                 "L1 I3 P2 [ 8, 9] - aa1",
                 "L1 I4 P2 [10,11] - aa2"
         );
-    }*/
+    }
 
     public void test_should_save_new_root_category() {
         repository.saveCategory(createCategory("A"));
@@ -77,14 +77,14 @@ public class CategoryRepositoryTest extends AbstractDbTest {
                 "L0 I1 P0 [ 1, 2] A"
         );
         Category a1 = createCategory("a1");
-        a1.parentId = a.id;
+        a1.parent = a;
         repository.saveCategory(a1);
         assertTree(
                 "L0 I1 P0 [ 1, 4] A",
                 "L1 I2 P1 [ 2, 3] - a1"
         );
         Category aa1 = createCategory("aa1");
-        aa1.parentId = 2;
+        aa1.parent = a1;
         repository.saveCategory(aa1);
         assertTree(
                 "L0 I1 P0 [ 1, 6] A",
@@ -108,14 +108,14 @@ public class CategoryRepositoryTest extends AbstractDbTest {
                 "L0 I1 P0 [ 1, 2] AA",
                 "L0 I2 P0 [ 3, 4] B"
         );
-        b.parentId = a.id;
+        b.parent = a;
         b.title = "aa1";
         repository.saveCategory(b);
         assertTree(
                 "L0 I1 P0 [ 1, 4] AA",
                 "L1 I2 P1 [ 2, 3] - aa1"
         );
-        b.parentId = 0;
+        b.parent = Category.noCategory(context);
         b.title = "C";
         repository.saveCategory(b);
         assertTree(
@@ -140,7 +140,7 @@ public class CategoryRepositoryTest extends AbstractDbTest {
                 "L2 I3 P2 [ 3, 4] -- aa1",
                 "L0 I4 P0 [ 7, 8] B"
         );
-        a1.parentId = b.id;
+        a1.parent = b;
         repository.saveCategory(a1);
         assertTree(
                 "L0 I1 P0 [ 1, 2] A",
@@ -148,7 +148,7 @@ public class CategoryRepositoryTest extends AbstractDbTest {
                 "L1 I2 P4 [ 4, 7] - a1",
                 "L2 I3 P2 [ 5, 6] -- aa1"
         );
-        aa1.parentId = 0;
+        aa1.parent = Category.noCategory(context);
         aa1.title = "C";
         repository.saveCategory(aa1);
         assertTree(

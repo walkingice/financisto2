@@ -29,9 +29,9 @@ public class CategoryTreeTest extends AndroidTestCase {
                 "L1 I2 P1 [ 2, 3] - a1"
         );
         assertSame(tree.getRoot(), tree.rootAt(0).parent);
-        assertEquals(0, tree.rootAt(0).parentId);
+        assertEquals(0, tree.rootAt(0).getParentId());
         assertSame(tree.rootAt(0), tree.rootAt(0).childAt(0).parent);
-        assertEquals(1, tree.rootAt(0).childAt(0).parentId);
+        assertEquals(1, tree.rootAt(0).childAt(0).getParentId());
 
         child.addChild(createCategory("aa1"));
         assertTree(

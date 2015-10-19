@@ -72,6 +72,7 @@ public class TransactionTest extends AbstractDbTest {
     public void test_should_insert_and_update_attributes() {
         //given
         Category aa1 = categories.get("AA1");
+        categoryRepository.loadAttributesFor(aa1);
         Attribute attr1 = aa1.attributes.get(0);
         Attribute attr2 = aa1.attributes.get(1);
         //when inserted

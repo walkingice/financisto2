@@ -1,6 +1,5 @@
 CREATE TABLE category (
     _id integer primary key autoincrement,
-    parent_id integer not null default 0,
     title text not null,
     left integer not null default 0,
     right integer not null default 0,
@@ -14,6 +13,6 @@ CREATE INDEX category_left_idx ON category (left);
 
 CREATE INDEX idx_key_cat ON category (remote_key);
 
-INSERT INTO category(_id, parent_id, title) VALUES(-1,0,'[Split...]');
+INSERT INTO category(_id,title,left,right) VALUES(-1,-99000,-99000,'[Split...]');
 
-INSERT INTO category(_id, parent_id, title) VALUES(0,0,'No category');
+INSERT INTO category(_id,title,left,right) VALUES(0,-90000,-90000,'No category');

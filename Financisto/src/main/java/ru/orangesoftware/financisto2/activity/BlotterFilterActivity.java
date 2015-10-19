@@ -181,7 +181,7 @@ public class BlotterFilterActivity extends AbstractActivity {
 	private void updateCategoryFromFilter() {
 		Criteria c = filter.get(BlotterFilter.CATEGORY_LEFT);
 		if (c != null) {
-			Category cat = db.getCategoryByLeft(c.getLongValue1());
+			Category cat = categoryRepository.getCategoryByLeft(c.getLongValue1());
             if (cat.id > 0) {
 			    category.setText(cat.title);
             } else {
@@ -192,7 +192,7 @@ public class BlotterFilterActivity extends AbstractActivity {
             c = filter.get(BlotterFilter.CATEGORY_ID);
             if (c != null) {
                 long categoryId = c.getLongValue1();
-                Category cat = db.getCategory(categoryId);
+                Category cat = categoryRepository.getCategoryById(categoryId);
                 category.setText(cat.title);
                 showMinusButton(category);
             } else {
@@ -389,7 +389,7 @@ public class BlotterFilterActivity extends AbstractActivity {
             if (selectedId == 0) {
                 filter.put(new SingleCategoryCriteria(0));
             } else {
-			    Category cat = db.getCategory(selectedId);
+			    Category cat = categoryRepository.getCategoryById(selectedId);
 			    filter.put(Criteria.btw(BlotterFilter.CATEGORY_LEFT, String.valueOf(cat.left), String.valueOf(cat.right)));
             }
 			updateCategoryFromFilter();

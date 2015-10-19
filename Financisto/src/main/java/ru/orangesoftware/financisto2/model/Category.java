@@ -4,9 +4,9 @@
  * are made available under the terms of the GNU Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
- * 
+ * <p/>
  * Contributors:
- *     Denis Solonenko - initial API and implementation
+ * Denis Solonenko - initial API and implementation
  ******************************************************************************/
 package ru.orangesoftware.financisto2.model;
 
@@ -30,9 +30,9 @@ import java.util.List;
 @Entity
 @Table(name = "category")
 public class Category extends MyEntity implements Iterable<Category> {
-	
+
     public static final long NO_CATEGORY_ID = 0;
-	public static final long SPLIT_CATEGORY_ID = -1;
+    public static final long SPLIT_CATEGORY_ID = -1;
 
     public static boolean isSplit(long categoryId) {
         return Category.SPLIT_CATEGORY_ID == categoryId;
@@ -41,6 +41,8 @@ public class Category extends MyEntity implements Iterable<Category> {
     public static Category noCategory(Context context) {
         Category category = new Category();
         category.id = 0;
+        category.left = -90000;
+        category.right = -90000;
         category.title = context.getString(R.string.no_category);
         category.systemEntity = true;
         return category;
@@ -49,6 +51,7 @@ public class Category extends MyEntity implements Iterable<Category> {
     public static Category splitCategory(Context context) {
         Category category = new Category();
         category.id = -1;
+        category.left = category.right = -99000;
         category.title = context.getString(R.string.split);
         category.systemEntity = true;
         return category;
@@ -56,9 +59,6 @@ public class Category extends MyEntity implements Iterable<Category> {
 
     public static final int TYPE_EXPENSE = 0;
     public static final int TYPE_INCOME = 1;
-
-    @Column(name = "parent_id")
-    public long parentId;
 
     @Column(name = "last_project_id")
     public long lastProjectId;
@@ -87,9 +87,10 @@ public class Category extends MyEntity implements Iterable<Category> {
     @Transient
     public String tag;
 
-    public Category(){}
+    public Category() {
+    }
 
-    public Category(long id){
+    public Category(long id) {
         this.id = id;
     }
 
@@ -102,7 +103,6 @@ public class Category extends MyEntity implements Iterable<Category> {
             children = new ArrayList<Category>();
         }
         category.parent = this;
-        category.parentId = id;
         children.add(category);
     }
 
@@ -159,7 +159,7 @@ public class Category extends MyEntity implements Iterable<Category> {
         return children.iterator();
     }
 
-//    public void moveToNewParent(Category newParent) {
+    //    public void moveToNewParent(Category newParent) {
 //        if (parent != null) {
 //            parent.removeChild(this);
 //        }
@@ -168,15 +168,15 @@ public class Category extends MyEntity implements Iterable<Category> {
 //
     public boolean moveChildUp(int pos) {
         if (pos > 0 && pos < children.size()) {
-            swap(pos, pos-1);
+            swap(pos, pos - 1);
             return true;
         }
         return false;
     }
 
     public boolean moveChildDown(int pos) {
-        if (pos >=0 && pos < children.size()-1) {
-            swap(pos, pos+1);
+        if (pos >= 0 && pos < children.size() - 1) {
+            swap(pos, pos + 1);
             return true;
         }
         return false;
@@ -192,7 +192,7 @@ public class Category extends MyEntity implements Iterable<Category> {
     }
 
     public boolean moveChildToTheBottom(int pos) {
-        if (pos >= 0 && pos < children.size()-1) {
+        if (pos >= 0 && pos < children.size() - 1) {
             Category node = children.remove(pos);
             children.add(children.size(), node);
             return true;
@@ -237,7 +237,7 @@ public class Category extends MyEntity implements Iterable<Category> {
 
     public static String getTitle(String title, int level) {
         String span = getTitleSpan(level);
-        return span+title;
+        return span + title;
     }
 
     public static String getTitleSpan(int level) {
@@ -253,7 +253,7 @@ public class Category extends MyEntity implements Iterable<Category> {
         } else {
             StringBuilder sb = new StringBuilder();
             if (level > 0) {
-                for (int i=0; i<level; i++) {
+                for (int i = 0; i < level; i++) {
                     sb.append("-");
                 }
             }

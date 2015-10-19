@@ -37,7 +37,7 @@ public class CategoryByPeriodReport extends Report2DChart {
 	public String getFilterName() {
 		if (filterIds.size()>0) {
 			long categoryId = filterIds.get(currentFilterOrder);
-			Category category = db.getCategory(categoryId);
+			Category category = categoryRepository.getCategoryById(categoryId);
 			if (category!=null) {
 				return category.getTitle();
 			} else {
@@ -98,7 +98,7 @@ public class CategoryByPeriodReport extends Report2DChart {
 			Cursor cursor = null;
 			try {
 				long categoryId = filterIds.get(currentFilterOrder);
-				Category parent = db.getCategory(categoryId);
+				Category parent = categoryRepository.getCategoryById(categoryId);
 				String where = CategoryColumns.left+" BETWEEN ? AND ?";
 				String[] pars = new String[]{String.valueOf(parent.left), String.valueOf(parent.right)};
 				cursor = sqlDb.query(DatabaseHelper.CATEGORY_TABLE, new String[]{CategoryColumns._id.name()}, where, pars, null, null, null);

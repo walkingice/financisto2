@@ -132,8 +132,8 @@ public class SubCategoryReport extends Report {
 	}
 
 	@Override
-	public Criteria getCriteriaForId(DatabaseAdapter db, long id) {
-		Category c = db.getCategory(id);
+	public Criteria getCriteriaForId(CategoryRepository categoryRepository, long id) {
+		Category c = categoryRepository.getCategoryById(id);
 		return Criteria.btw(BlotterFilter.CATEGORY_LEFT, String.valueOf(c.left), String.valueOf(c.right));
 	}
 
