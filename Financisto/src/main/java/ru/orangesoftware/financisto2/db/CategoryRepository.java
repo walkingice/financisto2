@@ -75,6 +75,7 @@ public class CategoryRepository {
             }
         }
         saveCategories(tree);
+        db.addAttributes(newCategory.id, newCategory.attributes);
     }
 
     public Category getCategoryById(long id) {
@@ -139,7 +140,6 @@ public class CategoryRepository {
         for (Category category : categories) {
             if (category.id <= 0) continue;
             db.reInsertCategory(category);
-            db.addAttributes(category.id, category.attributes);
             if (category.hasChildren()) {
                 insertInTransaction(category.children);
             }

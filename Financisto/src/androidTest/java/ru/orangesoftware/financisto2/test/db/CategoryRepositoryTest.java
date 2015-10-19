@@ -1,13 +1,23 @@
 package ru.orangesoftware.financisto2.test.db;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import ru.orangesoftware.financisto2.db.CategoryRepository;
+import ru.orangesoftware.financisto2.model.Attribute;
 import ru.orangesoftware.financisto2.model.Category;
 import ru.orangesoftware.financisto2.model.CategoryTree;
+import ru.orangesoftware.financisto2.test.builders.AttributeBuilder;
+
+import static java.util.Arrays.asList;
 
 public class CategoryRepositoryTest extends AbstractDbTest {
 
     CategoryRepository repository;
     CategoryTree tree;
+    Attribute attribute1;
+    Attribute attribute2;
+    Attribute attribute3;
 
     @Override
     public void setUp() throws Exception {
@@ -15,6 +25,9 @@ public class CategoryRepositoryTest extends AbstractDbTest {
         repository = new CategoryRepository(context);
         repository.db = db;
         tree = repository.loadCategories();
+        attribute1 = AttributeBuilder.withDb(db).createTextAttribute("attr1");
+        attribute2 = AttributeBuilder.withDb(db).createTextAttribute("attr2");
+        attribute3 = AttributeBuilder.withDb(db).createNumberAttribute("attr3");
     }
 
     public void test_should_load_empty_tree() {
@@ -187,6 +200,28 @@ public class CategoryRepositoryTest extends AbstractDbTest {
         );
     }
 
+    public void test_should_save_attributes() {
+        Category a = createCategory("A");
+        a.attributes = asList(attribute1, attribute2);
+        repository.saveCategory(a);
+        assertAttributes(a, "attr1", "attr2");
+
+        a.attributes = asList(attribute2, attribute3);
+        repository.saveCategory(a);
+        assertAttributes(a, "attr2", "attr3");
+
+        Category a1 = createCategory("a1");
+        a.addChild(a1);
+        tree.addRoot(a);
+        repository.saveCategories(tree);
+
+        assertTree(
+                "L0 I1 P0 [ 1, 4] A",
+                "L1 I2 P1 [ 2, 3] - a1"
+        );
+        assertAttributes(a, "attr2", "attr3");
+    }
+
     private CategoryTree assertTree(String...expectedTree) {
         StringBuilder sb = new StringBuilder();
         for (String s : expectedTree) {
@@ -196,6 +231,14 @@ public class CategoryRepositoryTest extends AbstractDbTest {
         String actualTree = tree.printTree();
         assertEquals(sb.toString(), actualTree);
         return tree;
+    }
+
+    private void assertAttributes(Category c, String...attributeNames) {
+        repository.loadAttributesFor(c);
+        assertEquals(attributeNames.length, c.attributes.size());
+        for (int i = 0; i < attributeNames.length; i++) {
+            assertEquals("Attribute at "+i, attributeNames[i], c.attributes.get(i).name);
+        }
     }
 
     private Category createCategory(String title) {

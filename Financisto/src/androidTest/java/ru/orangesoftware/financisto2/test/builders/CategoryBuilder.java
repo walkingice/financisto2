@@ -7,6 +7,9 @@ import ru.orangesoftware.financisto2.model.CategoryTree;
 
 import java.util.*;
 
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
+
 public class CategoryBuilder {
 
     private final Category category = new Category();
@@ -21,15 +24,10 @@ public class CategoryBuilder {
     public static Map<String, Category> createDefaultHierarchy(CategoryRepository categoryRepository) {
         Category a = createCategory("A");
         Category a1 = createCategory("A1");
-        a1.attributes = new ArrayList<>();
-        a1.attributes.add(AttributeBuilder.withDb(categoryRepository.db).createTextAttribute("attr0"));
         a.addChild(a1);
         Category a2 = createCategory("A2");
         a.addChild(a2);
         Category aa1 = createCategory("AA1");
-        aa1.attributes = new ArrayList<>();
-        aa1.attributes.add(AttributeBuilder.withDb(categoryRepository.db).createTextAttribute("attr1"));
-        aa1.attributes.add(AttributeBuilder.withDb(categoryRepository.db).createTextAttribute("attr2"));
         a1.addChild(aa1);
         Category b = createCategory("B");
         b.makeThisCategoryIncome();
@@ -37,6 +35,12 @@ public class CategoryBuilder {
         tree.addRoot(a);
         tree.addRoot(b);
         categoryRepository.saveCategories(tree);
+        categoryRepository.db.addAttributes(a1.id, singletonList(
+                AttributeBuilder.withDb(categoryRepository.db).createTextAttribute("attr0")));
+        categoryRepository.db.addAttributes(aa1.id, asList(
+                AttributeBuilder.withDb(categoryRepository.db).createTextAttribute("attr1"),
+                AttributeBuilder.withDb(categoryRepository.db).createTextAttribute("attr2")
+        ));
         return asMap(categoryRepository.loadCategories());
     }
 

@@ -198,6 +198,7 @@ public class CategoryActivity extends AbstractActivity {
     }
 
     private void addParentAttributes() {
+        parentAttributesLayout.removeAllViews();
         long categoryId = category.getParentId();
         Category category = categoryRepository.getCategoryById(categoryId);
         List<Attribute> attributes = db.getAllAttributesForCategory(category);
@@ -295,6 +296,7 @@ public class CategoryActivity extends AbstractActivity {
             parentCategoryText.setText(c.title);
         }
         updateIncomeExpenseType();
+        addParentAttributes();
     }
 
     @Override
