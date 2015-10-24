@@ -3,6 +3,7 @@ package ru.orangesoftware.financisto2.fragment;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.view.View;
 import android.widget.ListView;
 
@@ -16,14 +17,20 @@ import greendroid.widget.QuickActionGrid;
 import greendroid.widget.QuickActionWidget;
 import ru.orangesoftware.financisto2.R;
 import ru.orangesoftware.financisto2.activity.AccountActivity_;
+import ru.orangesoftware.financisto2.activity.AccountBlotterActivity_;
+import ru.orangesoftware.financisto2.activity.AccountListActivity;
+import ru.orangesoftware.financisto2.activity.BlotterActivity;
+import ru.orangesoftware.financisto2.activity.BlotterFilterActivity;
 import ru.orangesoftware.financisto2.activity.PurgeAccountActivity_;
 import ru.orangesoftware.financisto2.activity.TransactionActivity_;
 import ru.orangesoftware.financisto2.activity.TransferActivity_;
 import ru.orangesoftware.financisto2.adapter.AccountListAdapter2;
 import ru.orangesoftware.financisto2.adapter.AccountListAdapter2_;
+import ru.orangesoftware.financisto2.blotter.BlotterFilter;
 import ru.orangesoftware.financisto2.bus.AccountList;
 import ru.orangesoftware.financisto2.bus.GetAccountList;
 import ru.orangesoftware.financisto2.db.DatabaseAdapter;
+import ru.orangesoftware.financisto2.filter.Criteria;
 import ru.orangesoftware.financisto2.model.Account;
 
 import static ru.orangesoftware.financisto2.utils.MyPreferences.isQuickMenuEnabledForAccount;
@@ -124,7 +131,7 @@ public class AccountListFragment extends AbstractListFragment implements QuickAc
     }
 
     private void showAccountTransactions(long id) {
-
+        AccountBlotterActivity_.intent(getActivity()).accountId(id).start();
     }
 
     private void editAccount() {

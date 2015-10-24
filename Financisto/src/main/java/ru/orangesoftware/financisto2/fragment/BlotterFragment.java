@@ -37,6 +37,7 @@ import ru.orangesoftware.financisto2.adapter.BlotterListAdapter;
 import ru.orangesoftware.financisto2.adapter.BlotterListAdapter_;
 import ru.orangesoftware.financisto2.adapter.TransactionsListAdapter;
 import ru.orangesoftware.financisto2.adapter.TransactionsListAdapter_;
+import ru.orangesoftware.financisto2.blotter.BlotterFilter;
 import ru.orangesoftware.financisto2.bus.RemoveBlotterFilter;
 import ru.orangesoftware.financisto2.bus.GetTransactionList;
 import ru.orangesoftware.financisto2.bus.TransactionDeleted;
@@ -70,6 +71,9 @@ public class BlotterFragment extends AbstractListFragment implements QuickAction
 
     @AfterInject
     public void restoreFilter() {
+        if (accountId != -1) {
+            blotterFilter.eq(BlotterFilter.FROM_ACCOUNT_ID, String.valueOf(accountId));
+        }
         if (saveFilter && blotterFilter.isEmpty()) {
             blotterFilter = WhereFilter.fromSharedPreferences(getActivity().getPreferences(0));
         }

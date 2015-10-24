@@ -163,6 +163,9 @@
             android:name="ru.orangesoftware.financisto2.activity.BlotterActivity"
             android:label="@string/blotter" />
         <activity
+            android:name="ru.orangesoftware.financisto2.activity.AccountBlotterActivity_"
+            android:label="@string/blotter" />
+        <activity
             android:name="ru.orangesoftware.financisto2.activity.PlannerActivity"
             android:label="@string/planner" />
         <activity
