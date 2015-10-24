@@ -86,11 +86,13 @@ public class BlotterFragment extends AbstractListFragment implements QuickAction
     }
 
     public void updateFilterMenu() {
-        Drawable drawable = getResources().getDrawable(R.drawable.actionbar_filter);
-        if (!blotterFilter.isEmpty()) {
-            drawable.mutate().setColorFilter(getResources().getColor(R.color.holo_blue_light), PorterDuff.Mode.SRC_ATOP);
+        if (filterMenuItem != null) {
+            Drawable drawable = getResources().getDrawable(R.drawable.actionbar_filter);
+            if (!blotterFilter.isEmpty()) {
+                drawable.mutate().setColorFilter(getResources().getColor(R.color.holo_blue_light), PorterDuff.Mode.SRC_ATOP);
+            }
+            filterMenuItem.setIcon(drawable);
         }
-        filterMenuItem.setIcon(drawable);
     }
 
     @Override
@@ -104,6 +106,7 @@ public class BlotterFragment extends AbstractListFragment implements QuickAction
             saveFilter(WhereFilter.empty());
         }
         bus.post(new GetTransactionList(blotterFilter));
+        updateFilterMenu();
     }
 
     private void saveFilter(WhereFilter filter) {

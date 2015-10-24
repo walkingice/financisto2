@@ -39,6 +39,8 @@ import ru.orangesoftware.financisto2.bus.InitialLoad;
 import ru.orangesoftware.financisto2.dialog.WebViewDialog;
 import ru.orangesoftware.financisto2.fragment.AccountListFragment_;
 import ru.orangesoftware.financisto2.fragment.BlotterFragment_;
+import ru.orangesoftware.financisto2.fragment.EmptyFragment;
+import ru.orangesoftware.financisto2.fragment.EmptyFragment_;
 import ru.orangesoftware.financisto2.utils.EntityEnum;
 import ru.orangesoftware.financisto2.utils.PinProtection;
 
@@ -168,14 +170,16 @@ public class MainActivity2 extends FragmentActivity {
             switch (position) {
                 case 0:
                     return AccountListFragment_.builder().build();
-                default:
+                case 1:
                     return BlotterFragment_.builder().build();
+                default:
+                    return EmptyFragment_.builder().build();
             }
         }
 
         @Override
         public int getCount() {
-            return 2;
+            return 4;
         }
 
         @Override
@@ -194,7 +198,7 @@ public class MainActivity2 extends FragmentActivity {
         }
     }
 
-    private static enum DrawerItem implements EntityEnum {
+    private enum DrawerItem implements EntityEnum {
         BACKUP_RESTORE(R.string.backup_restore, R.drawable.drawer_action_reload){
             @Override
             public void onClick(final Context context) {
