@@ -1,4 +1,6 @@
-**! Please note that the branch is currently UNSTABLE due to migrating to Holo !**
+**! Application in this branch is currently very UNSTABLE due to a global re-work and re-design !**
+
+Early screenshots (https://www.dropbox.com/sh/cqhyr44y8hc1usn/AAAK3AvwnOaTG3k7XACdO2OFa) 
 
 # Financisto
 
