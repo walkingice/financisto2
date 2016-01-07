@@ -40,13 +40,13 @@ public class ScheduledAlarmReceiver extends PackageReplaceReceiver {
     }
 
     private void requestScheduleOne(Context context, Intent intent) {
-        Intent serviceIntent = new Intent(FinancistoService.ACTION_SCHEDULE_ONE);
+        Intent serviceIntent = new Intent(FinancistoService.ACTION_SCHEDULE_ONE, null, context, FinancistoService.class);
         serviceIntent.putExtra(RecurrenceScheduler.SCHEDULED_TRANSACTION_ID, intent.getLongExtra(RecurrenceScheduler.SCHEDULED_TRANSACTION_ID, -1));
         WakefulIntentService.sendWakefulWork(context, serviceIntent);
     }
 
     private void requestAutoBackup(Context context) {
-        Intent serviceIntent = new Intent(FinancistoService.ACTION_AUTO_BACKUP);
+        Intent serviceIntent = new Intent(FinancistoService.ACTION_AUTO_BACKUP, null, context, FinancistoService.class);
         WakefulIntentService.sendWakefulWork(context, serviceIntent);
     }
 

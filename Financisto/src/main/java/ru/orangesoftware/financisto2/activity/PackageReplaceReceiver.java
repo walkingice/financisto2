@@ -36,12 +36,12 @@ public class PackageReplaceReceiver extends BroadcastReceiver {
 	}
 
     protected void requestScheduleAll(Context context) {
-        Intent serviceIntent = new Intent(FinancistoService.ACTION_SCHEDULE_ALL);
+        Intent serviceIntent = new Intent(FinancistoService.ACTION_SCHEDULE_ALL, null, context, FinancistoService.class);
         WakefulIntentService.sendWakefulWork(context, serviceIntent);
     }
 
     protected void requestScheduleAutoBackup(Context context) {
-        Intent serviceIntent = new Intent(FinancistoService.ACTION_SCHEDULE_AUTO_BACKUP);
+        Intent serviceIntent = new Intent(FinancistoService.ACTION_SCHEDULE_AUTO_BACKUP, null, context, FinancistoService.class);
         WakefulIntentService.sendWakefulWork(context, serviceIntent);
     }
     
