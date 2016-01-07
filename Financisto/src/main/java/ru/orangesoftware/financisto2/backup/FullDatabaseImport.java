@@ -17,6 +17,7 @@ import java.util.List;
 
 import ru.orangesoftware.financisto2.db.CategoryRepository;
 import ru.orangesoftware.financisto2.db.DatabaseAdapter;
+import ru.orangesoftware.financisto2.model.Category;
 import ru.orangesoftware.financisto2.service.RecurrenceScheduler;
 import ru.orangesoftware.financisto2.service.RecurrenceScheduler_;
 import ru.orangesoftware.financisto2.utils.CurrencyCache;
@@ -43,6 +44,7 @@ public abstract class FullDatabaseImport {
         try {
             cleanDatabase();
             restoreDatabase();
+            restoreSystemEntities();
             sqlDb.setTransactionSuccessful();
         } finally {
             sqlDb.endTransaction();
@@ -52,20 +54,17 @@ public abstract class FullDatabaseImport {
         scheduleAll();
     }
 
+    private void restoreSystemEntities() {
+        db.reInsertCategory(Category.noCategory(context));
+        db.reInsertCategory(Category.splitCategory(context));
+    }
+
     protected abstract void restoreDatabase() throws IOException;
 
     private void cleanDatabase() {
         for (String tableName : tablesToClean()) {
-            if (tableHasSystemIds(tableName) && shouldKeepSystemEntries()) {
-                sqlDb.execSQL("delete from " + tableName + " where _id>0");
-            } else {
-                sqlDb.execSQL("delete from " + tableName);
-            }
+            sqlDb.execSQL("delete from " + tableName);
         }
-    }
-
-    protected boolean shouldKeepSystemEntries() {
-        return false;
     }
 
     protected List<String> tablesToClean() {

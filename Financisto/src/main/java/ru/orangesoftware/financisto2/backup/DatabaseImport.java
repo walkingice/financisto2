@@ -12,6 +12,7 @@ package ru.orangesoftware.financisto2.backup;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.util.Log;
 
 import com.google.android.gms.drive.Contents;
 import com.google.android.gms.drive.DriveContents;
@@ -32,10 +33,14 @@ import ru.orangesoftware.financisto2.db.DatabaseAdapter;
 import ru.orangesoftware.financisto2.db.DatabaseSchemaEvolution;
 import ru.orangesoftware.financisto2.export.Export;
 import ru.orangesoftware.financisto2.export.dropbox.Dropbox;
+import ru.orangesoftware.financisto2.model.AccountType;
+import ru.orangesoftware.financisto2.model.ElectronicPaymentType;
 
 public class DatabaseImport extends FullDatabaseImport {
 
-	private final DatabaseSchemaEvolution schemaEvolution;
+    private static final int FINANCISTO1_VERSION = 100;
+
+    private final DatabaseSchemaEvolution schemaEvolution;
     private final InputStream backupStream;
 
     public static DatabaseImport createFromFileBackup(Context context, DatabaseAdapter db, CategoryRepository categoryRepository, String backupFile) throws FileNotFoundException {
@@ -83,10 +88,11 @@ public class DatabaseImport extends FullDatabaseImport {
         pb.read(bytes);
         pb.unread(bytes);
         int head = ((int) bytes[0] & 0xff) | ((bytes[1] << 8) & 0xff00);
-        if (GZIPInputStream.GZIP_MAGIC == head)
+        if (GZIPInputStream.GZIP_MAGIC == head) {
             return new GZIPInputStream(pb);
-        else
+        } else {
             return pb;
+        }
     }
 
     private void recoverDatabase(BufferedReader br) throws IOException {
@@ -94,13 +100,23 @@ public class DatabaseImport extends FullDatabaseImport {
         ContentValues values = new ContentValues();
         String line;
         String tableName = null;
+        boolean isFinancisto1 = false;
         while ((line = br.readLine()) != null) {
-            if (line.startsWith("$")) {
+            if (line.startsWith("VERSION_CODE:")) {
+                int i = line.indexOf(":");
+                if (i > 0) {
+                    String value = line.substring(i + 1);
+                    int version = Integer.parseInt(value);
+                    isFinancisto1 = version <= FINANCISTO1_VERSION;
+                }
+            } else if (line.startsWith("$")) {
                 if ("$$".equals(line)) {
                     if (tableName != null && values.size() > 0) {
                         if (shouldRestoreTable(tableName)) {
                             cleanupValues(tableName, values);
-                            sqlDb.insert(tableName, null, values);
+                            if (values.size() > 0) {
+                                sqlDb.insert(tableName, null, values);
+                            }
                         }
                         tableName = null;
                         insideEntity = false;
@@ -132,6 +148,14 @@ public class DatabaseImport extends FullDatabaseImport {
     }
 
     private void cleanupValues(String tableName, ContentValues values) {
+        // remove system entities
+        Integer id = values.getAsInteger("_id");
+        if (id != null && id <= 0) {
+            Log.w("Financisto", "Removing system entity: "+values);
+            values.clear();
+            return;
+        }
+        // fix columns
         if ("transactions".equals(tableName)) {
             values.remove("location_id");
             values.remove("provider");
@@ -141,6 +165,12 @@ public class DatabaseImport extends FullDatabaseImport {
         } else if ("category".equals(tableName)) {
             values.remove("last_location_id");
             values.remove("sort_order");
+        } else if ("account".equals(tableName)) {
+            String type = values.getAsString("type");
+            if ("PAYPAL".equals(type)) {
+                values.put("type", AccountType.ELECTRONIC.name());
+                values.put("card_issuer", ElectronicPaymentType.PAYPAL.name());
+            }
         }
     }
 

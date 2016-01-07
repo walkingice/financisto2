@@ -41,6 +41,7 @@ public class CategoryTreeNavigator {
         this.categories = repository.loadCategories().getRoot().children;
         this.noCategory = Category.noCategory(context);
         this.splitCategory = Category.splitCategory(context);
+        categories.add(0, noCategory);
         tagCategories(noCategory);
     }
 

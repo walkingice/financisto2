@@ -278,7 +278,7 @@
 	<string name="gdocs_io_error">Error connecting with Google Drive.</string>
 
 	<string name="success">Success!</string>
-	<string name="fail">Fail...</string>
+	<string name="fail">Failed due to unexpected error...</string>
 	<string name="duplicate">Duplicate</string>
 	<string name="select_from_account">Please select from account...</string>	
 	<string name="select_to_account">Please select to account...</string>

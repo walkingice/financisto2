@@ -21,6 +21,7 @@ import ru.orangesoftware.financisto2.db.CategoryRepository;
 import ru.orangesoftware.financisto2.db.CategoryRepository_;
 import ru.orangesoftware.financisto2.db.DatabaseAdapter;
 import ru.orangesoftware.financisto2.db.DatabaseAdapter_;
+import ru.orangesoftware.financisto2.export.csv.Csv;
 import ru.orangesoftware.financisto2.utils.MyPreferences;
 
 import static ru.orangesoftware.financisto2.export.Export.uploadBackupFileToDropbox;
@@ -83,8 +84,8 @@ public abstract class ImportExportAsyncTask extends AsyncTask<String, String, Ob
 	protected void onPostExecute(Object result) {
 		dialog.dismiss();
 
-        if (result instanceof ImportExportException) {
-            ImportExportException exception = (ImportExportException) result;
+		if (result instanceof Exception) {
+            Exception exception = (Exception) result;
             new AlertDialog.Builder(context)
                     .setTitle(R.string.fail)
                     .setMessage(exception.getMessage())
@@ -92,9 +93,6 @@ public abstract class ImportExportAsyncTask extends AsyncTask<String, String, Ob
                     .show();
             return;
         }
-
-		if (result instanceof Exception) 
-			return;
 
 		String message = getSuccessMessage(result);
 

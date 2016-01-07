@@ -72,10 +72,10 @@ public class CategorySelector {
 
     public void fetchCategories() {
         categories = categoryRepository.loadCategories().asFlatList();
-        categories.add(0, Category.noCategory(activity));
         if (fetchAllCategories) {
             categories.add(0, Category.splitCategory(activity));
         }
+        categories.add(0, Category.noCategory(activity));
         categoryAdapter = TransactionUtils.createCategoryAdapter(db, activity, categories);
     }
 
