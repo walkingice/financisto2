@@ -5,8 +5,7 @@ SELECT
     left as left,
     right as right,
     type as type,
-	last_project_id as last_project_id,
-    level as level
+	last_project_id as last_project_id
 FROM category
 ORDER BY left;
 	

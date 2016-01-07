@@ -72,7 +72,7 @@ public class Category extends MyEntity implements Iterable<Category> {
     @Column(name = "type")
     public int type = TYPE_EXPENSE;
 
-    @Column(name = "level")
+    @Transient
     public int level;
 
     @Transient
@@ -103,6 +103,7 @@ public class Category extends MyEntity implements Iterable<Category> {
             children = new ArrayList<Category>();
         }
         category.parent = this;
+        category.level = level + 1;
         children.add(category);
     }
 

@@ -23,6 +23,7 @@ public class CategoryTree {
 
     public CategoryTree() {
         this.root = new Category(0);
+        this.root.level = -1;
         this.root.children = new ArrayList<Category>();
     }
 
