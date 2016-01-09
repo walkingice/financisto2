@@ -4,9 +4,9 @@
  * are made available under the terms of the GNU Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
- * 
+ * <p/>
  * Contributors:
- *     Denis Solonenko - initial API and implementation
+ * Denis Solonenko - initial API and implementation
  ******************************************************************************/
 package ru.orangesoftware.financisto2.adapter;
 
@@ -34,17 +34,17 @@ import ru.orangesoftware.financisto2.utils.Utils;
 public class AccountListAdapter2 extends BaseAdapter {
 
     @Bean
-	public Utils u;
+    public Utils u;
 
     private DateFormat df;
     private boolean isShowAccountLastTransactionDate;
 
     private List<Account> accounts;
 
-	public AccountListAdapter2(Context context) {
-		this.df = DateUtils.getShortDateFormat(context);
+    public AccountListAdapter2(Context context) {
+        this.df = DateUtils.getMediumDateFormat(context);
         this.isShowAccountLastTransactionDate = MyPreferences.isShowAccountLastTransactionDate(context);
-	}
+    }
 
     public void initAccounts(List<Account> accounts) {
         this.accounts = accounts;
@@ -72,7 +72,7 @@ public class AccountListAdapter2 extends BaseAdapter {
         if (convertView == null) {
             v = GenericViewHolder2_.build(context);
         } else {
-            v = (GenericViewHolder2)convertView;
+            v = (GenericViewHolder2) convertView;
         }
 
         Account a = getItem(position);
@@ -124,12 +124,12 @@ public class AccountListAdapter2 extends BaseAdapter {
         if (type == AccountType.CREDIT_CARD && a.limitAmount != 0) {
             long limitAmount = Math.abs(a.limitAmount);
             long balance = limitAmount + amount;
-            long balancePercentage = 10000*balance/limitAmount;
+            long balancePercentage = 10000 * balance / limitAmount;
             u.setAmountText(v.rightCenterView, a.currency, amount, false);
             u.setAmountText(v.rightView, a.currency, balance, false);
             v.rightCenterView.setVisibility(View.VISIBLE);
             v.progressBar.setMax(10000);
-            v.progressBar.setProgress((int)balancePercentage);
+            v.progressBar.setProgress((int) balancePercentage);
             v.progressBar.setVisibility(View.VISIBLE);
         } else {
             u.setAmountText(v.rightCenterView, a.currency, amount, false);
