@@ -8,10 +8,10 @@
 
 package ru.orangesoftware.financisto2.test.rates;
 
-import org.apache.http.entity.InputStreamEntity;
-import org.apache.http.util.EntityUtils;
+import com.google.common.io.CharStreams;
 
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.List;
 
 import ru.orangesoftware.financisto2.rates.ExchangeRate;
@@ -104,8 +104,7 @@ public class OpenExchangeRatesDownloaderTest extends AbstractRatesDownloaderTest
     private String fileAsString(String fileName) {
         try {
             InputStream is = getInstrumentation().getContext().getResources().getAssets().open(fileName);
-            InputStreamEntity entity = new InputStreamEntity(is, is.available());
-            return EntityUtils.toString(entity);
+            return CharStreams.toString(new InputStreamReader(is, "UTF-8"));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

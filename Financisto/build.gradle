@@ -18,7 +18,7 @@ repositories {
 }
 
 android {
-    compileSdkVersion 21
+    compileSdkVersion 23
     buildToolsVersion '23.0.2'
 
 //    compileOptions {
@@ -27,10 +27,11 @@ android {
 //    }
 
     defaultConfig {
-        minSdkVersion 16
-        targetSdkVersion 21
+        minSdkVersion 21
+        targetSdkVersion 23
         versionCode 200
         versionName "2.0.0"
+        multiDexEnabled true
     }
 
     buildTypes {
@@ -52,7 +53,16 @@ android {
 def googlePlayVersion = '6.5.87'
 
 dependencies {
-    compile 'com.android.support:support-v4:21.0.3'
+
+    compile 'com.android.support:appcompat-v7:23.1.1'
+    compile 'com.android.support:design:23.1.1'
+    compile 'com.android.support:cardview-v7:23.1.1'
+    compile 'com.android.support:recyclerview-v7:23.1.1'
+    compile 'com.android.support:multidex:1.0.1'
+
+    //compile 'com.android.support:support-v4:21.0.3'
+    //compile 'com.android.support:cardview-v7:21.0.3'
+    //compile 'com.android.support:recyclerview-v7:21.0.3'
     compile 'com.google.code.gson:gson:2.4'
     compile "com.google.android.gms:play-services-base:$googlePlayVersion"
     //compile "com.google.android.gms:play-services-ads:$googlePlayVersion"
@@ -77,6 +87,7 @@ dependencies {
     compile 'net.sf.trove4j:trove4j:3.0.3'
     compile 'de.greenrobot:eventbus:2.4.0'
     compile 'com.squareup.okhttp3:okhttp:3.0.0-RC1'
+    compile 'com.google.guava:guava:19.0'
     compile fileTree(include: ['**/*.jar'], dir: 'libs')
 }
 

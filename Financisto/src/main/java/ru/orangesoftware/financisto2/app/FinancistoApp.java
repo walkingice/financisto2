@@ -1,6 +1,6 @@
 package ru.orangesoftware.financisto2.app;
 
-import android.app.Application;
+import android.support.multidex.MultiDexApplication;
 
 import org.androidannotations.annotations.AfterInject;
 import org.androidannotations.annotations.Bean;
@@ -12,7 +12,7 @@ import ru.orangesoftware.financisto2.export.drive.GoogleDriveClient;
 import ru.orangesoftware.financisto2.export.dropbox.Dropbox;
 
 @EApplication
-public class FinancistoApp extends Application {
+public class FinancistoApp extends MultiDexApplication {
 
     @Bean
     public GreenRobotBus bus;

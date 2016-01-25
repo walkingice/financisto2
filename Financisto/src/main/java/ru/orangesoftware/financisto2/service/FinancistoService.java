@@ -143,7 +143,7 @@ public class FinancistoService extends WakefulIntentService {
 		filter.eq(BlotterFilter.STATUS, TransactionStatus.RS.name());
 		filter.toIntent(notificationIntent);
 		PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
-		notification.setLatestEventInfo(this, getString(R.string.scheduled_transactions_restored), text, contentIntent);
+		//notification.setLatestEventInfo(this, getString(R.string.scheduled_transactions_restored), text, contentIntent);
 		return notification;
 	}
 
@@ -155,7 +155,7 @@ public class FinancistoService extends WakefulIntentService {
 		Context context = getApplicationContext();
 		Intent notificationIntent = t.getActivityIntent(this);
 		PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
-		notification.setLatestEventInfo(context, t.getNotificationContentTitle(this), t.getNotificationContentText(this), contentIntent);	
+		//notification.setLatestEventInfo(context, t.getNotificationContentTitle(this), t.getNotificationContentText(this), contentIntent);
 		return notification;
 	}
 
