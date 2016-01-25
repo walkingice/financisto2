@@ -134,28 +134,39 @@ public class FinancistoService extends WakefulIntentService {
 
 	private Notification createRestoredNotification(int count) {
 		long when = System.currentTimeMillis();
+        Context context = getApplicationContext();
 		String text = getString(R.string.scheduled_transactions_have_been_restored, count);
-		Notification notification = new Notification(R.drawable.notification_icon_transaction, text, when);
-		notification.flags |= Notification.FLAG_AUTO_CANCEL;
-		notification.defaults = Notification.DEFAULT_ALL;
-		Intent notificationIntent = new Intent(this, MassOpActivity.class);
-		WhereFilter filter = new WhereFilter("");
+        Intent notificationIntent = new Intent(this, MassOpActivity.class);
+        WhereFilter filter = new WhereFilter("");
 		filter.eq(BlotterFilter.STATUS, TransactionStatus.RS.name());
 		filter.toIntent(notificationIntent);
+        Notification notification = new Notification.Builder(context)
+                .setDefaults(Notification.DEFAULT_ALL)
+                .setContentTitle(getString(R.string.scheduled_transactions_restored))
+                .setContentText(text)
+                .setSmallIcon(R.drawable.notification_icon_transaction)
+                .setAutoCancel(true)
+                .setContentIntent(PendingIntent.getActivity(this, 0, notificationIntent, 0))
+                .build();
+
 		PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
-		//notification.setLatestEventInfo(this, getString(R.string.scheduled_transactions_restored), text, contentIntent);
 		return notification;
 	}
 
 	private Notification createNotification(TransactionInfo t) {
 		long when = System.currentTimeMillis();
-		Notification notification = new Notification(t.getNotificationIcon(), t.getNotificationTickerText(this), when);
-		notification.flags |= Notification.FLAG_AUTO_CANCEL;
-		applyNotificationOptions(notification, t.notificationOptions);
-		Context context = getApplicationContext();
-		Intent notificationIntent = t.getActivityIntent(this);
-		PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
-		//notification.setLatestEventInfo(context, t.getNotificationContentTitle(this), t.getNotificationContentText(this), contentIntent);
+        Context context = getApplicationContext();
+        Intent notificationIntent = t.getActivityIntent(this);
+        Notification notification = new Notification.Builder(context)
+                .setDefaults(Notification.DEFAULT_ALL)
+                .setTicker(t.getNotificationTickerText(this))
+                .setContentTitle(t.getNotificationContentTitle(this))
+                .setContentText(t.getNotificationContentText(this))
+                .setSmallIcon(t.getNotificationIcon())
+                .setAutoCancel(true)
+                .setContentIntent(PendingIntent.getActivity(this, 0, notificationIntent, 0))
+                .build();
+        applyNotificationOptions(notification, t.notificationOptions);
 		return notification;
 	}
 
