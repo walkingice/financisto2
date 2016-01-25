@@ -39,7 +39,6 @@ import ru.orangesoftware.financisto2.bus.InitialLoad;
 import ru.orangesoftware.financisto2.dialog.WebViewDialog;
 import ru.orangesoftware.financisto2.fragment.AccountListFragment_;
 import ru.orangesoftware.financisto2.fragment.BlotterFragment_;
-import ru.orangesoftware.financisto2.fragment.EmptyFragment;
 import ru.orangesoftware.financisto2.fragment.EmptyFragment_;
 import ru.orangesoftware.financisto2.utils.EntityEnum;
 import ru.orangesoftware.financisto2.utils.PinProtection;

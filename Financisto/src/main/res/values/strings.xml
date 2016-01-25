@@ -886,4 +886,6 @@
     <string name="google_drive_backup_success">Backup success on Google Drive: %s</string>
 	<string name="dropbox_backup_success">Backup success on Dropbox: %s</string>
 
+	<string name="blotter_total" formatted="false">Total (in %s): %s</string>
+
 </resources>

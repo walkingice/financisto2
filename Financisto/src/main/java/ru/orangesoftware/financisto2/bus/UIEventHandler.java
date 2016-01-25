@@ -13,8 +13,10 @@ import java.util.List;
 import ru.orangesoftware.financisto2.R;
 import ru.orangesoftware.financisto2.db.DatabaseAdapter;
 import ru.orangesoftware.financisto2.db.DatabaseHelper;
+import ru.orangesoftware.financisto2.db.TransactionsTotalCalculator;
 import ru.orangesoftware.financisto2.filter.WhereFilter;
 import ru.orangesoftware.financisto2.model.Account;
+import ru.orangesoftware.financisto2.model.Total;
 import ru.orangesoftware.financisto2.utils.CurrencyCache;
 import ru.orangesoftware.financisto2.utils.MyPreferences;
 
@@ -85,6 +87,13 @@ public class UIEventHandler {
             c = db.getBlotter(filter);
         }
         bus.post(new TransactionList(accountId, c));
+    }
+
+    public void onEventBackgroundThread(GetBlotterTotal event) {
+        WhereFilter filter = event.filter;
+        TransactionsTotalCalculator calculator = new TransactionsTotalCalculator(db, filter);
+        Total total = calculator.getBlotterBalanceInHomeCurrency();
+        bus.post(new BlotterTotal(total));
     }
 
 }

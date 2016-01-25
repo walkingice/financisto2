@@ -3,15 +3,17 @@ package ru.orangesoftware.financisto2.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.ColorFilter;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.androidannotations.annotations.AfterInject;
@@ -23,6 +25,7 @@ import org.androidannotations.annotations.InstanceState;
 import org.androidannotations.annotations.OptionsItem;
 import org.androidannotations.annotations.OptionsMenu;
 import org.androidannotations.annotations.OptionsMenuItem;
+import org.androidannotations.annotations.ViewById;
 
 import greendroid.widget.QuickAction;
 import greendroid.widget.QuickActionGrid;
@@ -33,25 +36,29 @@ import ru.orangesoftware.financisto2.activity.BlotterFilterActivity_;
 import ru.orangesoftware.financisto2.activity.BlotterOperations;
 import ru.orangesoftware.financisto2.activity.TransactionActivity_;
 import ru.orangesoftware.financisto2.activity.TransferActivity_;
-import ru.orangesoftware.financisto2.adapter.BlotterListAdapter;
-import ru.orangesoftware.financisto2.adapter.BlotterListAdapter_;
-import ru.orangesoftware.financisto2.adapter.TransactionsListAdapter;
-import ru.orangesoftware.financisto2.adapter.TransactionsListAdapter_;
+import ru.orangesoftware.financisto2.adapter.BlotterListAdapter2;
+import ru.orangesoftware.financisto2.adapter.TransactionsListAdapter2;
 import ru.orangesoftware.financisto2.blotter.BlotterFilter;
-import ru.orangesoftware.financisto2.bus.RemoveBlotterFilter;
+import ru.orangesoftware.financisto2.bus.BlotterTotal;
+import ru.orangesoftware.financisto2.bus.GetBlotterTotal;
 import ru.orangesoftware.financisto2.bus.GetTransactionList;
+import ru.orangesoftware.financisto2.bus.RemoveBlotterFilter;
 import ru.orangesoftware.financisto2.bus.TransactionDeleted;
 import ru.orangesoftware.financisto2.bus.TransactionList;
 import ru.orangesoftware.financisto2.db.DatabaseAdapter;
 import ru.orangesoftware.financisto2.db.DatabaseAdapter_;
 import ru.orangesoftware.financisto2.filter.WhereFilter;
+import ru.orangesoftware.financisto2.utils.Utils;
 
-@EFragment(R.layout.blotter)
+@EFragment(R.layout.fragment_blotter)
 @OptionsMenu(R.menu.blotter_menu)
-public class BlotterFragment extends AbstractListFragment implements QuickActionWidget.OnQuickActionClickListener {
+public class BlotterFragment extends AbstractFragment implements QuickActionWidget.OnQuickActionClickListener {
 
     @Bean
     protected DatabaseAdapter db;
+
+    @Bean
+    protected Utils u;
 
     @FragmentArg
     protected long accountId = -1;
@@ -69,6 +76,15 @@ public class BlotterFragment extends AbstractListFragment implements QuickAction
     @InstanceState
     protected WhereFilter blotterFilter = WhereFilter.empty();
 
+    @InstanceState
+    protected int scrollPosition = -1;
+
+    @ViewById(R.id.recyclerView)
+    RecyclerView recyclerView;
+
+    @ViewById(R.id.total)
+    TextView totalView;
+
     @AfterInject
     public void restoreFilter() {
         if (accountId != -1) {
@@ -77,6 +93,21 @@ public class BlotterFragment extends AbstractListFragment implements QuickAction
         if (saveFilter && blotterFilter.isEmpty()) {
             blotterFilter = WhereFilter.fromSharedPreferences(getActivity().getPreferences(0));
         }
+    }
+
+    @AfterViews
+    public void initViews() {
+        recyclerView.setHasFixedSize(true);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        ItemClickSupport.addTo(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+            @Override
+            public void onItemClicked(RecyclerView recyclerView, int position, long id, View v) {
+                onListItemClick(v, position, id);
+            }
+        });
     }
 
     @Override
@@ -105,7 +136,9 @@ public class BlotterFragment extends AbstractListFragment implements QuickAction
         if (removeBlotterFilter != null) {
             saveFilter(WhereFilter.empty());
         }
+        scrollPosition = recyclerView.getVerticalScrollbarPosition();
         bus.post(new GetTransactionList(blotterFilter));
+        bus.post(new GetBlotterTotal(blotterFilter));
         updateFilterMenu();
     }
 
@@ -121,14 +154,18 @@ public class BlotterFragment extends AbstractListFragment implements QuickAction
     public void onEventMainThread(TransactionList event) {
         FragmentActivity context = getActivity();
         DatabaseAdapter db = DatabaseAdapter_.getInstance_(context);
-        BlotterListAdapter adapter;
+        BlotterListAdapter2 adapter;
         if (event.accountId != -1) {
-            adapter = TransactionsListAdapter_.getInstance_(context);
+            adapter = new TransactionsListAdapter2(context, event.cursor);
         } else {
-            adapter = BlotterListAdapter_.getInstance_(context);
+            adapter = new BlotterListAdapter2(context, event.cursor);
         }
-        adapter.initWithCursor(event.cursor);
-        setListAdapter(adapter);
+        recyclerView.setAdapter(adapter);
+        // TODO restore scroll position
+    }
+
+    public void onEventMainThread(BlotterTotal event) {
+        u.setTotal(totalView, event.total);
     }
 
     public void onEventMainThread(WhereFilter filter) {
@@ -168,8 +205,7 @@ public class BlotterFragment extends AbstractListFragment implements QuickAction
         startActivity(intent);
     }
 
-    @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
+    public void onListItemClick(View v, int position, long id) {
         selectedId = id;
         prepareAccountActionGrid();
         actionGrid.show(v);
