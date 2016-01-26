@@ -48,9 +48,6 @@ public class GenericViewHolder2 extends RelativeLayout {
     @ViewById(R.id.progress)
 	public ProgressBar progressBar;
 
-    @ViewById(R.id.progress_text)
-	public TextView progressText;
-
     public GenericViewHolder2(Context context) {
         super(context);
     }

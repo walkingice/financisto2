@@ -135,7 +135,6 @@ public class AccountListAdapter2 extends BaseAdapter {
             u.setAmountText(v.rightCenterView, a.currency, amount, false);
             v.rightView.setVisibility(View.GONE);
             v.progressBar.setVisibility(View.GONE);
-            v.progressText.setVisibility(View.GONE);
         }
     }
 
