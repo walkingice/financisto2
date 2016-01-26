@@ -13,7 +13,6 @@ apply plugin: 'com.neenbedankt.android-apt'
 
 repositories {
     maven { url "http://repo.commonsware.com.s3.amazonaws.com" }
-    maven { url "https://repository-achartengine.forge.cloudbees.com/snapshot/" }
     mavenCentral()
 }
 
@@ -53,7 +52,7 @@ android {
     }
 
     dexOptions {
-        javaMaxHeapSize "4g"
+        javaMaxHeapSize "2g"
         // Skip pre-dexing when running on Travis CI or when disabled via -Dpre-dex=false.
         preDexLibraries = preDexEnabled && !travisBuild
     }
@@ -92,7 +91,6 @@ dependencies {
     apt "org.androidannotations:androidannotations:3.3.2"
     compile 'org.androidannotations:androidannotations-api:3.3.2'
     compile 'com.commonsware.cwac:wakeful:1.0.5'
-    compile 'org.achartengine:achartengine:1.2.0'
     compile 'net.sf.trove4j:trove4j:3.0.3'
     compile 'de.greenrobot:eventbus:2.4.0'
     compile 'com.squareup.okhttp3:okhttp:3.0.0-RC1'
