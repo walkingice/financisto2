@@ -3,14 +3,17 @@ package ru.orangesoftware.financisto2.fragment;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.ListView;
 
+import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.OptionsItem;
 import org.androidannotations.annotations.OptionsMenu;
+import org.androidannotations.annotations.ViewById;
 
 import greendroid.widget.QuickAction;
 import greendroid.widget.QuickActionGrid;
@@ -18,33 +21,45 @@ import greendroid.widget.QuickActionWidget;
 import ru.orangesoftware.financisto2.R;
 import ru.orangesoftware.financisto2.activity.AccountActivity_;
 import ru.orangesoftware.financisto2.activity.AccountBlotterActivity_;
-import ru.orangesoftware.financisto2.activity.AccountListActivity;
-import ru.orangesoftware.financisto2.activity.BlotterActivity;
-import ru.orangesoftware.financisto2.activity.BlotterFilterActivity;
 import ru.orangesoftware.financisto2.activity.PurgeAccountActivity_;
 import ru.orangesoftware.financisto2.activity.TransactionActivity_;
 import ru.orangesoftware.financisto2.activity.TransferActivity_;
-import ru.orangesoftware.financisto2.adapter.AccountListAdapter2;
-import ru.orangesoftware.financisto2.adapter.AccountListAdapter2_;
-import ru.orangesoftware.financisto2.blotter.BlotterFilter;
+import ru.orangesoftware.financisto2.adapter.AccountListAdapter;
 import ru.orangesoftware.financisto2.bus.AccountList;
 import ru.orangesoftware.financisto2.bus.GetAccountList;
 import ru.orangesoftware.financisto2.db.DatabaseAdapter;
-import ru.orangesoftware.financisto2.filter.Criteria;
 import ru.orangesoftware.financisto2.model.Account;
 
 import static ru.orangesoftware.financisto2.utils.MyPreferences.isQuickMenuEnabledForAccount;
 
-@EFragment(R.layout.account_list)
+@EFragment(R.layout.fragment_accounts)
 @OptionsMenu(R.menu.account_list_menu)
-public class AccountListFragment extends AbstractListFragment implements QuickActionWidget.OnQuickActionClickListener {
+public class AccountListFragment extends AbstractFragment implements QuickActionWidget.OnQuickActionClickListener {
 
     @Bean
     protected DatabaseAdapter db;
 
+    @ViewById(R.id.recyclerView)
+    RecyclerView recyclerView;
+
     private QuickActionWidget actionGrid;
 
     private long selectedId = -1;
+
+    @AfterViews
+    public void initViews() {
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        ItemClickSupport.addTo(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+            @Override
+            public void onItemClicked(RecyclerView recyclerView, int position, long id, View v) {
+                onListItemClick(v, position, id);
+            }
+        });
+    }
 
     @Override
     protected void reload() {
@@ -52,9 +67,8 @@ public class AccountListFragment extends AbstractListFragment implements QuickAc
     }
 
     public void onEventMainThread(AccountList event) {
-        AccountListAdapter2 adapter = AccountListAdapter2_.getInstance_(getActivity());
-        adapter.initAccounts(event.accounts);
-        setListAdapter(adapter);
+        AccountListAdapter adapter = new AccountListAdapter(getActivity(), event.accounts);
+        recyclerView.setAdapter(adapter);
     }
 
     @OptionsItem(R.id.menu_add_account)
@@ -62,8 +76,7 @@ public class AccountListFragment extends AbstractListFragment implements QuickAc
         AccountActivity_.intent(this).start();
     }
 
-    @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
+    public void onListItemClick(View v, int position, long id) {
         if (isQuickMenuEnabledForAccount(getActivity())) {
             selectedId = id;
             prepareAccountActionGrid();
