@@ -14,7 +14,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.util.Log;
 
-import com.google.android.gms.drive.Contents;
 import com.google.android.gms.drive.DriveContents;
 
 import java.io.BufferedReader;
@@ -166,6 +165,7 @@ public class DatabaseImport extends FullDatabaseImport {
             values.remove("last_location_id");
             values.remove("sort_order");
         } else if ("account".equals(tableName)) {
+            values.remove("sort_order");
             String type = values.getAsString("type");
             if ("PAYPAL".equals(type)) {
                 values.put("type", AccountType.ELECTRONIC.name());

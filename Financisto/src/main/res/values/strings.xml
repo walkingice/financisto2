@@ -228,8 +228,6 @@
 	<string name="sort_accounts">Sort accounts</string>
 	<string name="sort_accounts_summary">Define sort order for accounts list (requires restart)</string>
 	<string-array name="sort_accounts_entities">
-		<item>By Sort Order (Asc)</item>
-		<item>By Sort Order (Desc)</item>
 		<item>By Name</item>
         <item>By Last Transaction (Asc)</item>
         <item>By Last Transaction (Desc)</item>

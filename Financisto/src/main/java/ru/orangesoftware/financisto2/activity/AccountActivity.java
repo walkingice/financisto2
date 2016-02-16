@@ -14,7 +14,6 @@ package ru.orangesoftware.financisto2.activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.text.InputFilter;
 import android.text.InputType;
 import android.view.View;
 import android.widget.CheckBox;
@@ -72,7 +71,6 @@ public class AccountActivity extends AbstractActivity {
 	private EditText numberText;
 	private View numberNode;
 	private EditText issuerName;
-	private EditText sortOrderText;
 	private CheckBox isIncludedIntoTotals;
     private EditText noteText;
     private EditText closingDayText;
@@ -99,11 +97,6 @@ public class AccountActivity extends AbstractActivity {
 		numberText.setHint(R.string.card_number_hint);
 		numberText.setSingleLine();
 
-		sortOrderText = new EditText(this);
-		sortOrderText.setInputType(InputType.TYPE_CLASS_NUMBER);
-        sortOrderText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(3)});
-		sortOrderText.setSingleLine();
-		
 		closingDayText = new EditText(this);
 		closingDayText.setInputType(InputType.TYPE_CLASS_NUMBER);
 		closingDayText.setHint(R.string.closing_day_hint);
@@ -175,7 +168,6 @@ public class AccountActivity extends AbstractActivity {
         noteText.setLines(2);
         x.addEditNode(layout, R.string.note, noteText);
 
-		x.addEditNode(layout, R.string.sort_order, sortOrderText);
 		isIncludedIntoTotals = x.addCheckboxNode(layout,
 				R.id.is_included_into_totals, R.string.is_included_into_totals,
 				R.string.is_included_into_totals_summary, true);
@@ -227,8 +219,6 @@ public class AccountActivity extends AbstractActivity {
 
         account.title = text(accountTitle);
         account.creationDate = System.currentTimeMillis();
-        String sortOrder = text(sortOrderText);
-        account.sortOrder = sortOrder == null ? 0 : Integer.parseInt(sortOrder);
         account.isIncludeIntoTotals  = isIncludedIntoTotals.isChecked();
         account.limitAmount = -Math.abs(limitInput.getAmount());
         account.note = text(noteText);
@@ -385,8 +375,7 @@ public class AccountActivity extends AbstractActivity {
 		accountTitle.setText(account.title);
 		issuerName.setText(account.issuer);
 		numberText.setText(account.number);
-		sortOrderText.setText(String.valueOf(account.sortOrder));
-		
+
 		/******** bill filtering ********/
 		if (account.closingDay>0) {
 			closingDayText.setText(String.valueOf(account.closingDay));

@@ -47,9 +47,6 @@ public class Account extends MyEntity {
 	@Column(name = "total_limit")
 	public long limitAmount;
 
-	@Column(name = "sort_order")
-	public int sortOrder;
-	
 	@Column(name = "is_active")
 	public boolean isActive = true; 
 

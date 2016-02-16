@@ -20,16 +20,14 @@ import android.content.res.Resources;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import com.dropbox.client2.session.AccessTokenPair;
-
-import ru.orangesoftware.financisto2.export.Export;
-import ru.orangesoftware.financisto2.model.Currency;
-import ru.orangesoftware.financisto2.rates.ExchangeRateProviderFactory;
-import ru.orangesoftware.financisto2.rates.ExchangeRateProvider;
-
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Locale;
+
+import ru.orangesoftware.financisto2.export.Export;
+import ru.orangesoftware.financisto2.model.Currency;
+import ru.orangesoftware.financisto2.rates.ExchangeRateProvider;
+import ru.orangesoftware.financisto2.rates.ExchangeRateProviderFactory;
 
 import static ru.orangesoftware.financisto2.utils.AndroidUtils.isGreenDroidSupported;
 
@@ -39,8 +37,6 @@ public class MyPreferences {
     public static final String DROPBOX_AUTHORIZE = "dropbox_authorize";
 
     public enum AccountSortOrder {
-        SORT_ORDER_ASC("sortOrder", true),
-        SORT_ORDER_DESC("sortOrder", false),
         NAME("title", true),
         LAST_TRANSACTION_ASC("lastTransactionDate", true),
         LAST_TRANSACTION_DESC("lastTransactionDate", false);
@@ -106,7 +102,7 @@ public class MyPreferences {
 
     public static AccountSortOrder getAccountSortOrder(Context context) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        String sortOrder = sharedPreferences.getString("sort_accounts", AccountSortOrder.SORT_ORDER_DESC.name());
+        String sortOrder = sharedPreferences.getString("sort_accounts", AccountSortOrder.LAST_TRANSACTION_DESC.name());
         return AccountSortOrder.valueOf(sortOrder);
     }
 

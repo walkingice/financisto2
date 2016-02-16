@@ -38,7 +38,7 @@
                 android:summary="@string/show_account_last_transaction_date_summary"
                 android:title="@string/show_account_last_transaction_date" />
             <ListPreference
-                android:defaultValue="SORT_ORDER_DESC"
+                android:defaultValue="LAST_TRANSACTION_DESC"
                 android:entries="@array/sort_accounts_entities"
                 android:entryValues="@array/sort_accounts_values"
                 android:key="sort_accounts"

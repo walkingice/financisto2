@@ -106,8 +106,6 @@
 		<item>zh-TW</item>
 	</string-array>
 	<string-array name="sort_accounts_values">
-		<item>SORT_ORDER_ASC</item>
-		<item>SORT_ORDER_DESC</item>
 		<item>NAME</item>
         <item>LAST_TRANSACTION_ASC</item>
         <item>LAST_TRANSACTION_DESC</item>

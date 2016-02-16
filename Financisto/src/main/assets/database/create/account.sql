@@ -7,7 +7,6 @@ CREATE TABLE account (
     type text not null default 'CASH',
     issuer text,
     number text,
-    sort_order integer not null default 0,
     is_active boolean not null default 1,
     is_include_into_totals boolean not null default 1,
     last_category_id long not null default 0,

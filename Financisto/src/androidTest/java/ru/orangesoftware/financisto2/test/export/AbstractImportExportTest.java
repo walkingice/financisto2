@@ -28,7 +28,6 @@ public abstract class AbstractImportExportTest extends AbstractDbTest {
         a.type = AccountType.CASH.name();
         a.currency = c;
         a.totalAmount = 10000;
-        a.sortOrder = 100;
         a.note = "AAA\nBBB:CCC";
         db.saveAccount(a);
         assertNotNull(db.load(Account.class, a.id));
@@ -42,7 +41,6 @@ public abstract class AbstractImportExportTest extends AbstractDbTest {
         a.type = AccountType.BANK.name();
         a.currency = c;
         a.totalAmount = 23450;
-        a.sortOrder = 50;
         db.saveAccount(a);
         assertNotNull(db.load(Account.class, a.id));
         return a;
