@@ -1,0 +1,7 @@
+dependencies:
+  pre:
+    - echo y | android update sdk --no-ui --all --filter "build-tools-23.0.2"
+
+test:
+  override:
+    - ./gradlew clean build -PdisablePreDex

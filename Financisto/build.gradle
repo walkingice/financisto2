@@ -51,11 +51,6 @@ android {
         exclude 'META-INF/NOTICE.txt'
     }
 
-    dexOptions {
-        // Skip pre-dexing when running on Travis CI or when disabled via -Dpre-dex=false.
-        preDexLibraries = preDexEnabled && !travisBuild
-        if (travisBuild) javaMaxHeapSize "4g"
-    }
 }
 
 def googlePlayVersion = '6.5.87'

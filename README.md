@@ -4,7 +4,7 @@ Early screenshots (https://www.dropbox.com/sh/cqhyr44y8hc1usn/AAAK3AvwnOaTG3k7XA
 
 # Financisto
 
-[![Build Status](https://travis-ci.org/dsolonenko/financisto.svg?branch=master)](https://travis-ci.org/dsolonenko/financisto)
+[![Circle CI](https://circleci.com/gh/dsolonenko/financisto.svg?style=svg)](https://circleci.com/gh/dsolonenko/financisto)
 
 ## About
 
